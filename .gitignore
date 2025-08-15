@@ -1,6 +1,4 @@
 .env
-psychologist_memory.db
-psychologist_sessions.db
 __pycache__/ai_psychologist.cpython-312.pyc
 __pycache__/config.cpython-312.pyc
 env_template.txt
