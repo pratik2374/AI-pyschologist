@@ -7,6 +7,7 @@ A multi-layered psychological AI agent with:
 - Short and long-term memory systems
 - Psychological knowledge integration
 - Multiple therapy modes
+- Automatic therapy mode determination
 """
 
 import json
@@ -32,11 +33,38 @@ from config import Config
 
 console = Console()
 
-class CrisisDetector:
-    """HUMUN safeguard system for detecting crisis situations"""
+class CrisisResponseAgent:
+    """Specialized agent for handling crisis situations with soothing, gradual responses"""
     
-    def __init__(self, crisis_keywords: List[str]):
-        self.crisis_keywords = [kw.lower() for kw in crisis_keywords]
+    def __init__(self):
+        self.crisis_keywords = Config.CRISIS_KEYWORDS
+        self.crisis_agent = Agent(
+            name="Crisis Response Specialist",
+            role="Compassionate crisis intervention specialist providing immediate emotional support and safety guidance",
+            model=OpenAIChat(id="gpt-4o-mini"),
+            instructions="""
+            You are a compassionate crisis response specialist. Your role is to:
+            1. Provide immediate emotional support and validation
+            2. Use a calm, soothing, and reassuring tone
+            3. Gradually guide the person toward professional help
+            4. Never rush or pressure the person
+            5. Show genuine care and concern for their safety
+            
+            Response Guidelines:
+            - Start with empathy and validation
+            - Use gentle, encouraging language with soft, calming words
+            - Provide immediate emotional support and comfort
+            - Gradually introduce the idea of professional help
+            - Offer specific, actionable steps they can take
+            - Provide reassurance that they're not alone
+            - Use warm, caring language that feels like a gentle hug
+            - Avoid being overwhelming, rushed, or clinical
+            
+            Tone: Warm, gentle, caring, like a trusted friend who deeply cares
+            Language: Soft, soothing, encouraging, never demanding
+            """,
+            markdown=True
+        )
     
     def detect_crisis(self, message: str) -> Dict[str, Any]:
         """Detect potential crisis situations in user messages"""
@@ -55,23 +83,117 @@ class CrisisDetector:
             "severity": "high" if is_crisis else "low"
         }
     
-    def get_crisis_response(self) -> str:
-        """Get standardized crisis response"""
-        return """🚨 CRISIS DETECTED - IMMEDIATE ACTION REQUIRED 🚨
+    def generate_crisis_response(self, user_message: str) -> str:
+        """Generate a personalized, soothing crisis response using the crisis agent"""
+        try:
+            # Create a context-aware crisis prompt
+            crisis_prompt = f"""
+            The user has shared: "{user_message}"
+            
+            This appears to be a crisis situation. Please provide:
+            1. Immediate emotional support and validation
+            2. A calm, soothing response that shows you care
+            3. Gentle encouragement to seek professional help
+            4. Specific, actionable steps they can take
+            5. Reassurance that they're not alone
+            
+            Use a warm, caring tone and avoid being overwhelming or rushed.
+            """
+            
+            response = self.crisis_agent.run(crisis_prompt)
+            return response.content
+            
+        except Exception as e:
+            console.print(f"[red]Error generating crisis response: {e}[/red]")
+            # Fallback to a basic crisis response
+            return self._get_fallback_crisis_response()
+    
+    def _get_fallback_crisis_response(self) -> str:
+        """Fallback crisis response if the agent fails"""
+        return """I can hear that you're going through something very difficult right now, and I want you to know that I care about you and your safety.
 
-This sounds very serious and I care about your safety. I am an AI and cannot provide the professional help you need right now.
+Your feelings are valid, and it's completely understandable that you're feeling this way. You don't have to go through this alone.
 
-PLEASE:
-1. Call a crisis helpline immediately:
-   - National Suicide Prevention Lifeline (US): 988 or 1-800-273-8255
-   - Crisis Text Line: Text HOME to 741741
-   - Emergency Services: 911
+I want to gently encourage you to reach out for professional support. There are people who are specially trained to help in situations like this, and they want to help you.
 
-2. Reach out to a licensed mental health professional
-3. Talk to someone you trust
-4. Go to the nearest emergency room if you're in immediate danger
+Could you consider:
+• Calling a crisis helpline? They're available 24/7 and are there to listen and help
+• Talking to someone you trust - a friend, family member, or counselor
+• Reaching out to a mental health professional
 
-Your life has value and there are people who want to help you. Please get professional support right away."""
+You're showing real strength by talking about this, and I believe in your ability to get through this difficult time. Your life has value, and there are people who want to support you.
+
+Would you be willing to take one small step toward getting help? Even just calling a helpline to talk to someone who can listen?"""
+
+class TherapyModeDeterminer:
+    """Intelligently determines the most appropriate therapy mode based on conversation patterns"""
+    
+    def __init__(self):
+        self.mode_agent = Agent(
+            name="Therapy Mode Analyzer",
+            role="Psychological assessment specialist that determines optimal therapy approaches",
+            model=OpenAIChat(id="gpt-4o-mini"),
+            instructions="""
+            You are a psychological assessment specialist. Your role is to analyze conversation patterns and determine the most appropriate therapy mode.
+            
+            Available modes:
+            - CBT (Cognitive Behavioral Therapy): For thought patterns, anxiety, depression, behavioral issues
+            - Humanistic: For self-exploration, personal growth, emotional validation, relationship issues
+            - Psychoanalytic: For deep patterns, childhood experiences, unconscious processes, long-term issues
+            
+            Analysis Guidelines:
+            - Consider the user's communication style
+            - Identify recurring themes and patterns
+            - Assess emotional expression and depth
+            - Evaluate readiness for different approaches
+            - Consider immediate vs. long-term needs
+            
+            Return only the mode name: "cbt", "humanistic", or "psychoanalytic"
+            """,
+            markdown=False
+        )
+    
+    def determine_therapy_mode(self, conversation_history: List[Dict], current_message: str) -> str:
+        """Determine the most appropriate therapy mode based on conversation patterns"""
+        try:
+            # Create analysis prompt
+            analysis_prompt = f"""
+            Analyze this conversation to determine the optimal therapy mode.
+            
+            Conversation History:
+            {self._format_conversation_for_analysis(conversation_history)}
+            
+            Current Message: {current_message}
+            
+            Based on the patterns, themes, and communication style, which therapy mode would be most effective?
+            
+            Return only: cbt, humanistic, or psychoanalytic
+            """
+            
+            response = self.mode_agent.run(analysis_prompt)
+            determined_mode = response.content.strip().lower()
+            
+            # Validate the response
+            if determined_mode in ["cbt", "humanistic", "psychoanalytic"]:
+                return determined_mode
+            else:
+                return "cbt"  # Default fallback
+                
+        except Exception as e:
+            console.print(f"[yellow]Warning: Could not determine therapy mode: {e}[/yellow]")
+            return "cbt"  # Default fallback
+    
+    def _format_conversation_for_analysis(self, conversations: List[Dict]) -> str:
+        """Format conversation history for analysis"""
+        if not conversations:
+            return "No previous conversation history available."
+        
+        formatted = []
+        for i, conv in enumerate(conversations[-5:], 1):  # Last 5 conversations
+            formatted.append(f"{i}. User: {conv['user_message']}")
+            formatted.append(f"   Response: {conv['agent_response']}")
+        
+        return "\n".join(formatted)
 
 class MemoryManager:
     """Manages short-term and long-term memory systems"""
@@ -270,8 +392,10 @@ class AIPsychologist:
         # Validate configuration
         Config.validate()
         
+        self.initial_therapy_mode = therapy_mode  # Store the initial mode
         self.therapy_mode = therapy_mode
-        self.crisis_detector = CrisisDetector(Config.CRISIS_KEYWORDS)
+        self.crisis_detector = CrisisResponseAgent()
+        self.therapy_mode_determiner = TherapyModeDeterminer()
         self.memory_manager = MemoryManager()
         self.knowledge_base = PsychologicalKnowledgeBase()
         
@@ -308,6 +432,7 @@ class AIPsychologist:
         self.current_session_id = None
         self.user_id = "default"
         self.session_count = 0
+        self.conversation_count = 0  # Track conversation count for mode determination
     
     def _get_therapy_instructions(self) -> str:
         """Get therapy mode specific instructions"""
@@ -379,9 +504,10 @@ class AIPsychologist:
         
         console.print(Panel(
             f"🫂 Welcome to your AI Therapy Session #{self.session_count}\n"
-            f"Therapy Mode: {self.therapy_mode.upper()}\n"
+            f"Initial Therapy Mode: {self.therapy_mode.upper()}\n"
             f"Session ID: {self.current_session_id}\n\n"
-            "Type 'quit' to end the session, 'summary' for session summary, or 'history' for conversation history.",
+            "💡 The therapy mode will automatically adjust based on our conversation patterns.\n"
+            "Type 'quit' to end the session, 'summary' for session summary, 'history' for conversation history, or 'mode' for current mode status.",
             title="AI Psychologist Session Started",
             border_style="blue"
         ))
@@ -393,7 +519,7 @@ class AIPsychologist:
         crisis_info = self.crisis_detector.detect_crisis(user_message)
         
         if crisis_info["is_crisis"]:
-            crisis_response = self.crisis_detector.get_crisis_response()
+            crisis_response = self.crisis_detector.generate_crisis_response(user_message)
             
             # Store crisis conversation
             self.memory_manager.store_conversation(
@@ -407,6 +533,24 @@ class AIPsychologist:
             )
             
             return crisis_response
+        
+        # Increment conversation count
+        self.conversation_count += 1
+        
+        # Determine therapy mode after 2-3 conversations to allow for pattern recognition
+        if self.conversation_count >= 2:
+            conversation_history = self.memory_manager.get_recent_conversations(
+                user_id=self.user_id,
+                limit=10 # Use a larger history for mode determination
+            )
+            determined_mode = self.therapy_mode_determiner.determine_therapy_mode(conversation_history, user_message)
+            
+            # Update therapy mode if it has changed
+            if determined_mode != self.therapy_mode:
+                self._update_therapy_mode(determined_mode)
+        else:
+            # Use current therapy mode for first few conversations
+            determined_mode = self.therapy_mode
         
         # Generate therapeutic response using Agno agent
         try:
@@ -426,7 +570,7 @@ class AIPsychologist:
                 session_id=self.current_session_id,
                 tags=self._extract_tags(user_message),
                 crisis_detected=False,
-                therapy_mode=self.therapy_mode
+                therapy_mode=determined_mode
             )
             
             return agent_response
@@ -453,6 +597,37 @@ class AIPsychologist:
             tags.append("work")
         
         return tags
+    
+    def _update_therapy_mode(self, new_mode: str):
+        """Update the therapy mode and notify the user"""
+        old_mode = self.therapy_mode
+        self.therapy_mode = new_mode
+        
+        # Update agent instructions with new mode
+        self.agent.instructions = self._get_therapy_instructions()
+        
+        # Notify user of mode change
+        if old_mode != new_mode:
+            console.print(Panel(
+                f"🔄 Therapy Mode Updated\n\n"
+                f"Previous Mode: {old_mode.upper()}\n"
+                f"New Mode: {new_mode.upper()}\n\n"
+                f"Based on our conversation patterns, I'm switching to {new_mode.upper()} approach.\n"
+                f"This will help me provide more targeted and effective support for your needs.",
+                title="Mode Change",
+                border_style="yellow"
+            ))
+            
+            # Store mode change in memory
+            self.memory_manager.store_conversation(
+                user_message=f"[SYSTEM: Therapy mode changed from {old_mode.upper()} to {new_mode.upper()}]",
+                agent_response=f"Therapy mode automatically updated to {new_mode.upper()} based on conversation patterns",
+                user_id=self.user_id,
+                session_id=self.current_session_id,
+                tags=["mode_change", old_mode, new_mode],
+                crisis_detected=False,
+                therapy_mode=new_mode
+            )
     
     def get_session_summary(self) -> str:
         """Get summary of current session"""
@@ -540,9 +715,34 @@ def main():
                 else:
                     console.print("[yellow]No conversation history available.[/yellow]")
                 continue
+            elif user_input.lower() == 'mode':
+                status_text = f"Current Therapy Mode: {psychologist.therapy_mode.upper()}\n"
+                status_text += f"Initial Mode: {psychologist.initial_therapy_mode.upper()}\n"
+                status_text += f"Conversation Count: {psychologist.conversation_count}\n\n"
+                
+                if psychologist.conversation_count < 2:
+                    status_text += "🔄 Mode determination in progress...\n"
+                    status_text += f"Need {2 - psychologist.conversation_count} more conversation(s) to auto-adjust"
+                else:
+                    status_text += "✅ Mode determination active\n"
+                    status_text += "Therapy mode will automatically adjust based on conversation patterns"
+                
+                console.print(Panel(
+                    status_text,
+                    title="Therapy Mode Status",
+                    border_style="cyan"
+                ))
+                continue
             
             # Process message
             console.print("\n[bold green]AI Psychologist[/bold green]")
+            
+            # Show progress indicator for mode determination
+            if psychologist.conversation_count == 1:
+                console.print("[dim]🔄 Analyzing conversation patterns for therapy mode optimization...[/dim]")
+            elif psychologist.conversation_count == 2:
+                console.print("[dim]🔍 Determining optimal therapy approach...[/dim]")
+            
             response = psychologist.process_message(user_input)
             console.print(response)
             
