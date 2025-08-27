@@ -1,41 +1,24 @@
-import os
-from typing import Literal
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
+"""
+Configuration for AI Psychologist App
+"""
 
 class Config:
-    """Configuration for the Psychological AI Agent App"""
-    
-    # OpenAI API Configuration
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    
-    # App Configuration
-    THERAPY_MODE = os.getenv("THERAPY_MODE", "cbt")
-    ENABLE_SAFEGUARDS = os.getenv("ENABLE_SAFEGUARDS", "true").lower() == "true"
-    MAX_SESSION_LENGTH = int(os.getenv("MAX_SESSION_LENGTH", "50"))
-    
-    # Crisis keywords for HUMUN safeguard
+    # Crisis detection keywords
     CRISIS_KEYWORDS = [
-        "suicide", "kill myself", "end my life", "want to die",
-        "self-harm", "cut myself", "hurt myself",
-        "abuse", "domestic violence", "sexual assault",
-        "extreme distress", "mental breakdown", "psychotic"
+        "kill myself", "suicide", "want to die", "end my life",
+        "self-harm", "hopeless", "can't go on", "no reason to live",
+        "better off dead", "hurt myself", "end it all"
     ]
     
-    # Therapy mode instructions
+    # Therapy mode instructions (if needed for future use)
     THERAPY_INSTRUCTIONS = {
-        "cbt": "Focus on cognitive restructuring, identifying thought patterns, and behavioral techniques.",
-        "humanistic": "Emphasize empathy, unconditional positive regard, and client-centered approaches.",
-        "psychoanalytic": "Explore deeper unconscious patterns, childhood experiences, and defense mechanisms."
+        "cbt": "Focus on cognitive restructuring and behavioral techniques",
+        "humanistic": "Emphasize self-actualization and personal growth",
+        "psychoanalytic": "Explore unconscious patterns and early experiences"
     }
     
-    @classmethod
-    def validate(cls):
-        """Validate configuration"""
-        if not cls.OPENAI_API_KEY:
-            raise ValueError("OPENAI_API_KEY is required. Please set it in your environment variables.")
-        
-        if cls.THERAPY_MODE not in ["cbt", "humanistic", "psychoanalytic"]:
-            raise ValueError(f"Invalid therapy mode: {cls.THERAPY_MODE}")
+    @staticmethod
+    def validate():
+        """Validate configuration settings"""
+        # Add validation logic here if needed
+        pass

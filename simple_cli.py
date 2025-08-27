@@ -1,109 +1,159 @@
 """
-Simple CLI version of AI Psychologist for testing and development
+Simple CLI for AI Psychologist Multi-Agent System
+
+A streamlined command-line interface for the AI Psychologist
+with direct agent redirection and streaming responses for fast inference.
 """
 
-import os
-from dotenv import load_dotenv
+import sys
 from ai_psychologist import AIPsychologist
+from rich.console import Console
+from rich.panel import Panel
+from rich.prompt import Prompt
+from rich.text import Text
+from rich.live import Live
+from rich.spinner import Spinner
+from rich.progress import Progress, SpinnerColumn, TextColumn
 
-def simple_cli():
-    """Simple command-line interface for AI Psychologist"""
+console = Console()
+
+def print_welcome():
+    """Display welcome message"""
+    welcome_text = Text()
+    welcome_text.append("🧠 AI Psychologist - Direct Agent Redirection\n\n", style="bold blue")
+    welcome_text.append("Powered by Agno Framework with intelligent redirection:\n", style="dim")
+    welcome_text.append("• CBT Specialist - Practical coping strategies\n", style="cyan")
+    welcome_text.append("• Humanistic Specialist - Self-discovery & growth\n", style="green")
+    welcome_text.append("• Psychoanalytic Specialist - Pattern recognition\n", style="yellow")
+    welcome_text.append("• Smart Redirection - Automatic agent switching\n", style="bold magenta")
     
-    # Load environment variables
-    load_dotenv()
+    console.print(Panel(
+        welcome_text,
+        title="Welcome",
+        border_style="blue"
+    ))
+
+def print_help():
+    """Display help information"""
+    help_text = """
+Available Commands:
+• Type your message to start a therapy session
+• 'summary' - Get session summary
+• 'history' - View conversation history
+• 'agent' - Show current agent status
+• 'help' - Show this help message
+• 'quit' or 'exit' - End session
+
+Special Features:
+• Crisis detection with immediate response
+• Automatic agent redirection for optimal care
+• Session memory and tracking
+• Fast inference with specialized agents
+• Streaming-like responses for real-time interaction
+    """
     
-    print("🧠 AI Psychologist - Simple CLI Version")
-    print("=" * 50)
+    console.print(Panel(
+        help_text,
+        title="Help",
+        border_style="green"
+    ))
+
+def main():
+    """Main CLI function"""
+    print_welcome()
     
-    # Check for API key
-    if not os.getenv("OPENAI_API_KEY"):
-        print("❌ OPENAI_API_KEY not found in environment variables")
-        print("Please create a .env file with your OpenAI API key:")
-        print("OPENAI_API_KEY=your_api_key_here")
+    # Initialize AI Psychologist
+    try:
+        psychologist = AIPsychologist()
+        console.print("[green]✓ Direct agent redirection system initialized[/green]")
+    except Exception as e:
+        console.print(f"[red]✗ Failed to initialize: {e}[/red]")
+        console.print("[yellow]Please check your configuration and try again.[/yellow]")
         return
     
-    # Choose therapy mode
-    print("\nChoose therapy mode:")
-    print("1. CBT (Cognitive Behavioral Therapy)")
-    print("2. Humanistic")
-    print("3. Psychoanalytic")
+    # Get user ID
+    user_id = Prompt.ask(
+        "\nEnter your user ID", 
+        default="user_001")
     
-    while True:
-        choice = input("\nEnter choice (1-3) or 'q' to quit: ").strip()
-        
-        if choice.lower() == 'q':
-            print("Goodbye! 👋")
-            return
-        
-        if choice in ['1', '2', '3']:
-            modes = ['cbt', 'humanistic', 'psychoanalytic']
-            selected_mode = modes[int(choice) - 1]
-            break
-        else:
-            print("Invalid choice. Please enter 1, 2, 3, or 'q'.")
+    # Start session
+    psychologist.start_session(user_id)
+    console.print("\n[dim]Type 'help' for available commands[/dim]")
     
+    # Main conversation loop
     try:
-        # Initialize AI Psychologist
-        print(f"\n🔄 Initializing AI Psychologist in {selected_mode.upper()} mode...")
-        psychologist = AIPsychologist(therapy_mode=selected_mode)
-        print("✅ AI Psychologist initialized successfully!")
-        
-        # Start session
-        user_id = input("\nEnter your user ID (or press Enter for default): ").strip()
-        if not user_id:
-            user_id = "default"
-        
-        psychologist.start_session(user_id)
-        
-        # Main conversation loop
-        print("\n" + "="*50)
-        print("Session started! Type 'quit' to end, 'summary' for summary, 'history' for history")
-        print("="*50)
-        
         while True:
-            user_input = input("\nYou: ").strip()
+            user_input = Prompt.ask("\n[bold blue]You[/bold blue]")
             
-            if user_input.lower() in ['quit', 'exit', 'bye', 'q']:
-                print("\n🔄 Ending session...")
+            if user_input.lower() in ['quit', 'exit', 'bye']:
+                console.print("[yellow]Ending session...[/yellow]")
                 break
+            elif user_input.lower() == 'help':
+                print_help()
+                continue
             elif user_input.lower() == 'summary':
-                summary = psychologist.get_session_summary()
-                print(f"\n📋 Session Summary:\n{summary}")
+                console.print("\n[bold cyan]Requesting session summary...[/bold cyan]")
+                try:
+                    summary = psychologist._get_current_agent().run(
+                        "Please provide a session summary",
+                        user_id=psychologist.user_id,
+                        session_id=psychologist.current_session_id
+                    )
+                    console.print(Panel(
+                        summary.content,
+                        title="Session Summary",
+                        border_style="cyan"
+                    ))
+                except Exception as e:
+                    console.print(f"[red]Error getting summary: {e}[/red]")
                 continue
             elif user_input.lower() == 'history':
-                history = psychologist.get_conversation_history(5)
-                if history:
-                    print("\n📚 Recent Conversation History:")
-                    for i, conv in enumerate(history, 1):
-                        print(f"\n{i}. Time: {conv['timestamp'][:19]}")
-                        print(f"   You: {conv['user_message'][:80]}...")
-                        print(f"   AI: {conv['agent_response'][:80]}...")
-                else:
-                    print("\n📚 No conversation history available yet.")
+                console.print("\n[bold cyan]Requesting conversation history...[/bold cyan]")
+                try:
+                    history = psychologist._get_current_agent().run(
+                        "Please provide conversation history",
+                        user_id=psychologist.user_id,
+                        session_id=psychologist.current_session_id
+                    )
+                    console.print(Panel(
+                        history.content,
+                        title="Conversation History",
+                        border_style="cyan"
+                    ))
+                except Exception as e:
+                    console.print(f"[red]Error getting history: {e}[/red]")
                 continue
-            elif not user_input:
+            elif user_input.lower() == 'agent':
+                status = psychologist.get_current_agent_status()
+                console.print(Panel(
+                    status,
+                    title="Agent Status",
+                    border_style="cyan"
+                ))
                 continue
             
             # Process message
-            print("\nAI Psychologist:")
-            try:
+            console.print("\n[bold green]AI Psychologist[/bold green]")
+            
+            # Show current agent
+            console.print(f"[dim]🤖 {psychologist.current_agent.upper()} Specialist[/dim]")
+            
+            # Process message with streaming-like response
+            with Live(Spinner("dots"), console=console, refresh_per_second=10):
                 response = psychologist.process_message(user_input)
-                print(response)
-            except Exception as e:
-                print(f"❌ Error: {e}")
-                print("Please try again.")
-        
-        # Final summary
-        if psychologist.current_session_id:
-            final_summary = psychologist.get_session_summary()
-            if final_summary and final_summary != "Session summary not available yet.":
-                print(f"\n📋 Final Session Summary:\n{final_summary}")
-        
-        print("\n🙏 Thank you for your session. Take care! 🫂")
-        
+            
+            console.print(response)
+            
+    except KeyboardInterrupt:
+        console.print("\n[yellow]Session interrupted by user.[/yellow]")
     except Exception as e:
-        print(f"\n❌ Failed to initialize AI Psychologist: {e}")
-        print("Please check your configuration and try again.")
+        console.print(f"\n[red]Unexpected error: {e}[/red]")
+    finally:
+        console.print("[green]Thank you for your session. Take care! 🫂[/green]")
 
 if __name__ == "__main__":
-    simple_cli()
+    try:
+        main()
+    except Exception as e:
+        console.print(f"[red]Fatal error: {e}[/red]")
+        sys.exit(1)
