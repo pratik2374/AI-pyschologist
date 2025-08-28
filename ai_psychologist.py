@@ -40,12 +40,7 @@ class Config:
         "better off dead", "hurt myself", "end it all"
     ]
     
-    # Agent redirection keywords for faster inference
-    REDIRECTION_KEYWORDS = {
-        "cbt": ["thoughts", "thinking", "behavior", "coping", "anxiety", "depression", "stress", "patterns", "change", "techniques", "manage", "control", "strategies", "tools", "skills", "practice", "exercise", "homework", "routine", "habit"],
-        "humanistic": ["feelings", "emotions", "self", "identity", "growth", "meaning", "purpose", "relationships", "acceptance", "authenticity", "values", "beliefs", "spirituality", "connection", "belonging", "potential", "freedom", "choice"],
-        "psychoanalytic": ["childhood", "past", "patterns", "relationships", "unconscious", "defense", "transference", "early", "family", "recurring", "dreams", "memories", "trauma", "attachment", "dynamics", "conflict", "repression", "projection"]
-    }
+    # Keyword-based redirection removed; dynamic routing will be used instead
     
     @staticmethod
     def validate():
@@ -188,8 +183,8 @@ class AIPsychologist:
         self.session_count = 0
         self.current_agent = "humanistic"  # Start with Humanistic as default
         self.conversation_context = []
-        self.redirection_keywords = Config.REDIRECTION_KEYWORDS
-        self.redirection_history = {}  # Track redirections to avoid loops
+        # Initialize dynamic router agent for intent-based redirection
+        self.redirection_history = {}
 
         # --- TOOLS ---
         @tool
@@ -292,60 +287,89 @@ class AIPsychologist:
             ]
         )
 
+        # --- ROUTER AGENT (Dynamic intent router) ---
+        self.router_agent = Agent(
+            name="Therapy Router",
+            model=OpenAIChat(id="gpt-4o-mini"),
+            role="Select the most appropriate therapy specialist (cbt, humanistic, psychoanalytic) per user message.",
+            tools=[],
+            storage=self.storage,
+            instructions=[
+                "You are an expert triage router for a therapy system.",
+                "Given the user's latest message and brief recent context, choose the best next agent.",
+                "Options: cbt | humanistic | psychoanalytic | stay",
+                "Return ONLY a compact JSON object with keys: target, confidence, rationale.",
+                "- target: one of 'cbt', 'humanistic', 'psychoanalytic', or 'stay'",
+                "- confidence: number between 0 and 1",
+                "- rationale: short reason (<= 25 words)",
+                "Do not include any extra commentary outside JSON."
+            ]
+        )
+
+    def _build_router_prompt(self, current_agent: str, message: str, conversation_context: List[Dict]) -> str:
+        recent_ctx = conversation_context[-3:] if conversation_context else []
+        recent_formatted = []
+        for turn in recent_ctx:
+            recent_formatted.append({
+                "user_message": (turn.get("user_message") or "")[:220],
+                "therapy_mode": turn.get("therapy_mode") or "",
+            })
+        prompt = (
+            "Current agent: " + current_agent + "\n" +
+            "User message: " + message + "\n" +
+            "Recent context (latest first): " + json.dumps(list(reversed(recent_formatted)))
+        )
+        return prompt
+
     def _should_redirect(self, current_agent: str, message: str, conversation_context: List[Dict]) -> Dict[str, Any]:
-        """Determine if redirection to another agent is beneficial"""
-        message_lower = message.lower()
-        
-        # Debug: Show what's being checked
+        """Determine if redirection to another agent is beneficial using dynamic routing."""
         console.print(f"[dim]🔍 Checking redirection for: {current_agent.upper()}[/dim]")
         console.print(f"[dim]📝 Message: {message[:50]}...[/dim]")
         
-        # Check for redirection keywords
-        for target_agent, keywords in self.redirection_keywords.items():
-            if target_agent != current_agent:
-                keyword_matches = [kw for kw in keywords if kw in message_lower]
-                if keyword_matches:
-                    console.print(f"[dim]🎯 Found {target_agent.upper()} keywords: {', '.join(keyword_matches)}[/dim]")
-                    # Check if this would be a beneficial redirection
-                    if self._is_beneficial_redirection(current_agent, target_agent, message, conversation_context):
-                        console.print(f"[dim]✅ Redirection approved to {target_agent.upper()}[/dim]")
-                        return {
-                            "should_redirect": True,
-                            "target_agent": target_agent,
-                            "reason": f"Detected {target_agent.upper()} keywords: {', '.join(keyword_matches)}",
-                            "confidence": len(keyword_matches) / len(keywords)
-                        }
-                    else:
-                        console.print(f"[dim]❌ Redirection rejected to {target_agent.upper()}[/dim]")
-        
-        console.print(f"[dim]🔄 No redirection needed[/dim]")
-        return {"should_redirect": False}
+        router_prompt = self._build_router_prompt(current_agent, message, conversation_context)
+        try:
+            router_response = self.router_agent.run(router_prompt, user_id=self.user_id, session_id=self.current_session_id)
+            content = router_response.content.strip()
+            try:
+                decision = json.loads(content)
+            except Exception:
+                start = content.find('{')
+                end = content.rfind('}')
+                if start != -1 and end != -1 and end > start:
+                    decision = json.loads(content[start:end+1])
+                else:
+                    decision = {"target": "stay", "confidence": 0, "rationale": "unparsed"}
+        except Exception as e:
+            console.print(f"[dim]⚠ Router error: {e}[/dim]")
+            decision = {"target": "stay", "confidence": 0, "rationale": "router_error"}
+
+        target = (decision.get("target") or "stay").lower()
+        confidence = float(decision.get("confidence") or 0)
+        rationale = decision.get("rationale") or ""
+
+        valid_targets = {"cbt", "humanistic", "psychoanalytic", "stay"}
+        if target not in valid_targets:
+            target = "stay"
+
+        if target in ("stay", current_agent):
+            console.print(f"[dim]🔄 No redirection needed[/dim]")
+            return {"should_redirect": False}
+
+        if conversation_context:
+            prev_agent = conversation_context[-1].get('therapy_mode')
+            if prev_agent == target and confidence < 0.7:
+                console.print(f"[dim]⏳ Hold redirection to avoid bounce (confidence {confidence:.2f})[/dim]")
+                return {"should_redirect": False}
+
+        console.print(f"[dim]✅ Redirection approved to {target.upper()} (conf {confidence:.2f})[/dim]")
+        return {
+            "should_redirect": True,
+            "target_agent": target,
+            "reason": rationale or f"Router selected {target}",
+            "confidence": confidence
+        }
     
-    def _is_beneficial_redirection(self, from_agent: str, to_agent: str, message: str, context: List[Dict]) -> bool:
-        """Determine if redirection would be beneficial based on context"""
-        
-        # Avoid redirection loops
-        if len(context) > 0:
-            last_agent = context[-1].get('therapy_mode', 'unknown')
-            if last_agent == to_agent:
-                return False
-        
-        # Use the same keywords as the main redirection logic
-        message_content = message.lower()
-        
-        if to_agent == "cbt":
-            cbt_indicators = self.redirection_keywords["cbt"]
-            return any(indicator in message_content for indicator in cbt_indicators)
-        
-        elif to_agent == "humanistic":
-            humanistic_indicators = self.redirection_keywords["humanistic"]
-            return any(indicator in message_content for indicator in humanistic_indicators)
-        
-        elif to_agent == "psychoanalytic":
-            psychoanalytic_indicators = self.redirection_keywords["psychoanalytic"]
-            return any(indicator in message_content for indicator in psychoanalytic_indicators)
-        
-        return False
+    # Old keyword-based helper removed; routing is handled by the router agent
 
     def start_session(self, user_id: str = None):
         if user_id:
@@ -519,10 +543,7 @@ def main():
                 # Debug redirection logic
                 console.print("\n[bold cyan]🔍 Debugging Redirection Logic[/bold cyan]")
                 console.print(f"Current Agent: {psychologist.current_agent.upper()}")
-                console.print(f"Redirection Keywords:")
-                for agent, keywords in psychologist.redirection_keywords.items():
-                    console.print(f"  {agent.upper()}: {', '.join(keywords[:5])}...")
-                
+                console.print("Router-based dynamic decision:\n")
                 # Test redirection with a sample message
                 test_message = "This reminds me of how my parents treated me"
                 console.print(f"\nTest Message: '{test_message}'")
