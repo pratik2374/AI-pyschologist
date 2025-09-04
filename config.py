@@ -31,6 +31,11 @@ class Config:
         "psychoanalytic": "Explore deeper unconscious patterns, childhood experiences, and defense mechanisms."
     }
     
+    # MongoDB configuration
+    MONGODB_URL = os.getenv("MONGODB_URL")
+    MONGODB_DB_NAME = os.getenv("MONGODB_DB_NAME", "agno")
+    MONGODB_SESSIONS_COLLECTION = os.getenv("MONGODB_SESSIONS_COLLECTION", "psychologist_sessions")
+    
     @classmethod
     def validate(cls):
         """Validate configuration"""
@@ -39,3 +44,6 @@ class Config:
         
         if cls.THERAPY_MODE not in ["cbt", "humanistic", "psychoanalytic"]:
             raise ValueError(f"Invalid therapy mode: {cls.THERAPY_MODE}")
+
+        if not cls.MONGODB_URL:
+            raise ValueError("MONGODB_URL is required. Please set it in your environment variables.")

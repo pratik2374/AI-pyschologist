@@ -12,17 +12,18 @@ A multi-layered psychological AI agent with:
 
 import json
 import os
-import sqlite3
+from pymongo import MongoClient, ASCENDING
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from pathlib import Path
 
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
-from agno.storage.sqlite import SqliteStorage
-from agno.memory.v2.db.sqlite import SqliteMemoryDb
-from agno.memory.v2.memory import Memory
+from agno.storage.mongodb import MongoDbStorage
 from agno.tools import tool
+from agno.memory.v2.db.base import MemoryDb
+from agno.memory.v2.db.schema import MemoryRow
+from agno.memory.v2.memory import Memory
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
@@ -198,116 +199,150 @@ class TherapyModeDeterminer:
 class MemoryManager:
     """Manages short-term and long-term memory systems"""
     
-    def __init__(self, db_file: str = "psychologist_memory.db"):
-        self.db_file = db_file
+    def __init__(self, mongo_url: str, db_name: str, collection_name: str = "conversation_logs"):
+        self.client = MongoClient(mongo_url)
+        self.db = self.client[db_name]
+        self.collection = self.db[collection_name]
         self.setup_database()
     
     def setup_database(self):
-        """Initialize the SQLite database for long-term memory"""
-        conn = sqlite3.connect(self.db_file)
-        cursor = conn.cursor()
-        
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS conversation_logs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                timestamp TEXT NOT NULL,
-                user_id TEXT,
-                session_id TEXT,
-                user_message TEXT NOT NULL,
-                agent_response TEXT NOT NULL,
-                tags TEXT,
-                crisis_detected BOOLEAN DEFAULT FALSE,
-                therapy_mode TEXT
-            )
-        ''')
-        
-        conn.commit()
-        conn.close()
+        """Ensure MongoDB indexes for long-term memory"""
+        self.collection.create_index([("user_id", ASCENDING), ("timestamp", ASCENDING)])
+        self.collection.create_index([("session_id", ASCENDING), ("timestamp", ASCENDING)])
+        self.collection.create_index([("tags", ASCENDING)])
     
     def store_conversation(self, user_message: str, agent_response: str, 
                           user_id: str = "default", session_id: str = "default",
                           tags: List[str] = None, crisis_detected: bool = False,
                           therapy_mode: str = "cbt"):
-        """Store conversation in long-term memory"""
-        conn = sqlite3.connect(self.db_file)
-        cursor = conn.cursor()
-        
-        tags_json = json.dumps(tags or [])
-        
-        cursor.execute('''
-            INSERT INTO conversation_logs 
-            (timestamp, user_id, session_id, user_message, agent_response, tags, crisis_detected, therapy_mode)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            datetime.now().isoformat(),
-            user_id,
-            session_id,
-            user_message,
-            agent_response,
-            tags_json,
-            crisis_detected,
-            therapy_mode
-        ))
-        
-        conn.commit()
-        conn.close()
+        """Store conversation in long-term memory (MongoDB)"""
+        document = {
+            "timestamp": datetime.now().isoformat(),
+            "user_id": user_id,
+            "session_id": session_id,
+            "user_message": user_message,
+            "agent_response": agent_response,
+            "tags": tags or [],
+            "crisis_detected": crisis_detected,
+            "therapy_mode": therapy_mode,
+        }
+        self.collection.insert_one(document)
     
     def get_recent_conversations(self, user_id: str = "default", limit: int = 5) -> List[Dict]:
-        """Retrieve recent conversations for context"""
-        conn = sqlite3.connect(self.db_file)
-        cursor = conn.cursor()
-        
-        cursor.execute('''
-            SELECT user_message, agent_response, timestamp, tags, therapy_mode
-            FROM conversation_logs 
-            WHERE user_id = ? 
-            ORDER BY timestamp DESC 
-            LIMIT ?
-        ''', (user_id, limit))
-        
-        rows = cursor.fetchall()
-        conn.close()
-        
-        conversations = []
-        for row in rows:
-            conversations.append({
-                "user_message": row[0],
-                "agent_response": row[1],
-                "timestamp": row[2],
-                "tags": json.loads(row[3]) if row[3] else [],
-                "therapy_mode": row[4]
-            })
-        
-        return conversations
+        """Retrieve recent conversations for context (MongoDB)"""
+        cursor = (
+            self.collection
+            .find({"user_id": user_id}, {"_id": 0, "user_message": 1, "agent_response": 1, "timestamp": 1, "tags": 1, "therapy_mode": 1})
+            .sort("timestamp", -1)
+            .limit(limit)
+        )
+        return [
+            {
+                "user_message": doc.get("user_message", ""),
+                "agent_response": doc.get("agent_response", ""),
+                "timestamp": doc.get("timestamp", ""),
+                "tags": doc.get("tags", []),
+                "therapy_mode": doc.get("therapy_mode", "cbt"),
+            }
+            for doc in cursor
+        ]
     
     def search_by_tags(self, tags: List[str], user_id: str = "default") -> List[Dict]:
-        """Search conversations by tags for pattern recognition"""
-        conn = sqlite3.connect(self.db_file)
-        cursor = conn.cursor()
-        
-        # Create placeholders for SQL query
-        placeholders = ','.join(['?' for _ in tags])
-        
-        cursor.execute(f'''
-            SELECT user_message, agent_response, timestamp, tags, therapy_mode
-            FROM conversation_logs 
-            WHERE user_id = ? AND tags LIKE ?
-        ''', (user_id, f'%{tags[0]}%'))
-        
-        rows = cursor.fetchall()
-        conn.close()
-        
-        conversations = []
-        for row in rows:
-            conversations.append({
-                "user_message": row[0],
-                "agent_response": row[1],
-                "timestamp": row[2],
-                "tags": json.loads(row[3]) if row[3] else [],
-                "therapy_mode": row[4]
-            })
-        
-        return conversations
+        """Search conversations by tags for pattern recognition (MongoDB)"""
+        cursor = (
+            self.collection
+            .find({"user_id": user_id, "tags": {"$in": tags}}, {"_id": 0, "user_message": 1, "agent_response": 1, "timestamp": 1, "tags": 1, "therapy_mode": 1})
+            .sort("timestamp", -1)
+        )
+        return [
+            {
+                "user_message": doc.get("user_message", ""),
+                "agent_response": doc.get("agent_response", ""),
+                "timestamp": doc.get("timestamp", ""),
+                "tags": doc.get("tags", []),
+                "therapy_mode": doc.get("therapy_mode", "cbt"),
+            }
+            for doc in cursor
+        ]
+
+
+class MongoMemoryDb(MemoryDb):
+    """MongoDB implementation of Agno MemoryDb for user memories and summaries."""
+
+    def __init__(self, collection_name: str = "user_memories", mongo_url: str = None, db_name: str = None):
+        if not mongo_url or not db_name:
+            raise ValueError("mongo_url and db_name are required for MongoMemoryDb")
+        self.client = MongoClient(mongo_url)
+        self.db = self.client[db_name]
+        self.collection = self.db[collection_name]
+        self._ensure_indexes()
+
+    def __dict__(self) -> Dict[str, Any]:
+        return {
+            "name": "MongoMemoryDb",
+            "collection": self.collection.name,
+            "db": self.db.name,
+        }
+
+    def _ensure_indexes(self) -> None:
+        self.collection.create_index([("id", ASCENDING)], unique=True)
+        self.collection.create_index([("user_id", ASCENDING), ("created_at", ASCENDING)])
+
+    # Interface methods
+    def create(self) -> None:
+        # Collections are created on first insert; ensure indexes
+        self._ensure_indexes()
+
+    def memory_exists(self, memory: MemoryRow) -> bool:
+        return self.collection.count_documents({"id": memory.id}, limit=1) > 0
+
+    def read_memories(self, user_id: Optional[str] = None, limit: Optional[int] = None, sort: Optional[str] = None) -> List[MemoryRow]:
+        query: Dict[str, Any] = {}
+        if user_id is not None:
+            query["user_id"] = user_id
+        sort_dir = 1 if sort == "asc" else -1
+        cursor = self.collection.find(query).sort("created_at", sort_dir)
+        if limit is not None:
+            cursor = cursor.limit(limit)
+        memories: List[MemoryRow] = []
+        for doc in cursor:
+            memories.append(
+                MemoryRow(
+                    id=doc.get("id"),
+                    user_id=doc.get("user_id"),
+                    memory=doc.get("memory"),
+                    last_updated=doc.get("updated_at") or doc.get("created_at"),
+                )
+            )
+        return memories
+
+    def upsert_memory(self, memory: MemoryRow, create_and_retry: bool = True) -> None:
+        now = datetime.now()
+        self.collection.update_one(
+            {"id": memory.id},
+            {
+                "$set": {
+                    "user_id": memory.user_id,
+                    "memory": memory.memory,
+                    "updated_at": now,
+                },
+                "$setOnInsert": {"created_at": now, "id": memory.id},
+            },
+            upsert=True,
+        )
+
+    def delete_memory(self, memory_id: str) -> None:
+        self.collection.delete_one({"id": memory_id})
+
+    def drop_table(self) -> None:
+        self.collection.drop()
+
+    def table_exists(self) -> bool:
+        return self.collection.name in self.db.list_collection_names()
+
+    def clear(self) -> bool:
+        self.collection.delete_many({})
+        return True
 
 class PsychologicalKnowledgeBase:
     """Provides psychological techniques and knowledge"""
@@ -396,18 +431,23 @@ class AIPsychologist:
         self.therapy_mode = therapy_mode
         self.crisis_detector = CrisisResponseAgent()
         self.therapy_mode_determiner = TherapyModeDeterminer()
-        self.memory_manager = MemoryManager()
+        self.memory_manager = MemoryManager(
+            mongo_url=Config.MONGODB_URL,
+            db_name=Config.MONGODB_DB_NAME,
+        )
         self.knowledge_base = PsychologicalKnowledgeBase()
         
-        # Initialize Agno components
-        self.storage = SqliteStorage(
-            table_name="psychologist_sessions", 
-            db_file="psychologist_sessions.db"
+        # Initialize Agno components (MongoDB for session storage)
+        self.storage = MongoDbStorage(
+            collection_name=Config.MONGODB_SESSIONS_COLLECTION,
+            db_url=Config.MONGODB_URL,
+            db_name=Config.MONGODB_DB_NAME,
         )
         
+        # Initialize Agno Memory using MongoDB
         self.memory = Memory(
             model=OpenAIChat(id="gpt-4o-mini"),
-            db=SqliteMemoryDb(table_name="user_memories", db_file="psychologist_memory.db")
+            db=MongoMemoryDb(collection_name="user_memories", mongo_url=Config.MONGODB_URL, db_name=Config.MONGODB_DB_NAME),
         )
         
         # Create the main agent
@@ -466,15 +506,24 @@ class AIPsychologist:
         if not session_id:
             session_id = self.current_session_id or "current"
         
-        summary = self.memory.get_session_summary(
-            user_id=self.user_id, 
-            session_id=session_id
+        conversations = self.memory_manager.get_recent_conversations(
+            user_id=self.user_id,
+            limit=10,
         )
-        
-        if summary and summary.summary:
-            return f"Session Summary: {summary.summary}"
-        else:
+        if not conversations:
             return "No session summary available yet."
+        # Create a lightweight textual summary without relying on Sqlite-based Memory
+        last_modes = list({c.get("therapy_mode", "cbt") for c in conversations})
+        topics = set()
+        for c in conversations:
+            for t in c.get("tags", []):
+                topics.add(t)
+        summary_lines = [
+            f"Conversations: {len(conversations)}",
+            f"Therapy modes observed: {', '.join(sorted(last_modes))}",
+            f"Topics: {', '.join(sorted(topics)) if topics else 'None'}",
+        ]
+        return "Session Summary:\n" + "\n".join(summary_lines)
     
     @tool
     def _get_conversation_history(self, limit: int = 5) -> str:
@@ -634,15 +683,23 @@ class AIPsychologist:
         if not self.current_session_id:
             return "No active session."
         
-        summary = self.memory.get_session_summary(
+        # Use Mongo conversation logs to produce a basic summary
+        conversations = self.memory_manager.get_recent_conversations(
             user_id=self.user_id,
-            session_id=self.current_session_id
+            limit=10,
         )
-        
-        if summary and summary.summary:
-            return summary.summary
-        else:
+        if not conversations:
             return "Session summary not available yet."
+        last_modes = list({c.get("therapy_mode", "cbt") for c in conversations})
+        topics = set()
+        for c in conversations:
+            for t in c.get("tags", []):
+                topics.add(t)
+        return (
+            f"Conversations: {len(conversations)}\n"
+            f"Therapy modes observed: {', '.join(sorted(last_modes))}\n"
+            f"Topics: {', '.join(sorted(topics)) if topics else 'None'}"
+        )
     
     def get_conversation_history(self, limit: int = 10) -> List[Dict]:
         """Get conversation history for current user"""

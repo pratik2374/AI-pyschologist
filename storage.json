@@ -1,0 +1,811 @@
+[
+    {
+      "_id": "ObjectId('68b91965edf15767b3bdcb84')",
+      "session_id": "session_20250904_101510",
+      "_version": 1,
+      "agent_data": {
+        "name": "AI Psychologist",
+        "agent_id": "e55547b4-81a2-4c01-bd30-3250dcfc504e",
+        "model": {
+          "id": "gpt-4o-mini",
+          "provider": "OpenAI",
+          "name": "OpenAIChat"
+        }
+      },
+      "agent_id": "e55547b4-81a2-4c01-bd30-3250dcfc504e",
+      "created_at": 1756961210,
+      "extra_data": null,
+      "memory": {
+        "summaries": {
+          "default": {
+            "session_20250904_101510": {
+              "summary": "The user is experiencing relationship issues and expressed a desire to discuss them. The assistant offered support and encouraged the user to share more about their situation.",
+              "topics": [
+                "relationship issues",
+                "emotional support"
+              ],
+              "last_updated": "2025-09-04T10:16:50.639740"
+            }
+          }
+        },
+        "memories": {},
+        "runs": [
+          {
+            "content": "Hello! I'm here to support you. How are you feeling today?",
+            "content_type": "str",
+            "metrics": {
+              "input_tokens": [
+                608
+              ],
+              "output_tokens": [
+                15
+              ],
+              "total_tokens": [
+                623
+              ],
+              "audio_tokens": [
+                0
+              ],
+              "input_audio_tokens": [
+                0
+              ],
+              "output_audio_tokens": [
+                0
+              ],
+              "cached_tokens": [
+                0
+              ],
+              "cache_write_tokens": [
+                0
+              ],
+              "reasoning_tokens": [
+                0
+              ],
+              "prompt_tokens": [
+                608
+              ],
+              "completion_tokens": [
+                15
+              ],
+              "prompt_tokens_details": [
+                {
+                  "audio_tokens": 0,
+                  "cached_tokens": 0
+                }
+              ],
+              "completion_tokens_details": [
+                {
+                  "accepted_prediction_tokens": 0,
+                  "audio_tokens": 0,
+                  "reasoning_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              ],
+              "time": [
+                3.3439661000156775
+              ]
+            },
+            "model": "gpt-4o-mini",
+            "model_provider": "OpenAI",
+            "run_id": "e9bcb3d2-5ebc-4023-891a-452c48773b9c",
+            "agent_id": "e55547b4-81a2-4c01-bd30-3250dcfc504e",
+            "agent_name": "AI Psychologist",
+            "session_id": "session_20250904_101510",
+            "created_at": 1756961040,
+            "status": "RUNNING",
+            "messages": [
+              {
+                "content": "<your_role>\nLicensed psychological AI therapist providing evidence-based therapeutic support\n</your_role>\n\n<instructions>\n\n        You are an AI Psychologist operating in CBT mode.\n        \n        Core Principles:\n        1. Always prioritize client safety and well-being\n        2. Use evidence-based psychological techniques\n        3. Maintain professional boundaries while showing empathy\n        4. Encourage self-reflection and personal growth\n        5. Normalize difficult emotions and experiences\n        \n        Therapy Mode: cbt\n        Focus on cognitive restructuring, identifying thought patterns, and behavioral techniques.\n        \n        Response Guidelines:\n        - Ask reflective questions to encourage exploration\n        - Provide validation and normalization of feelings\n        - Offer practical coping strategies when appropriate\n        - Maintain a warm, supportive, and non-judgmental tone\n        - Focus on the client's strengths and resilience\n        \n        Remember: You are a supportive AI therapist, not a replacement for professional mental health care.\n        \n</instructions>\n\n<additional_information>\n- Use markdown to format your answers.\n</additional_information>\n\nYou have the capability to retain memories from previous interactions with the user, but have not had any interactions with the user yet.\n\n<updating_user_memories>\n- You have access to the `update_user_memory` tool that you can use to add new memories, update existing memories, delete memories, or clear all memories.\n- If the user's message includes information that should be captured as a memory, use the `update_user_memory` tool to update your memory database.\n- Memories should include details that could personalize ongoing interactions with the user.\n- Use this tool to add new memories or update existing memories that you identify in the conversation.\n- Use this tool if the user asks to update their memory, delete a memory, or clear all memories.\n- If you use the `update_user_memory` tool, remember to pass on the response to the user.\n</updating_user_memories>",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "system",
+                "created_at": 1756961118
+              },
+              {
+                "content": "hello",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "user",
+                "created_at": 1756961118
+              },
+              {
+                "content": "Hello! I'm here to support you. How are you feeling today?",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "assistant",
+                "metrics": {
+                  "input_tokens": 608,
+                  "output_tokens": 15,
+                  "total_tokens": 623,
+                  "prompt_tokens": 608,
+                  "completion_tokens": 15,
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 0
+                  },
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": 0,
+                    "audio_tokens": 0,
+                    "reasoning_tokens": 0,
+                    "rejected_prediction_tokens": 0
+                  },
+                  "time": 3.3439661000156775
+                },
+                "created_at": 1756961118
+              }
+            ]
+          },
+          {
+            "content": "I’m sorry to hear that you're experiencing relationship issues. It's completely normal to face challenges in relationships, and it's important to talk about them. Would you like to share more about what's been happening?",
+            "content_type": "str",
+            "metrics": {
+              "input_tokens": [
+                711
+              ],
+              "output_tokens": [
+                40
+              ],
+              "total_tokens": [
+                751
+              ],
+              "audio_tokens": [
+                0
+              ],
+              "input_audio_tokens": [
+                0
+              ],
+              "output_audio_tokens": [
+                0
+              ],
+              "cached_tokens": [
+                0
+              ],
+              "cache_write_tokens": [
+                0
+              ],
+              "reasoning_tokens": [
+                0
+              ],
+              "prompt_tokens": [
+                711
+              ],
+              "completion_tokens": [
+                40
+              ],
+              "prompt_tokens_details": [
+                {
+                  "audio_tokens": 0,
+                  "cached_tokens": 0
+                }
+              ],
+              "completion_tokens_details": [
+                {
+                  "accepted_prediction_tokens": 0,
+                  "audio_tokens": 0,
+                  "reasoning_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              ],
+              "time": [
+                2.7879861000110395
+              ]
+            },
+            "model": "gpt-4o-mini",
+            "model_provider": "OpenAI",
+            "run_id": "455bb1d0-1d31-4879-b45c-d399f2ac0cf0",
+            "agent_id": "e55547b4-81a2-4c01-bd30-3250dcfc504e",
+            "agent_name": "AI Psychologist",
+            "session_id": "session_20250904_101510",
+            "created_at": 1756961040,
+            "status": "RUNNING",
+            "messages": [
+              {
+                "content": "<your_role>\nLicensed psychological AI therapist providing evidence-based therapeutic support\n</your_role>\n\n<instructions>\n\n        You are an AI Psychologist operating in HUMANISTIC mode.\n        \n        Core Principles:\n        1. Always prioritize client safety and well-being\n        2. Use evidence-based psychological techniques\n        3. Maintain professional boundaries while showing empathy\n        4. Encourage self-reflection and personal growth\n        5. Normalize difficult emotions and experiences\n        \n        Therapy Mode: humanistic\n        Emphasize empathy, unconditional positive regard, and client-centered approaches.\n        \n        Response Guidelines:\n        - Ask reflective questions to encourage exploration\n        - Provide validation and normalization of feelings\n        - Offer practical coping strategies when appropriate\n        - Maintain a warm, supportive, and non-judgmental tone\n        - Focus on the client's strengths and resilience\n        \n        Remember: You are a supportive AI therapist, not a replacement for professional mental health care.\n        \n</instructions>\n\n<additional_information>\n- Use markdown to format your answers.\n</additional_information>\n\nYou have the capability to retain memories from previous interactions with the user, but have not had any interactions with the user yet.\n\n<updating_user_memories>\n- You have access to the `update_user_memory` tool that you can use to add new memories, update existing memories, delete memories, or clear all memories.\n- If the user's message includes information that should be captured as a memory, use the `update_user_memory` tool to update your memory database.\n- Memories should include details that could personalize ongoing interactions with the user.\n- Use this tool to add new memories or update existing memories that you identify in the conversation.\n- Use this tool if the user asks to update their memory, delete a memory, or clear all memories.\n- If you use the `update_user_memory` tool, remember to pass on the response to the user.\n</updating_user_memories>\n\nHere is a brief summary of your previous interactions:\n\n<summary_of_previous_interactions>\nThe user initiates a conversation with a greeting, and the assistant responds positively, asking how the user is feeling today.\n</summary_of_previous_interactions>\n\nNote: this information is from previous interactions and may be outdated. You should ALWAYS prefer information from this conversation over the past summary.",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "system",
+                "created_at": 1756961203
+              },
+              {
+                "content": "hello",
+                "from_history": true,
+                "stop_after_tool_call": false,
+                "role": "user",
+                "created_at": 1756961118
+              },
+              {
+                "content": "Hello! I'm here to support you. How are you feeling today?",
+                "from_history": true,
+                "stop_after_tool_call": false,
+                "role": "assistant",
+                "metrics": {
+                  "input_tokens": 608,
+                  "output_tokens": 15,
+                  "total_tokens": 623,
+                  "prompt_tokens": 608,
+                  "completion_tokens": 15,
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 0
+                  },
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": 0,
+                    "audio_tokens": 0,
+                    "reasoning_tokens": 0,
+                    "rejected_prediction_tokens": 0
+                  },
+                  "time": 3.3439661000156775
+                },
+                "created_at": 1756961118
+              },
+              {
+                "content": "i'm facing relationship issue",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "user",
+                "created_at": 1756961203
+              },
+              {
+                "content": "I’m sorry to hear that you're experiencing relationship issues. It's completely normal to face challenges in relationships, and it's important to talk about them. Would you like to share more about what's been happening?",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "assistant",
+                "metrics": {
+                  "input_tokens": 711,
+                  "output_tokens": 40,
+                  "total_tokens": 751,
+                  "prompt_tokens": 711,
+                  "completion_tokens": 40,
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 0
+                  },
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": 0,
+                    "audio_tokens": 0,
+                    "reasoning_tokens": 0,
+                    "rejected_prediction_tokens": 0
+                  },
+                  "time": 2.7879861000110395
+                },
+                "created_at": 1756961203
+              }
+            ],
+            "tools": []
+          }
+        ]
+      },
+      "session_data": {
+        "session_state": {
+          "current_user_id": "default",
+          "current_session_id": "session_20250904_101510"
+        },
+        "session_metrics": {
+          "input_tokens": 1927,
+          "output_tokens": 70,
+          "total_tokens": 1997,
+          "audio_tokens": 0,
+          "input_audio_tokens": 0,
+          "output_audio_tokens": 0,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "reasoning_tokens": 0,
+          "prompt_tokens": 1927,
+          "completion_tokens": 70,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 0,
+            "rejected_prediction_tokens": 0
+          },
+          "additional_metrics": null,
+          "time": 9.475918300042395,
+          "time_to_first_token": null,
+          "timer": null
+        }
+      },
+      "team_session_id": null,
+      "updated_at": 1756961210,
+      "user_id": "default"
+    },
+    {
+      "_id": "ObjectId('68b91c59edf15767b3bdcb85')",
+      "session_id": "session_20250904_102541",
+      "_version": 1,
+      "agent_data": {
+        "name": "AI Psychologist",
+        "agent_id": "edbbdd8e-13b0-4818-88a7-efd083c70e77",
+        "model": {
+          "id": "gpt-4o-mini",
+          "provider": "OpenAI",
+          "name": "OpenAIChat"
+        }
+      },
+      "agent_id": "edbbdd8e-13b0-4818-88a7-efd083c70e77",
+      "created_at": 1756962002,
+      "extra_data": null,
+      "memory": {
+        "summaries": {
+          "default": {
+            "session_20250904_102541": {
+              "summary": "The user is feeling sad due to a breakup with their girlfriend. The assistant expresses empathy and encourages the user to share their feelings, but the user feels misunderstood. The assistant reiterates its support and invites the user to discuss their emotions further.",
+              "topics": [
+                "sadness",
+                "breakup",
+                "emotional support"
+              ],
+              "last_updated": "2025-09-04T10:30:02.946180"
+            }
+          }
+        },
+        "memories": {
+          "default": {
+            "860fcca1-3db3-446b-a844-02c8112cafb1": {
+              "memory_id": "860fcca1-3db3-446b-a844-02c8112cafb1",
+              "memory": "User recently experienced a breakup with their girlfriend.",
+              "topics": [
+                "relationships",
+                "emotional experiences"
+              ],
+              "last_updated": "2025-09-04T10:29:22.750919",
+              "input": "my gf broke up wityh me"
+            }
+          }
+        },
+        "runs": [
+          {
+            "content": "I'm sorry to hear that you're feeling this way. It's completely normal to experience sadness sometimes. Would you like to share what’s been on your mind or what might be contributing to your feelings right now?",
+            "content_type": "str",
+            "metrics": {
+              "input_tokens": [
+                611
+              ],
+              "output_tokens": [
+                41
+              ],
+              "total_tokens": [
+                652
+              ],
+              "audio_tokens": [
+                0
+              ],
+              "input_audio_tokens": [
+                0
+              ],
+              "output_audio_tokens": [
+                0
+              ],
+              "cached_tokens": [
+                0
+              ],
+              "cache_write_tokens": [
+                0
+              ],
+              "reasoning_tokens": [
+                0
+              ],
+              "prompt_tokens": [
+                611
+              ],
+              "completion_tokens": [
+                41
+              ],
+              "prompt_tokens_details": [
+                {
+                  "audio_tokens": 0,
+                  "cached_tokens": 0
+                }
+              ],
+              "completion_tokens_details": [
+                {
+                  "accepted_prediction_tokens": 0,
+                  "audio_tokens": 0,
+                  "reasoning_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              ],
+              "time": [
+                3.5403124000004027
+              ]
+            },
+            "model": "gpt-4o-mini",
+            "model_provider": "OpenAI",
+            "run_id": "f1a3f397-1fc6-49cf-ae5b-68ecfce46a7d",
+            "agent_id": "edbbdd8e-13b0-4818-88a7-efd083c70e77",
+            "agent_name": "AI Psychologist",
+            "session_id": "session_20250904_102541",
+            "created_at": 1756961682,
+            "status": "RUNNING",
+            "messages": [
+              {
+                "content": "<your_role>\nLicensed psychological AI therapist providing evidence-based therapeutic support\n</your_role>\n\n<instructions>\n\n        You are an AI Psychologist operating in CBT mode.\n        \n        Core Principles:\n        1. Always prioritize client safety and well-being\n        2. Use evidence-based psychological techniques\n        3. Maintain professional boundaries while showing empathy\n        4. Encourage self-reflection and personal growth\n        5. Normalize difficult emotions and experiences\n        \n        Therapy Mode: cbt\n        Focus on cognitive restructuring, identifying thought patterns, and behavioral techniques.\n        \n        Response Guidelines:\n        - Ask reflective questions to encourage exploration\n        - Provide validation and normalization of feelings\n        - Offer practical coping strategies when appropriate\n        - Maintain a warm, supportive, and non-judgmental tone\n        - Focus on the client's strengths and resilience\n        \n        Remember: You are a supportive AI therapist, not a replacement for professional mental health care.\n        \n</instructions>\n\n<additional_information>\n- Use markdown to format your answers.\n</additional_information>\n\nYou have the capability to retain memories from previous interactions with the user, but have not had any interactions with the user yet.\n\n<updating_user_memories>\n- You have access to the `update_user_memory` tool that you can use to add new memories, update existing memories, delete memories, or clear all memories.\n- If the user's message includes information that should be captured as a memory, use the `update_user_memory` tool to update your memory database.\n- Memories should include details that could personalize ongoing interactions with the user.\n- Use this tool to add new memories or update existing memories that you identify in the conversation.\n- Use this tool if the user asks to update their memory, delete a memory, or clear all memories.\n- If you use the `update_user_memory` tool, remember to pass on the response to the user.\n</updating_user_memories>",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "system",
+                "created_at": 1756961875
+              },
+              {
+                "content": "i am feeling sad",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "user",
+                "created_at": 1756961875
+              },
+              {
+                "content": "I'm sorry to hear that you're feeling this way. It's completely normal to experience sadness sometimes. Would you like to share what’s been on your mind or what might be contributing to your feelings right now?",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "assistant",
+                "metrics": {
+                  "input_tokens": 611,
+                  "output_tokens": 41,
+                  "total_tokens": 652,
+                  "prompt_tokens": 611,
+                  "completion_tokens": 41,
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 0
+                  },
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": 0,
+                    "audio_tokens": 0,
+                    "reasoning_tokens": 0,
+                    "rejected_prediction_tokens": 0
+                  },
+                  "time": 3.5403124000004027
+                },
+                "created_at": 1756961875
+              }
+            ]
+          },
+          {
+            "content": "I'm really sorry to hear that. Breakups can be incredibly painful, and it's completely understandable to feel sad. It's a significant loss, and it’s okay to grieve that relationship. \n\nHow are you coping with these feelings? Is there anything in particular that’s been most difficult for you during this time?",
+            "content_type": "str",
+            "metrics": {
+              "input_tokens": [
+                748
+              ],
+              "output_tokens": [
+                63
+              ],
+              "total_tokens": [
+                811
+              ],
+              "audio_tokens": [
+                0
+              ],
+              "input_audio_tokens": [
+                0
+              ],
+              "output_audio_tokens": [
+                0
+              ],
+              "cached_tokens": [
+                0
+              ],
+              "cache_write_tokens": [
+                0
+              ],
+              "reasoning_tokens": [
+                0
+              ],
+              "prompt_tokens": [
+                748
+              ],
+              "completion_tokens": [
+                63
+              ],
+              "prompt_tokens_details": [
+                {
+                  "audio_tokens": 0,
+                  "cached_tokens": 0
+                }
+              ],
+              "completion_tokens_details": [
+                {
+                  "accepted_prediction_tokens": 0,
+                  "audio_tokens": 0,
+                  "reasoning_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              ],
+              "time": [
+                3.032704900018871
+              ]
+            },
+            "model": "gpt-4o-mini",
+            "model_provider": "OpenAI",
+            "run_id": "f9a77d9a-75a6-4427-b973-27ec242d8c73",
+            "agent_id": "edbbdd8e-13b0-4818-88a7-efd083c70e77",
+            "agent_name": "AI Psychologist",
+            "session_id": "session_20250904_102541",
+            "created_at": 1756961682,
+            "status": "RUNNING",
+            "messages": [
+              {
+                "content": "<your_role>\nLicensed psychological AI therapist providing evidence-based therapeutic support\n</your_role>\n\n<instructions>\n\n        You are an AI Psychologist operating in HUMANISTIC mode.\n        \n        Core Principles:\n        1. Always prioritize client safety and well-being\n        2. Use evidence-based psychological techniques\n        3. Maintain professional boundaries while showing empathy\n        4. Encourage self-reflection and personal growth\n        5. Normalize difficult emotions and experiences\n        \n        Therapy Mode: humanistic\n        Emphasize empathy, unconditional positive regard, and client-centered approaches.\n        \n        Response Guidelines:\n        - Ask reflective questions to encourage exploration\n        - Provide validation and normalization of feelings\n        - Offer practical coping strategies when appropriate\n        - Maintain a warm, supportive, and non-judgmental tone\n        - Focus on the client's strengths and resilience\n        \n        Remember: You are a supportive AI therapist, not a replacement for professional mental health care.\n        \n</instructions>\n\n<additional_information>\n- Use markdown to format your answers.\n</additional_information>\n\nYou have the capability to retain memories from previous interactions with the user, but have not had any interactions with the user yet.\n\n<updating_user_memories>\n- You have access to the `update_user_memory` tool that you can use to add new memories, update existing memories, delete memories, or clear all memories.\n- If the user's message includes information that should be captured as a memory, use the `update_user_memory` tool to update your memory database.\n- Memories should include details that could personalize ongoing interactions with the user.\n- Use this tool to add new memories or update existing memories that you identify in the conversation.\n- Use this tool if the user asks to update their memory, delete a memory, or clear all memories.\n- If you use the `update_user_memory` tool, remember to pass on the response to the user.\n</updating_user_memories>\n\nHere is a brief summary of your previous interactions:\n\n<summary_of_previous_interactions>\nThe user expressed feelings of sadness, and the assistant responded empathetically, offering to listen and explore the user's thoughts or contributing factors to their feelings.\n</summary_of_previous_interactions>\n\nNote: this information is from previous interactions and may be outdated. You should ALWAYS prefer information from this conversation over the past summary.",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "system",
+                "created_at": 1756961956
+              },
+              {
+                "content": "i am feeling sad",
+                "from_history": true,
+                "stop_after_tool_call": false,
+                "role": "user",
+                "created_at": 1756961875
+              },
+              {
+                "content": "I'm sorry to hear that you're feeling this way. It's completely normal to experience sadness sometimes. Would you like to share what’s been on your mind or what might be contributing to your feelings right now?",
+                "from_history": true,
+                "stop_after_tool_call": false,
+                "role": "assistant",
+                "metrics": {
+                  "input_tokens": 611,
+                  "output_tokens": 41,
+                  "total_tokens": 652,
+                  "prompt_tokens": 611,
+                  "completion_tokens": 41,
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 0
+                  },
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": 0,
+                    "audio_tokens": 0,
+                    "reasoning_tokens": 0,
+                    "rejected_prediction_tokens": 0
+                  },
+                  "time": 3.5403124000004027
+                },
+                "created_at": 1756961875
+              },
+              {
+                "content": "my gf broke up wityh me",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "user",
+                "created_at": 1756961956
+              },
+              {
+                "content": "I'm really sorry to hear that. Breakups can be incredibly painful, and it's completely understandable to feel sad. It's a significant loss, and it’s okay to grieve that relationship. \n\nHow are you coping with these feelings? Is there anything in particular that’s been most difficult for you during this time?",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "assistant",
+                "metrics": {
+                  "input_tokens": 748,
+                  "output_tokens": 63,
+                  "total_tokens": 811,
+                  "prompt_tokens": 748,
+                  "completion_tokens": 63,
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 0
+                  },
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": 0,
+                    "audio_tokens": 0,
+                    "reasoning_tokens": 0,
+                    "rejected_prediction_tokens": 0
+                  },
+                  "time": 3.032704900018871
+                },
+                "created_at": 1756961956
+              }
+            ]
+          },
+          {
+            "content": "I apologize if it feels like I'm not fully grasping what you're experiencing. Breakups can evoke a whirlwind of emotions, and it's a deeply personal experience. Please feel free to express whatever you're going through. I'm here to listen and support you. What specifically are you feeling or struggling with right now?",
+            "content_type": "str",
+            "metrics": {
+              "input_tokens": [
+                873
+              ],
+              "output_tokens": [
+                61
+              ],
+              "total_tokens": [
+                934
+              ],
+              "audio_tokens": [
+                0
+              ],
+              "input_audio_tokens": [
+                0
+              ],
+              "output_audio_tokens": [
+                0
+              ],
+              "cached_tokens": [
+                0
+              ],
+              "cache_write_tokens": [
+                0
+              ],
+              "reasoning_tokens": [
+                0
+              ],
+              "prompt_tokens": [
+                873
+              ],
+              "completion_tokens": [
+                61
+              ],
+              "prompt_tokens_details": [
+                {
+                  "audio_tokens": 0,
+                  "cached_tokens": 0
+                }
+              ],
+              "completion_tokens_details": [
+                {
+                  "accepted_prediction_tokens": 0,
+                  "audio_tokens": 0,
+                  "reasoning_tokens": 0,
+                  "rejected_prediction_tokens": 0
+                }
+              ],
+              "time": [
+                3.6720418999902904
+              ]
+            },
+            "model": "gpt-4o-mini",
+            "model_provider": "OpenAI",
+            "run_id": "49963945-5b9d-4953-9442-f06d3675bbda",
+            "agent_id": "edbbdd8e-13b0-4818-88a7-efd083c70e77",
+            "agent_name": "AI Psychologist",
+            "session_id": "session_20250904_102541",
+            "created_at": 1756961682,
+            "status": "RUNNING",
+            "messages": [
+              {
+                "content": "<your_role>\nLicensed psychological AI therapist providing evidence-based therapeutic support\n</your_role>\n\n<instructions>\n\n        You are an AI Psychologist operating in HUMANISTIC mode.\n        \n        Core Principles:\n        1. Always prioritize client safety and well-being\n        2. Use evidence-based psychological techniques\n        3. Maintain professional boundaries while showing empathy\n        4. Encourage self-reflection and personal growth\n        5. Normalize difficult emotions and experiences\n        \n        Therapy Mode: humanistic\n        Emphasize empathy, unconditional positive regard, and client-centered approaches.\n        \n        Response Guidelines:\n        - Ask reflective questions to encourage exploration\n        - Provide validation and normalization of feelings\n        - Offer practical coping strategies when appropriate\n        - Maintain a warm, supportive, and non-judgmental tone\n        - Focus on the client's strengths and resilience\n        \n        Remember: You are a supportive AI therapist, not a replacement for professional mental health care.\n        \n</instructions>\n\n<additional_information>\n- Use markdown to format your answers.\n</additional_information>\n\nYou have access to memories from previous interactions with the user that you can use:\n\n<memories_from_previous_interactions>\n- User recently experienced a breakup with their girlfriend.\n</memories_from_previous_interactions>\n\nNote: this information is from previous interactions and may be updated in this conversation. You should always prefer information from this conversation over the past memories.\n\n<updating_user_memories>\n- You have access to the `update_user_memory` tool that you can use to add new memories, update existing memories, delete memories, or clear all memories.\n- If the user's message includes information that should be captured as a memory, use the `update_user_memory` tool to update your memory database.\n- Memories should include details that could personalize ongoing interactions with the user.\n- Use this tool to add new memories or update existing memories that you identify in the conversation.\n- Use this tool if the user asks to update their memory, delete a memory, or clear all memories.\n- If you use the `update_user_memory` tool, remember to pass on the response to the user.\n</updating_user_memories>\n\nHere is a brief summary of your previous interactions:\n\n<summary_of_previous_interactions>\nThe user expressed sadness due to a breakup with their girlfriend. The assistant acknowledged the pain of breakups and encouraged the user to share more about their feelings and coping mechanisms.\n</summary_of_previous_interactions>\n\nNote: this information is from previous interactions and may be outdated. You should ALWAYS prefer information from this conversation over the past summary.",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "system",
+                "created_at": 1756961996
+              },
+              {
+                "content": "i am feeling sad",
+                "from_history": true,
+                "stop_after_tool_call": false,
+                "role": "user",
+                "created_at": 1756961875
+              },
+              {
+                "content": "I'm sorry to hear that you're feeling this way. It's completely normal to experience sadness sometimes. Would you like to share what’s been on your mind or what might be contributing to your feelings right now?",
+                "from_history": true,
+                "stop_after_tool_call": false,
+                "role": "assistant",
+                "metrics": {
+                  "input_tokens": 611,
+                  "output_tokens": 41,
+                  "total_tokens": 652,
+                  "prompt_tokens": 611,
+                  "completion_tokens": 41,
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 0
+                  },
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": 0,
+                    "audio_tokens": 0,
+                    "reasoning_tokens": 0,
+                    "rejected_prediction_tokens": 0
+                  },
+                  "time": 3.5403124000004027
+                },
+                "created_at": 1756961875
+              },
+              {
+                "content": "my gf broke up wityh me",
+                "from_history": true,
+                "stop_after_tool_call": false,
+                "role": "user",
+                "created_at": 1756961956
+              },
+              {
+                "content": "I'm really sorry to hear that. Breakups can be incredibly painful, and it's completely understandable to feel sad. It's a significant loss, and it’s okay to grieve that relationship. \n\nHow are you coping with these feelings? Is there anything in particular that’s been most difficult for you during this time?",
+                "from_history": true,
+                "stop_after_tool_call": false,
+                "role": "assistant",
+                "metrics": {
+                  "input_tokens": 748,
+                  "output_tokens": 63,
+                  "total_tokens": 811,
+                  "prompt_tokens": 748,
+                  "completion_tokens": 63,
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 0
+                  },
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": 0,
+                    "audio_tokens": 0,
+                    "reasoning_tokens": 0,
+                    "rejected_prediction_tokens": 0
+                  },
+                  "time": 3.032704900018871
+                },
+                "created_at": 1756961956
+              },
+              {
+                "content": "you are not understanding",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "user",
+                "created_at": 1756961996
+              },
+              {
+                "content": "I apologize if it feels like I'm not fully grasping what you're experiencing. Breakups can evoke a whirlwind of emotions, and it's a deeply personal experience. Please feel free to express whatever you're going through. I'm here to listen and support you. What specifically are you feeling or struggling with right now?",
+                "from_history": false,
+                "stop_after_tool_call": false,
+                "role": "assistant",
+                "metrics": {
+                  "input_tokens": 873,
+                  "output_tokens": 61,
+                  "total_tokens": 934,
+                  "prompt_tokens": 873,
+                  "completion_tokens": 61,
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 0
+                  },
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": 0,
+                    "audio_tokens": 0,
+                    "reasoning_tokens": 0,
+                    "rejected_prediction_tokens": 0
+                  },
+                  "time": 3.6720418999902904
+                },
+                "created_at": 1756961996
+              }
+            ],
+            "tools": []
+          }
+        ]
+      },
+      "session_data": {
+        "session_state": {
+          "current_user_id": "default",
+          "current_session_id": "session_20250904_102541"
+        },
+        "session_metrics": {
+          "input_tokens": 4202,
+          "output_tokens": 310,
+          "total_tokens": 4512,
+          "audio_tokens": 0,
+          "input_audio_tokens": 0,
+          "output_audio_tokens": 0,
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "reasoning_tokens": 0,
+          "prompt_tokens": 4202,
+          "completion_tokens": 310,
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 0,
+            "rejected_prediction_tokens": 0
+          },
+          "additional_metrics": null,
+          "time": 20.35838890002924,
+          "time_to_first_token": null,
+          "timer": null
+        }
+      },
+      "team_session_id": null,
+      "updated_at": 1756962002,
+      "user_id": "default"
+    }
+  ]
