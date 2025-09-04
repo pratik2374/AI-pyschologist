@@ -3,9 +3,16 @@ from pydantic import BaseModel
 from ai_psychologist import AIPsychologist, Config , CrisisDetector
 from typing import Optional
 import os
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/")
+def root_page():
+    return FileResponse("static/index.html")
 
 
 class Query(BaseModel):
