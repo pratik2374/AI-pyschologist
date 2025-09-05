@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Psychologist · Calm, Helpful, Confidential</title>
+    <style>
+      /* ========= Design Tokens ========= */
+      :root{
+        --bg: #0b1020;            /* Deeper, calmer base */
+        --bg-accent: #0f172a;
+        --panel: rgba(13, 19, 33, .6);
+        --panel-strong: rgba(13, 19, 33, .85);
+        --text: #e7eefc;
+        --muted: #9fb2cc;
+        --accent: #22c55e;
+        --primary: #7cc1ff;
+        --primary-strong: #3b82f6;
+        --danger: #ef4444;
+        --bubble-user: rgba(30,41,59,.65);
+        --bubble-ai: rgba(13, 71, 48, .55);
+        --border: rgba(90,118,170,.25);
+        --ring: rgba(124,193,255,.25);
+        --shadow: 0 18px 60px rgba(2, 6, 23, .55);
+        --radius: 16px;
+      }
+
+      /* ========= Base ========= */
+      *{ box-sizing: border-box }
+      html, body { height: 100% }
+      body{
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(1200px 900px at 15% 10%, #0c1530 0%, transparent 40%),
+          radial-gradient(1000px 700px at 85% 15%, #0a1c2f 0%, transparent 35%),
+          linear-gradient(180deg, var(--bg) 0%, var(--bg-accent) 100%);
+      }
+
+      .app{
+        max-width: 960px;
+        margin: 0 auto;
+        min-height: 100dvh;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 18px;
+        padding: clamp(10px, 2vw, 20px);
+      }
+
+      /* ========= Header / Brand ========= */
+      header{
+        position: sticky; top: 0; z-index: 10;
+        display: flex; align-items: center; gap: 14px;
+        padding: 16px;
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius) + 4px);
+        background: linear-gradient(180deg, rgba(14,22,38,.85), rgba(10,16,30,.7));
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
+      }
+      .brand{ display: flex; align-items: center; gap: 12px }
+      .logo{
+        width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+        border: 1px solid rgba(124,193,255,.28);
+        background:
+          radial-gradient(120px 80px at 30% 20%, rgba(124,193,255,.25), rgba(34,197,94,.14)),
+          linear-gradient(180deg, rgba(15, 23, 42,.9), rgba(15, 23, 42,.6));
+        box-shadow: inset 0 0 22px rgba(124,193,255,.16);
+        font-size: 20px;
+      }
+      h1{
+        margin: 0;
+        font-size: clamp(18px, 2.4vw, 24px);
+        font-weight: 800; letter-spacing: .2px;
+        background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 80%);
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+        text-shadow: 0 0 22px rgba(124,193,255,.18);
+      }
+      .badge{ color: var(--muted); font-size: 12px; margin-top: 2px; display:block }
+
+      .controls{ margin-left: auto; display: flex; gap: 8px; align-items: center; }
+      .controls input{
+        width: clamp(160px, 22vw, 220px);
+        background: rgba(11,18,32,.65);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 10px 12px;
+        border-radius: 12px;
+        transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+      }
+      .controls input:focus{
+        outline: none;
+        border-color: rgba(124,193,255,.6);
+        box-shadow: 0 0 0 6px var(--ring);
+        background: rgba(11,18,32,.85);
+      }
+      .controls button{
+        background: linear-gradient(180deg, rgba(59,130,246,.18), rgba(30,64,175,.22));
+        color: #dbeafe;
+        border: 1px solid rgba(59,130,246,.4);
+        padding: 10px 12px; border-radius: 12px;
+        cursor: pointer; font-weight: 600;
+        box-shadow: 0 8px 22px rgba(30,64,175,.28);
+        transition: transform .06s ease, filter .18s ease, box-shadow .2s ease;
+      }
+      .controls button:hover{ filter: brightness(1.1) }
+      .controls button:active{ transform: translateY(1px) }
+
+      /* ========= Card / Chat ========= */
+      .container{
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .card{
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background:
+          linear-gradient(180deg, rgba(11,18,32,.85), rgba(11,18,32,.7));
+        box-shadow: var(--shadow), inset 0 0 40px rgba(13,19,33,.35);
+        overflow: clip;
+      }
+
+      .chat{
+        display: flex; flex-direction: column; gap: 14px;
+        padding: 18px 18px 10px 18px;
+        max-height: calc(100dvh - 230px);
+        overflow: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(124,193,255,.4) transparent;
+      }
+      .chat::-webkit-scrollbar{ width: 10px }
+      .chat::-webkit-scrollbar-thumb{
+        background: linear-gradient(180deg, rgba(124,193,255,.35), rgba(34,197,94,.28));
+        border-radius: 999px;
+      }
+
+      .muted{ color: var(--muted); font-size: 14px }
+      .msg{ display: grid; gap: 6px; animation: pop .15s ease-out }
+      @keyframes pop{ from{ transform: scale(.99); opacity:.7 } to{ transform: scale(1); opacity:1 } }
+
+      .from{
+        font-size: 12px; color: var(--muted);
+        display: inline-flex; align-items: center; gap: 8px;
+        opacity: .9;
+      }
+
+      .bubble{
+        position: relative;
+        padding: 12px 14px;
+        border-radius: 14px;
+        max-width: min(90%, 720px);
+        line-height: 1.55;
+        white-space: pre-wrap; word-wrap: break-word;
+        border: 1px solid rgba(255,255,255,.06);
+        backdrop-filter: blur(2px);
+      }
+
+      /* User bubble */
+      .user .bubble{
+        justify-self: end;
+        background: linear-gradient(180deg, rgba(31,41,55,.65), rgba(31,41,55,.45));
+        box-shadow: 0 8px 24px rgba(2,6,23,.35);
+      }
+
+      /* AI bubble */
+      .ai .bubble{
+        background: linear-gradient(180deg, rgba(11,60,40,.55), rgba(11,60,40,.4));
+        border: 1px solid rgba(34,197,94,.22);
+        box-shadow: 0 10px 30px rgba(2,6,23,.4);
+      }
+
+      .meta{ display: flex; gap: 8px; align-items: center; margin-top: 2px }
+      .pill{
+        font-size: 11px; padding: 4px 9px; border-radius: 999px;
+        border: 1px solid #2a4a3a; color: #95e3b9; background: rgba(34,197,94,.08);
+      }
+      .pill.danger{ color: #ffc4c4; border-color:#623; background: rgba(239,68,68,.1) }
+
+      .composer{
+        position: sticky; bottom: 0;
+        display: grid; grid-template-columns: 1fr auto; gap: 10px;
+        padding: 12px;
+        border-top: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(10,16,30,.86), rgba(10,16,30,.96));
+        backdrop-filter: blur(8px);
+      }
+      .composer input[type="text"]{
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(11,18,32,.72);
+        color: var(--text);
+        transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+      }
+      .composer input[type="text"]::placeholder{ color: #9fb2cc; opacity: .8 }
+      .composer input[type="text"]:focus{
+        outline: none;
+        border-color: rgba(124,193,255,.6);
+        box-shadow: 0 0 0 6px var(--ring);
+        background: rgba(11,18,32,.9);
+      }
+      .composer button{
+        padding: 12px 18px;
+        border-radius: 12px;
+        border: 1px solid rgba(59,130,246,.35);
+        background: linear-gradient(180deg, rgba(59,130,246,.25), rgba(30,64,175,.28));
+        color: #e6f0ff; cursor: pointer; font-weight: 700; letter-spacing: .2px;
+        box-shadow: 0 10px 26px rgba(30,64,175,.28);
+        transition: transform .06s ease, filter .2s ease, box-shadow .2s ease;
+      }
+      .composer button:hover{ filter: brightness(1.12) }
+      .composer button:active{ transform: translateY(1px) }
+
+      .error{
+        color: #fecaca;
+        background: #3a1212;
+        border: 1px solid #7f1d1d;
+        padding: 10px 12px;
+        border-radius: 10px;
+      }
+
+      .spinner{
+        width: 14px; height: 14px;
+        border: 2px solid #345b86; border-top-color: #a8d2ff;
+        border-radius: 50%; animation: spin 1s linear infinite;
+      }
+      @keyframes spin{ to{ transform: rotate(360deg) } }
+
+      /* ========= Subtle avatars (pure CSS, no JS changes) ========= */
+      .user .from::before,
+      .ai .from::before{
+        content: "";
+        width: 22px; height: 22px; border-radius: 50%;
+        display: inline-block; flex: 0 0 22px;
+        border: 1px solid rgba(255,255,255,.1);
+        box-shadow: inset 0 0 12px rgba(255,255,255,.12);
+      }
+      .user .from::before{
+        background: radial-gradient(circle at 30% 30%, #9fb2cc 0%, #3b4a66 70%);
+      }
+      .ai .from::before{
+        background: radial-gradient(circle at 30% 30%, #7fe3a9 0%, #1b4d39 70%);
+      }
+
+      /* ========= Responsive tweaks ========= */
+      @media (max-width: 640px){
+        header{ padding: 12px }
+        .controls input{ width: 140px }
+        .chat{ max-height: calc(100dvh - 240px) }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" role="application" aria-label="AI Psychologist Chat">
+      <header>
+        <div class="brand" aria-label="App brand">
+          <div class="logo" aria-hidden="true">🧠</div>
+          <div>
+            <h1>AI Psychologist</h1>
+            <span class="badge">Calm • Private • Multi-agent therapy assistant</span>
+          </div>
+        </div>
+        <div class="controls">
+          <input id="userId" placeholder="User ID (optional)" aria-label="User ID (optional)" />
+          <button id="saveUser" aria-label="Save user ID">Save</button>
+        </div>
+      </header>
+
+      <main class="container">
+        <section class="card" aria-live="polite" aria-busy="false">
+          <div id="chat" class="chat">
+            <div class="muted">
+              Welcome 👋 — this space is confidential. Your messages are processed by the backend at
+              <code>/psychologist</code>. You can press <kbd>Enter</kbd> to send.
+            </div>
+          </div>
+          <div class="composer">
+            <input id="input" type="text" placeholder="Type a thought, feeling, or question…" aria-label="Message input" />
+            <button id="send" aria-label="Send message">Send</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ========= Functional code unchanged ========= -->
+    <script>
+      const chat = document.getElementById('chat');
+      const input = document.getElementById('input');
+      const sendBtn = document.getElementById('send');
+      const userIdInput = document.getElementById('userId');
+      const saveUserBtn = document.getElementById('saveUser');
+
+      const API_URL = '/psychologist';
+
+      function appendMessage(role, text, meta = {}) {
+        const wrap = document.createElement('div');
+        wrap.className = `msg ${role}`;
+        const from = document.createElement('div');
+        from.className = 'from';
+        from.textContent = role === 'user' ? 'You' : 'AI Psychologist';
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.textContent = text;
+        wrap.appendChild(from);
+        wrap.appendChild(bubble);
+
+        if (role === 'ai') {
+          const metaRow = document.createElement('div');
+          metaRow.className = 'meta';
+          if (meta.therapy_mode) {
+            const pill = document.createElement('span');
+            pill.className = 'pill';
+            pill.textContent = meta.therapy_mode.toUpperCase();
+            metaRow.appendChild(pill);
+          }
+          if (meta.possible_crisis) {
+            const pill = document.createElement('span');
+            pill.className = 'pill danger';
+            pill.textContent = 'CRISIS';
+            metaRow.appendChild(pill);
+          }
+          wrap.appendChild(metaRow);
+        }
+
+        chat.appendChild(wrap);
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      function appendError(text) {
+        const div = document.createElement('div');
+        div.className = 'error';
+        div.textContent = text;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      function setLoading(isLoading) {
+        if (isLoading) {
+          const row = document.createElement('div');
+          row.className = 'msg ai';
+          row.id = 'loadingRow';
+          const from = document.createElement('div');
+          from.className = 'from';
+          from.innerHTML = '<span class="spinner"></span> Thinking...';
+          const bubble = document.createElement('div');
+          bubble.className = 'bubble';
+          bubble.textContent = '';
+          row.appendChild(from);
+          row.appendChild(bubble);
+          chat.appendChild(row);
+          chat.scrollTop = chat.scrollHeight;
+        } else {
+          const row = document.getElementById('loadingRow');
+          if (row) row.remove();
+        }
+      }
+
+      function getUserId() {
+        return userIdInput.value.trim() || localStorage.getItem('user_id') || 'default';
+      }
+
+      function saveUserId() {
+        const id = userIdInput.value.trim();
+        if (id) localStorage.setItem('user_id', id);
+      }
+
+      async function sendMessage() {
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+        appendMessage('user', text);
+        setLoading(true);
+        sendBtn.disabled = true;
+
+        try {
+          const res = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: text, user_id: getUserId() })
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            const msg = data?.detail || `Request failed (${res.status})`;
+            appendError(msg);
+          } else {
+            appendMessage('ai', data.response || '', {
+              therapy_mode: data.therapy_mode,
+              possible_crisis: data.possible_crisis
+            });
+          }
+        } catch (e) {
+          appendError(String(e));
+        } finally {
+          setLoading(false);
+          sendBtn.disabled = false;
+        }
+      }
+
+      // Wire up UI
+      sendBtn.addEventListener('click', sendMessage);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+      saveUserBtn.addEventListener('click', () => { saveUserId(); });
+
+      // Prefill user id from storage
+      userIdInput.value = localStorage.getItem('user_id') || '';
+    </script>
+  </body>
+</html>

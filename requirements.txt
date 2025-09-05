@@ -1,0 +1,7 @@
+agno
+openai
+rich
+langsmith
+python-dotenv
+fastapi
+uvicorn
