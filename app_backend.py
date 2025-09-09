@@ -1,10 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from ai_psychologist import AIPsychologist, Config , CrisisDetector
+from ai_psychologist import AIPsychologist, CrisisResponseAgent , TherapyModeDeterminer
 from typing import Optional
 import os
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+
 
 
 app = FastAPI()
@@ -44,16 +45,24 @@ def psychologist_endpoint(payload: Query):
             psychologist.start_session(payload.user_id or "default")
 
         
-        # Lightweight crisis check; if detected, return crisis guidance
-        lower_msg = message.lower()
-        possible_crisis = any(kw in lower_msg for kw in Config.CRISIS_KEYWORDS)
-        if possible_crisis:
-            crisis = CrisisDetector(Config.CRISIS_KEYWORDS)
-            return {"response": crisis.get_crisis_response(), "possible_crisis": True}
+        # Crisis pre-check using CrisisResponseAgent for consistency with ai_psychologist
+        crisis_agent = CrisisResponseAgent()
+        crisis_info = crisis_agent.detect_crisis(message)
+        if crisis_info.get("is_crisis"):
+            return {"response": crisis_agent.generate_crisis_response(message), "possible_crisis": True}
 
         # Otherwise, route to AI psychologist
         response_text = psychologist.process_message(message)
-        return {"response": response_text, "therapy_mode": psychologist.current_agent, "possible_crisis": False}
+        history = psychologist.memory_manager.get_recent_conversations(
+    user_id=psychologist.user_id,
+    limit=10
+)
+        mode = TherapyModeDeterminer().determine_therapy_mode(history, message)
+        return {
+            "response": response_text,
+            "therapy_mode": mode,
+            "possible_crisis": False
+        }
     except HTTPException:
         raise
     except Exception as exc:
