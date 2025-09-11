@@ -7,22 +7,25 @@
     <style>
       /* ========= Design Tokens ========= */
       :root{
-        --bg: #0b1020;            /* Deeper, calmer base */
-        --bg-accent: #0f172a;
-        --panel: rgba(13, 19, 33, .6);
-        --panel-strong: rgba(13, 19, 33, .85);
-        --text: #e7eefc;
-        --muted: #9fb2cc;
-        --accent: #22c55e;
-        --primary: #7cc1ff;
-        --primary-strong: #3b82f6;
-        --danger: #ef4444;
-        --bubble-user: rgba(30,41,59,.65);
-        --bubble-ai: rgba(13, 71, 48, .55);
-        --border: rgba(90,118,170,.25);
-        --ring: rgba(124,193,255,.25);
-        --shadow: 0 18px 60px rgba(2, 6, 23, .55);
-        --radius: 16px;
+        --bg: #2a1810;            /* Rich dark wood */
+        --bg-accent: #3d261a;
+        --panel: rgba(139, 69, 19, .15);
+        --panel-strong: rgba(139, 69, 19, .25);
+        --text: #f5e6d3;
+        --muted: #d4a574;
+        --accent: #ff6b35;        /* Warm ember orange */
+        --primary: #ffa500;       /* Golden warmth */
+        --primary-strong: #ff8c00;
+        --danger: #dc2626;
+        --bubble-user: rgba(101, 67, 33, .6);
+        --bubble-ai: rgba(139, 69, 19, .4);
+        --border: rgba(218, 165, 32, .3);
+        --ring: rgba(255, 165, 0, .25);
+        --shadow: 0 18px 60px rgba(20, 10, 5, .7);
+        --radius: 20px;
+        --wood: #8B4513;
+        --warm-glow: #ff4500;
+        --steam: rgba(255, 255, 255, .08);
       }
 
       /* ========= Base ========= */
@@ -30,12 +33,45 @@
       html, body { height: 100% }
       body{
         margin: 0;
-        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        font-family: 'Georgia', 'Times New Roman', serif;
         color: var(--text);
         background:
-          radial-gradient(1200px 900px at 15% 10%, #0c1530 0%, transparent 40%),
-          radial-gradient(1000px 700px at 85% 15%, #0a1c2f 0%, transparent 35%),
+          /* Steam effect */
+          radial-gradient(ellipse 800px 400px at 20% 80%, rgba(255, 255, 255, .03) 0%, transparent 50%),
+          radial-gradient(ellipse 600px 300px at 80% 20%, rgba(255, 255, 255, .02) 0%, transparent 50%),
+          /* Wood grain texture simulation */
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(139, 69, 19, .1) 2px,
+            rgba(139, 69, 19, .1) 4px
+          ),
+          /* Sauna glow */
+          radial-gradient(1200px 900px at 50% 100%, rgba(255, 69, 0, .08) 0%, transparent 60%),
+          radial-gradient(1000px 700px at 10% 10%, rgba(255, 140, 0, .05) 0%, transparent 50%),
+          /* Base gradient */
           linear-gradient(180deg, var(--bg) 0%, var(--bg-accent) 100%);
+        position: relative;
+      }
+
+      /* Animated steam effect */
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: 
+          radial-gradient(circle 200px at 15% 85%, rgba(255, 255, 255, .04) 0%, transparent 50%),
+          radial-gradient(circle 150px at 85% 15%, rgba(255, 255, 255, .03) 0%, transparent 50%),
+          radial-gradient(circle 100px at 70% 90%, rgba(255, 255, 255, .02) 0%, transparent 50%);
+        animation: steam 8s ease-in-out infinite alternate;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      @keyframes steam {
+        0% { opacity: 0.3; transform: translateY(0px) scale(1); }
+        100% { opacity: 0.1; transform: translateY(-10px) scale(1.1); }
       }
 
       .app{
@@ -46,65 +82,139 @@
         grid-template-rows: auto 1fr;
         gap: 18px;
         padding: clamp(10px, 2vw, 20px);
+        position: relative;
+        z-index: 2;
       }
 
       /* ========= Header / Brand ========= */
       header{
         position: sticky; top: 0; z-index: 10;
         display: flex; align-items: center; gap: 14px;
-        padding: 16px;
-        border: 1px solid var(--border);
-        border-radius: calc(var(--radius) + 4px);
-        background: linear-gradient(180deg, rgba(14,22,38,.85), rgba(10,16,30,.7));
-        backdrop-filter: blur(10px);
-        box-shadow: var(--shadow);
+        padding: 20px 24px;
+        border: 2px solid var(--border);
+        border-radius: calc(var(--radius) + 8px);
+        background: 
+          linear-gradient(145deg, rgba(139, 69, 19, .25) 0%, rgba(101, 67, 33, .2) 100%),
+          linear-gradient(180deg, rgba(42, 24, 16, .95), rgba(61, 38, 26, .9));
+        backdrop-filter: blur(12px);
+        box-shadow: 
+          var(--shadow),
+          inset 0 1px 0 rgba(255, 165, 0, .1),
+          0 0 40px rgba(255, 69, 0, .1);
+        position: relative;
       }
-      .brand{ display: flex; align-items: center; gap: 12px }
+
+      /* Wood grain effect on header */
+      header::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: 
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 1px,
+            rgba(139, 69, 19, .1) 1px,
+            rgba(139, 69, 19, .1) 3px
+          );
+        border-radius: inherit;
+        pointer-events: none;
+      }
+
+      .brand{ display: flex; align-items: center; gap: 16px; position: relative; z-index: 1; }
       .logo{
-        width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
-        border: 1px solid rgba(124,193,255,.28);
+        width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center;
+        border: 2px solid rgba(255, 165, 0, .4);
         background:
-          radial-gradient(120px 80px at 30% 20%, rgba(124,193,255,.25), rgba(34,197,94,.14)),
-          linear-gradient(180deg, rgba(15, 23, 42,.9), rgba(15, 23, 42,.6));
-        box-shadow: inset 0 0 22px rgba(124,193,255,.16);
-        font-size: 20px;
+          radial-gradient(circle at 30% 30%, rgba(255, 140, 0, .3) 0%, rgba(255, 69, 0, .1) 70%),
+          linear-gradient(145deg, rgba(139, 69, 19, .8), rgba(101, 67, 33, .6));
+        box-shadow: 
+          inset 0 0 25px rgba(255, 140, 0, .2),
+          0 8px 25px rgba(255, 69, 0, .15);
+        font-size: 24px;
+        animation: gentle-glow 3s ease-in-out infinite alternate;
       }
+
+      @keyframes gentle-glow {
+        0% { box-shadow: inset 0 0 25px rgba(255, 140, 0, .2), 0 8px 25px rgba(255, 69, 0, .15); }
+        100% { box-shadow: inset 0 0 30px rgba(255, 140, 0, .3), 0 8px 30px rgba(255, 69, 0, .25); }
+      }
+
       h1{
         margin: 0;
-        font-size: clamp(18px, 2.4vw, 24px);
-        font-weight: 800; letter-spacing: .2px;
-        background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 80%);
+        font-size: clamp(20px, 2.6vw, 28px);
+        font-weight: 700; 
+        letter-spacing: .5px;
+        background: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #ff4500 100%);
         -webkit-background-clip: text; background-clip: text; color: transparent;
-        text-shadow: 0 0 22px rgba(124,193,255,.18);
+        text-shadow: 0 0 30px rgba(255, 140, 0, .2);
+        font-family: 'Georgia', serif;
       }
-      .badge{ color: var(--muted); font-size: 12px; margin-top: 2px; display:block }
+      .badge{ 
+        color: var(--muted); 
+        font-size: 13px; 
+        margin-top: 3px; 
+        display:block;
+        font-style: italic;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+      }
 
-      .controls{ margin-left: auto; display: flex; gap: 8px; align-items: center; }
+      .controls{ 
+        margin-left: auto; 
+        display: flex; 
+        gap: 12px; 
+        align-items: center; 
+        position: relative; 
+        z-index: 1;
+      }
       .controls input{
-        width: clamp(160px, 22vw, 220px);
-        background: rgba(11,18,32,.65);
-        border: 1px solid var(--border);
+        width: clamp(170px, 24vw, 240px);
+        background: 
+          linear-gradient(145deg, rgba(139, 69, 19, .2), rgba(101, 67, 33, .15)),
+          rgba(42, 24, 16, .8);
+        border: 2px solid var(--border);
         color: var(--text);
-        padding: 10px 12px;
-        border-radius: 12px;
-        transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        padding: 12px 16px;
+        border-radius: 14px;
+        transition: all .3s ease;
+        font-family: inherit;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, .2);
       }
       .controls input:focus{
         outline: none;
-        border-color: rgba(124,193,255,.6);
-        box-shadow: 0 0 0 6px var(--ring);
-        background: rgba(11,18,32,.85);
+        border-color: rgba(255, 140, 0, .6);
+        box-shadow: 
+          0 0 0 6px var(--ring),
+          inset 0 2px 4px rgba(0, 0, 0, .2),
+          0 0 25px rgba(255, 140, 0, .1);
+        background: 
+          linear-gradient(145deg, rgba(139, 69, 19, .3), rgba(101, 67, 33, .2)),
+          rgba(42, 24, 16, .95);
       }
       .controls button{
-        background: linear-gradient(180deg, rgba(59,130,246,.18), rgba(30,64,175,.22));
-        color: #dbeafe;
-        border: 1px solid rgba(59,130,246,.4);
-        padding: 10px 12px; border-radius: 12px;
-        cursor: pointer; font-weight: 600;
-        box-shadow: 0 8px 22px rgba(30,64,175,.28);
-        transition: transform .06s ease, filter .18s ease, box-shadow .2s ease;
+        background: 
+          linear-gradient(145deg, rgba(255, 140, 0, .2), rgba(255, 69, 0, .25)),
+          linear-gradient(180deg, rgba(139, 69, 19, .4), rgba(101, 67, 33, .3));
+        color: #fff4e6;
+        border: 2px solid rgba(255, 140, 0, .5);
+        padding: 12px 18px; 
+        border-radius: 14px;
+        cursor: pointer; 
+        font-weight: 600;
+        font-family: inherit;
+        box-shadow: 
+          0 8px 25px rgba(255, 69, 0, .2),
+          inset 0 1px 0 rgba(255, 165, 0, .1);
+        transition: all .2s ease;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, .3);
       }
-      .controls button:hover{ filter: brightness(1.1) }
+      .controls button:hover{ 
+        filter: brightness(1.15); 
+        transform: translateY(-1px);
+        box-shadow: 
+          0 12px 35px rgba(255, 69, 0, .25),
+          inset 0 1px 0 rgba(255, 165, 0, .2);
+      }
       .controls button:active{ transform: translateY(1px) }
 
       /* ========= Card / Chat ========= */
@@ -113,141 +223,299 @@
         grid-template-columns: 1fr;
       }
       .card{
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
         border-radius: var(--radius);
         background:
-          linear-gradient(180deg, rgba(11,18,32,.85), rgba(11,18,32,.7));
-        box-shadow: var(--shadow), inset 0 0 40px rgba(13,19,33,.35);
+          /* Wood texture */
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 3px,
+            rgba(139, 69, 19, .08) 3px,
+            rgba(139, 69, 19, .08) 6px
+          ),
+          linear-gradient(180deg, rgba(139, 69, 19, .15), rgba(101, 67, 33, .12)),
+          linear-gradient(180deg, rgba(42, 24, 16, .95), rgba(61, 38, 26, .9));
+        box-shadow: 
+          var(--shadow), 
+          inset 0 0 60px rgba(139, 69, 19, .1),
+          inset 0 1px 0 rgba(255, 165, 0, .05);
         overflow: clip;
+        position: relative;
+      }
+
+      /* Subtle sauna heat shimmer effect */
+      .card::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: 
+          radial-gradient(circle 300px at 50% 100%, rgba(255, 69, 0, .03) 0%, transparent 70%);
+        animation: heat-shimmer 6s ease-in-out infinite alternate;
+        pointer-events: none;
+      }
+
+      @keyframes heat-shimmer {
+        0% { opacity: 0.3; }
+        100% { opacity: 0.1; }
       }
 
       .chat{
-        display: flex; flex-direction: column; gap: 14px;
-        padding: 18px 18px 10px 18px;
+        display: flex; flex-direction: column; gap: 16px;
+        padding: 24px 24px 16px 24px;
         max-height: calc(100dvh - 230px);
         overflow: auto;
         scrollbar-width: thin;
-        scrollbar-color: rgba(124,193,255,.4) transparent;
+        scrollbar-color: rgba(255, 140, 0, .4) transparent;
+        position: relative;
+        z-index: 1;
       }
-      .chat::-webkit-scrollbar{ width: 10px }
+      .chat::-webkit-scrollbar{ width: 12px }
       .chat::-webkit-scrollbar-thumb{
-        background: linear-gradient(180deg, rgba(124,193,255,.35), rgba(34,197,94,.28));
+        background: linear-gradient(180deg, rgba(255, 140, 0, .4), rgba(255, 69, 0, .3));
+        border-radius: 999px;
+        border: 1px solid rgba(139, 69, 19, .2);
+      }
+      .chat::-webkit-scrollbar-track{
+        background: rgba(139, 69, 19, .1);
         border-radius: 999px;
       }
 
-      .muted{ color: var(--muted); font-size: 14px }
-      .msg{ display: grid; gap: 6px; animation: pop .15s ease-out }
-      @keyframes pop{ from{ transform: scale(.99); opacity:.7 } to{ transform: scale(1); opacity:1 } }
+      .muted{ 
+        color: var(--muted); 
+        font-size: 15px;
+        text-align: center;
+        padding: 16px 20px;
+        background: 
+          linear-gradient(145deg, rgba(139, 69, 19, .1), rgba(101, 67, 33, .08)),
+          rgba(42, 24, 16, .3);
+        border-radius: 16px;
+        border: 1px solid rgba(218, 165, 32, .2);
+        box-shadow: inset 0 2px 8px rgba(0, 0, 0, .1);
+        font-style: italic;
+      }
+      .msg{ 
+        display: grid; 
+        gap: 8px; 
+        animation: pop .2s ease-out;
+        position: relative;
+      }
+      @keyframes pop{ 
+        from{ transform: scale(.98) translateY(5px); opacity:.6 } 
+        to{ transform: scale(1) translateY(0); opacity:1 } 
+      }
 
       .from{
-        font-size: 12px; color: var(--muted);
-        display: inline-flex; align-items: center; gap: 8px;
+        font-size: 13px; color: var(--muted);
+        display: inline-flex; align-items: center; gap: 10px;
         opacity: .9;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, .2);
       }
 
       .bubble{
         position: relative;
-        padding: 12px 14px;
-        border-radius: 14px;
-        max-width: min(90%, 720px);
-        line-height: 1.55;
+        padding: 16px 20px;
+        border-radius: 18px;
+        max-width: min(88%, 720px);
+        line-height: 1.6;
         white-space: pre-wrap; word-wrap: break-word;
-        border: 1px solid rgba(255,255,255,.06);
-        backdrop-filter: blur(2px);
+        border: 2px solid rgba(218, 165, 32, .15);
+        backdrop-filter: blur(3px);
+        font-size: 15px;
+        box-shadow: 0 8px 25px rgba(20, 10, 5, .3);
       }
 
-      /* User bubble */
+      /* User bubble - warmer wood tone */
       .user .bubble{
         justify-self: end;
-        background: linear-gradient(180deg, rgba(31,41,55,.65), rgba(31,41,55,.45));
-        box-shadow: 0 8px 24px rgba(2,6,23,.35);
+        background: 
+          linear-gradient(145deg, rgba(160, 82, 45, .4), rgba(139, 69, 19, .35)),
+          rgba(101, 67, 33, .6);
+        border-color: rgba(218, 165, 32, .25);
+        box-shadow: 
+          0 8px 30px rgba(20, 10, 5, .4),
+          inset 0 1px 0 rgba(255, 165, 0, .08);
       }
 
-      /* AI bubble */
+      /* AI bubble - deeper sauna wood */
       .ai .bubble{
-        background: linear-gradient(180deg, rgba(11,60,40,.55), rgba(11,60,40,.4));
-        border: 1px solid rgba(34,197,94,.22);
-        box-shadow: 0 10px 30px rgba(2,6,23,.4);
+        background: 
+          linear-gradient(145deg, rgba(139, 69, 19, .3), rgba(101, 67, 33, .25)),
+          rgba(139, 69, 19, .4);
+        border: 2px solid rgba(255, 140, 0, .2);
+        box-shadow: 
+          0 10px 35px rgba(20, 10, 5, .5),
+          inset 0 1px 0 rgba(255, 165, 0, .06);
       }
 
-      .meta{ display: flex; gap: 8px; align-items: center; margin-top: 2px }
+      .meta{ display: flex; gap: 10px; align-items: center; margin-top: 4px }
       .pill{
-        font-size: 11px; padding: 4px 9px; border-radius: 999px;
-        border: 1px solid #2a4a3a; color: #95e3b9; background: rgba(34,197,94,.08);
+        font-size: 11px; 
+        padding: 6px 12px; 
+        border-radius: 999px;
+        border: 1px solid rgba(255, 140, 0, .3); 
+        color: #ffd700; 
+        background: 
+          linear-gradient(145deg, rgba(255, 140, 0, .1), rgba(255, 69, 0, .08)),
+          rgba(139, 69, 19, .2);
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+        box-shadow: inset 0 1px 0 rgba(255, 165, 0, .1);
       }
-      .pill.danger{ color: #ffc4c4; border-color:#623; background: rgba(239,68,68,.1) }
+      .pill.danger{ 
+        color: #ffb3b3; 
+        border-color: rgba(220, 38, 38, .4); 
+        background: 
+          linear-gradient(145deg, rgba(220, 38, 38, .15), rgba(185, 28, 28, .12)),
+          rgba(127, 29, 29, .3);
+      }
 
       .composer{
         position: sticky; bottom: 0;
-        display: grid; grid-template-columns: 1fr auto; gap: 10px;
-        padding: 12px;
-        border-top: 1px solid var(--border);
-        background: linear-gradient(180deg, rgba(10,16,30,.86), rgba(10,16,30,.96));
-        backdrop-filter: blur(8px);
+        display: grid; grid-template-columns: 1fr auto; gap: 14px;
+        padding: 18px;
+        border-top: 2px solid var(--border);
+        background: 
+          /* Wood grain */
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(139, 69, 19, .06) 2px,
+            rgba(139, 69, 19, .06) 4px
+          ),
+          linear-gradient(180deg, rgba(61, 38, 26, .95), rgba(42, 24, 16, .98));
+        backdrop-filter: blur(10px);
+        box-shadow: 
+          0 -8px 25px rgba(20, 10, 5, .3),
+          inset 0 1px 0 rgba(255, 165, 0, .05);
+        position: relative;
+        z-index: 1;
       }
       .composer input[type="text"]{
-        padding: 14px 16px;
-        border-radius: 12px;
-        border: 1px solid var(--border);
-        background: rgba(11,18,32,.72);
+        padding: 16px 20px;
+        border-radius: 16px;
+        border: 2px solid var(--border);
+        background: 
+          linear-gradient(145deg, rgba(139, 69, 19, .15), rgba(101, 67, 33, .1)),
+          rgba(42, 24, 16, .8);
         color: var(--text);
-        transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        transition: all .3s ease;
+        font-family: inherit;
+        font-size: 15px;
+        box-shadow: inset 0 2px 8px rgba(0, 0, 0, .2);
       }
-      .composer input[type="text"]::placeholder{ color: #9fb2cc; opacity: .8 }
+      .composer input[type="text"]::placeholder{ 
+        color: #c19a6b; 
+        opacity: .8; 
+        font-style: italic;
+      }
       .composer input[type="text"]:focus{
         outline: none;
-        border-color: rgba(124,193,255,.6);
-        box-shadow: 0 0 0 6px var(--ring);
-        background: rgba(11,18,32,.9);
+        border-color: rgba(255, 140, 0, .7);
+        box-shadow: 
+          0 0 0 6px var(--ring),
+          inset 0 2px 8px rgba(0, 0, 0, .2),
+          0 0 30px rgba(255, 140, 0, .1);
+        background: 
+          linear-gradient(145deg, rgba(139, 69, 19, .25), rgba(101, 67, 33, .15)),
+          rgba(42, 24, 16, .95);
       }
       .composer button{
-        padding: 12px 18px;
-        border-radius: 12px;
-        border: 1px solid rgba(59,130,246,.35);
-        background: linear-gradient(180deg, rgba(59,130,246,.25), rgba(30,64,175,.28));
-        color: #e6f0ff; cursor: pointer; font-weight: 700; letter-spacing: .2px;
-        box-shadow: 0 10px 26px rgba(30,64,175,.28);
-        transition: transform .06s ease, filter .2s ease, box-shadow .2s ease;
+        padding: 14px 24px;
+        border-radius: 16px;
+        border: 2px solid rgba(255, 140, 0, .4);
+        background: 
+          linear-gradient(145deg, rgba(255, 140, 0, .25), rgba(255, 69, 0, .3)),
+          linear-gradient(180deg, rgba(139, 69, 19, .5), rgba(101, 67, 33, .4));
+        color: #fff4e6; 
+        cursor: pointer; 
+        font-weight: 700; 
+        letter-spacing: .3px;
+        font-family: inherit;
+        font-size: 15px;
+        box-shadow: 
+          0 10px 30px rgba(255, 69, 0, .25),
+          inset 0 1px 0 rgba(255, 165, 0, .15);
+        transition: all .2s ease;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, .3);
       }
-      .composer button:hover{ filter: brightness(1.12) }
-      .composer button:active{ transform: translateY(1px) }
+      .composer button:hover{ 
+        filter: brightness(1.2);
+        transform: translateY(-2px);
+        box-shadow: 
+          0 15px 40px rgba(255, 69, 0, .3),
+          inset 0 1px 0 rgba(255, 165, 0, .2);
+      }
+      .composer button:active{ transform: translateY(0px) }
 
       .error{
-        color: #fecaca;
-        background: #3a1212;
-        border: 1px solid #7f1d1d;
-        padding: 10px 12px;
-        border-radius: 10px;
+        color: #ffcdd2;
+        background: 
+          linear-gradient(145deg, rgba(183, 28, 28, .2), rgba(127, 29, 29, .15)),
+          rgba(58, 18, 18, .8);
+        border: 2px solid rgba(239, 68, 68, .4);
+        padding: 14px 18px;
+        border-radius: 14px;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, .2);
       }
 
       .spinner{
-        width: 14px; height: 14px;
-        border: 2px solid #345b86; border-top-color: #a8d2ff;
-        border-radius: 50%; animation: spin 1s linear infinite;
+        width: 16px; height: 16px;
+        border: 2px solid rgba(139, 69, 19, .3); 
+        border-top-color: #ffa500;
+        border-radius: 50%; 
+        animation: spin 1s linear infinite;
       }
       @keyframes spin{ to{ transform: rotate(360deg) } }
 
-      /* ========= Subtle avatars (pure CSS, no JS changes) ========= */
+      /* ========= Enhanced avatars with sauna theme ========= */
       .user .from::before,
       .ai .from::before{
         content: "";
-        width: 22px; height: 22px; border-radius: 50%;
-        display: inline-block; flex: 0 0 22px;
-        border: 1px solid rgba(255,255,255,.1);
-        box-shadow: inset 0 0 12px rgba(255,255,255,.12);
+        width: 26px; height: 26px; border-radius: 50%;
+        display: inline-block; flex: 0 0 26px;
+        border: 2px solid rgba(255, 165, 0, .2);
+        box-shadow: 
+          inset 0 0 15px rgba(255, 140, 0, .15),
+          0 2px 8px rgba(20, 10, 5, .3);
       }
       .user .from::before{
-        background: radial-gradient(circle at 30% 30%, #9fb2cc 0%, #3b4a66 70%);
+        background: 
+          radial-gradient(circle at 35% 30%, #d4a574 0%, #8B4513 60%, #654321 100%);
       }
       .ai .from::before{
-        background: radial-gradient(circle at 30% 30%, #7fe3a9 0%, #1b4d39 70%);
+        background: 
+          radial-gradient(circle at 35% 30%, #ffa500 0%, #ff8c00 40%, #8B4513 80%);
+        animation: ai-glow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes ai-glow {
+        0% { box-shadow: inset 0 0 15px rgba(255, 140, 0, .15), 0 2px 8px rgba(20, 10, 5, .3); }
+        100% { box-shadow: inset 0 0 20px rgba(255, 140, 0, .25), 0 2px 12px rgba(255, 69, 0, .2); }
       }
 
       /* ========= Responsive tweaks ========= */
       @media (max-width: 640px){
-        header{ padding: 12px }
-        .controls input{ width: 140px }
-        .chat{ max-height: calc(100dvh - 240px) }
+        header{ padding: 16px }
+        .controls input{ width: 150px }
+        .chat{ max-height: calc(100dvh - 240px); padding: 18px; }
+        .composer { padding: 14px; }
+        h1 { font-size: 22px; }
+        .bubble { padding: 14px 16px; }
+      }
+
+      /* ========= Additional sauna ambiance ========= */
+      @media (prefers-reduced-motion: no-preference) {
+        .app {
+          animation: subtle-warmth 10s ease-in-out infinite alternate;
+        }
+        
+        @keyframes subtle-warmth {
+          0% { filter: brightness(1) hue-rotate(0deg); }
+          100% { filter: brightness(1.02) hue-rotate(2deg); }
+        }
       }
     </style>
   </head>
@@ -310,15 +578,21 @@
           metaRow.className = 'meta';
           if (meta.therapy_mode) {
             const pill = document.createElement('span');
-            pill.className = 'pill';
+            pill.className = `pill ${meta.therapy_mode.toLowerCase()}`;
             pill.textContent = meta.therapy_mode.toUpperCase();
             metaRow.appendChild(pill);
+            
+            // Add therapy mode class to the message wrapper for styling
+            wrap.classList.add(meta.therapy_mode.toLowerCase());
           }
           if (meta.possible_crisis) {
             const pill = document.createElement('span');
             pill.className = 'pill danger';
             pill.textContent = 'CRISIS';
             metaRow.appendChild(pill);
+            
+            // Add crisis class for special styling
+            wrap.classList.add('crisis');
           }
           wrap.appendChild(metaRow);
         }
@@ -409,6 +683,30 @@
 
       // Prefill user id from storage
       userIdInput.value = localStorage.getItem('user_id') || '';
+
+      // Demo function to test different therapy modes (for testing purposes)
+      function testTherapyModes() {
+        const modes = [
+          { mode: 'cognitive', text: 'This is a cognitive therapy response example.', crisis: false },
+          { mode: 'behavioral', text: 'This is a behavioral therapy response example.', crisis: false },
+          { mode: 'psychodynamic', text: 'This is a psychodynamic therapy response example.', crisis: false },
+          { mode: 'humanistic', text: 'This is a humanistic therapy response example.', crisis: false },
+          { mode: 'supportive', text: 'This is a supportive counseling response example.', crisis: false },
+          { mode: 'crisis', text: 'This is a crisis intervention response example.', crisis: true }
+        ];
+
+        modes.forEach((example, index) => {
+          setTimeout(() => {
+            appendMessage('ai', example.text, {
+              therapy_mode: example.mode,
+              possible_crisis: example.crisis
+            });
+          }, index * 1000);
+        });
+      }
+
+      // Uncomment the line below to test therapy mode colors on page load
+      // testTherapyModes();
     </script>
   </body>
 </html>
