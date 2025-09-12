@@ -29,7 +29,6 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 from rich.text import Text
 from rich.table import Table
-
 from config import Config
 
 console = Console()

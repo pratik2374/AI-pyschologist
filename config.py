@@ -1,16 +1,15 @@
 import os
 from typing import Literal
-from dotenv import load_dotenv
+from dotenv import load_dotenv , find_dotenv
 
 # Load environment variables
-load_dotenv()
+load_dotenv(find_dotenv())
 
 class Config:
     """Configuration for the Psychological AI Agent App"""
     
     # OpenAI API Configuration
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    
     # App Configuration
     THERAPY_MODE = os.getenv("THERAPY_MODE", "cbt")
     ENABLE_SAFEGUARDS = os.getenv("ENABLE_SAFEGUARDS", "true").lower() == "true"
