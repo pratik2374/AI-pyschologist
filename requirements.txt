@@ -1,4 +1,4 @@
-agno>=0.6.0
+agno==1.8.4
 openai>=1.40.0
 rich>=13.7.1
 python-dotenv>=1.0.1
