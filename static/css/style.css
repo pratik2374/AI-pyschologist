@@ -47,19 +47,152 @@ body {
     background: var(--light-bg);
     color: var(--text-primary);
     line-height: 1.6;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 .app-container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
     max-width: 1200px;
     margin: 0 auto;
     background: var(--light-surface);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     border-radius: var(--radius);
     overflow: hidden;
+}
+
+/* Main area with optional sidebar */
+.main-area {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+}
+
+.sidebar {
+    width: 260px;
+    border-right: 2px solid var(--light-border);
+    background: var(--light-surface);
+    display: flex;
+    flex-direction: column;
+    min-width: 220px;
+}
+
+.sidebar-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--light-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.sidebar-header h3 {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.sidebar-btn {
+    border: 1px solid var(--light-border);
+    background: var(--light-bg);
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.sidebar-btn:hover {
+    background: rgba(99, 102, 241, 0.08);
+    border-color: var(--primary-color);
+    color: var(--text-primary);
+}
+
+.session-list {
+    padding: 0.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.session-item {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.6rem;
+    margin: 0.25rem 0;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.session-item:hover {
+    background: rgba(99, 102, 241, 0.06);
+    border-color: rgba(99, 102, 241, 0.25);
+    color: var(--text-primary);
+}
+
+.session-item.active {
+    border-color: rgba(99, 102, 241, 0.45);
+    background: rgba(99, 102, 241, 0.10);
+    color: var(--text-primary);
+}
+
+.session-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid rgba(99, 102, 241, 0.35);
+    flex-shrink: 0;
+}
+
+.session-item.active .session-dot {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.session-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+}
+
+.session-title {
+    font-size: 0.85rem;
+    color: inherit;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.session-time {
+    font-size: 0.72rem;
+    color: var(--text-light);
+}
+
+/* Collapsed sidebar (Gemini-style narrow rail) */
+.sidebar-collapsed .sidebar {
+    width: 56px;
+}
+
+.sidebar-collapsed .sidebar-header h3,
+.sidebar-collapsed .sidebar-header .sidebar-btn {
+    display: none;
+}
+
+.sidebar-collapsed .session-meta {
+    display: none;
+}
+
+.sidebar-collapsed .session-list {
+    padding-inline: 0.2rem;
 }
 
 /* Header */
@@ -133,7 +266,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg '%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     opacity: 0.1;
 }
 
@@ -186,8 +319,15 @@ body {
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
 }
 
 .welcome-content h2 {
@@ -240,15 +380,18 @@ body {
     overflow-y: auto;
     padding: 2rem;
     background: var(--light-bg);
-    background-image: 
+    background-image:
         radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
 }
 
 .messages-container::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    display: none;
+    /* Chrome/Safari */
 }
 
 .messages {
@@ -323,8 +466,13 @@ body {
 }
 
 @keyframes badgePop {
-    0% { transform: scale(0); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .message.user .therapy-mode-badge {
@@ -378,9 +526,13 @@ body {
 }
 
 @keyframes typing {
-    0%, 60%, 100% {
+
+    0%,
+    60%,
+    100% {
         transform: translateY(0);
     }
+
     30% {
         transform: translateY(-10px);
     }
@@ -409,7 +561,17 @@ body {
     font-size: 1rem;
     resize: none;
     max-height: 120px;
+    overflow-y: auto;
     transition: var(--transition);
+}
+
+#messageInput::-webkit-scrollbar {
+    display: none;
+}
+
+#messageInput {
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 #messageInput:focus {
@@ -551,6 +713,7 @@ body {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -562,6 +725,7 @@ body {
         opacity: 0;
         transform: scale(0.9);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -570,35 +734,39 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+
     .app-info {
         padding: 0.75rem 1rem;
         font-size: 0.8rem;
     }
-    
+
     .header {
         padding: 1rem;
     }
-    
+
     .logo h1 {
         font-size: 1.25rem;
     }
-    
+
     .welcome-content h2 {
         font-size: 1.5rem;
     }
-    
+
     .quick-prompts {
         grid-template-columns: 1fr;
     }
-    
+
     .messages-container {
         padding: 1rem;
     }
-    
+
     .message-content {
         max-width: 85%;
     }
-    
+
     .input-area {
         padding: 1rem;
     }

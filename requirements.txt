@@ -5,4 +5,5 @@ python-dotenv>=1.0.1
 pymongo[srv]>=4.7.3
 sqlalchemy>=2.0.31
 django>=5.0.0
+bcrypt>=4.2.0
 

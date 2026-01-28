@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
     'psychologist_app',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -37,6 +38,16 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'ai_psychologist_django.urls'
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
+}
+
 
 TEMPLATES = [
     {
