@@ -2,154 +2,132 @@
 <html lang="en">
 
 <head>
-       
     <meta charset="UTF-8">
-       
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>AI Psychologist - Your Mental Health Companion</title>
-       
+    <title>AI Psychologist - Your Mental Health Companion</title>
     <link rel="stylesheet" href="static/css/style.css">
-       
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300 ;400;500;600&display=swap" rel="stylesheet">
-       
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css ">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Minimal overrides needed if CSS isn't fully refactored yet */
+        .app-container.sidebar-collapsed .sidebar { margin-left: -280px; } 
+        /* Since we removed the sidebar functionality mostly, we can just hide it or ensure main-area takes full width */
+        .main-area { display: flex; flex: 1; overflow: hidden; justify-content: center;}
+        .chat-container { width: 100%; max-width: 900px; display: flex; flex-direction: column; height: 100%; }
+        .sidebar { display: none !important; } /* Force hide sidebar */
+    </style>
 </head>
 
 <body>
-        <div class="app-container">
-                <!-- Header -->
-                <header class="header">
-                        <div class="header-content">
-                                <div class="logo">
-                                        <i class="fas fa-brain"></i>
-                                        <h1>AI Psychologist</h1>
-                                    </div>
-                                <div class="header-actions">
-                                        <a class="btn-icon" href="/static/sessions.html" title="My sessions"
-                        style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">
-                                                <i class="fas fa-list"></i>
-                                            </a>
-                                        <button class="btn-icon" id="logoutBtn" title="Logout">
-                                                <i class="fas fa-right-from-bracket"></i>
-                                            </button>
-                                        <button class="btn-icon" id="clearChat" title="Clear chat">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        <button class="btn-icon" id="themeToggle" title="Toggle theme">
-                                                <i class="fas fa-moon"></i>
-                                            </button>
-                                    </div>
-                            </div>
-                    </header>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <h1>AI Psychologist</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" id="clearChat" title="Clear chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="btn-icon" id="themeToggle" title="Toggle theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
 
-                <!-- App Info -->
-                <div class="app-info">
-                        <div class="app-info-content">
-                                <p><strong>Your AI Mental Health Companion:</strong> Confidential support available 24/7
-                </p>
-                                <p>Holistic Mental Wellness • CBT Skills • Psychoanalytic Insight • Humanistic Growth
-                </p>
-                            </div>
-                    </div>
+        <!-- App Info -->
+        <div class="app-info">
+            <div class="app-info-content">
+                <p><strong>Your AI Mental Health Companion:</strong> Confidential support available 24/7</p>
+                <p>Holistic Mental Wellness • CBT Skills • Psychoanalytic Insight • Humanistic Growth</p>
+            </div>
+        </div>
 
-                <div class="main-area">
-                        <!-- Sidebar -->
-                        <aside class="sidebar">
-                                <div class="sidebar-header">
-                                        <h3>Sessions</h3>
-                                        <button class="sidebar-btn" id="newSessionBtn" title="New session">New</button>
-                                    </div>
-                                <div class="session-list" id="sessionList">
-                                        <!-- filled by JS -->
-                                    </div>
-                            </aside>
+        <div class="main-area">
+            <!-- Chat Container -->
+            <main class="chat-container">
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-content">
+                        <div class="welcome-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h2>Welcome to Your Safe Space</h2>
+                        <p>I'm here to listen and support you. How are you feeling today?</p>
+                        <div class="quick-prompts">
+                            <button class="quick-prompt" data-prompt="I'm feeling anxious">
+                                <i class="fas fa-cloud-rain"></i>
+                                Feeling Anxious
+                            </button>
+                            <button class="quick-prompt" data-prompt="I'm having trouble sleeping">
+                                <i class="fas fa-moon"></i>
+                                Sleep Issues
+                            </button>
+                            <button class="quick-prompt" data-prompt="I need help with stress">
+                                <i class="fas fa-bolt"></i>
+                                Stressed
+                            </button>
+                            <button class="quick-prompt" data-prompt="I want to talk about relationships">
+                                <i class="fas fa-heart"></i>
+                                Relationships
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-                        <!-- Chat Container -->
-                        <main class="chat-container">
-                                <div class="welcome-screen" id="welcomeScreen">
-                                    <div class="welcome-content">
-                                            <div class="welcome-icon">
-                                                    <i class="fas fa-heart"></i>
-                                                </div>
-                                            <h2>Welcome to Your Safe Space</h2>
-                                            <p>I'm here to listen and support you. How are you feeling today?</p>
-                                            <div class="quick-prompts">
-                                                    <button class="quick-prompt" data-prompt="I'm feeling anxious">
-                                                            <i class="fas fa-cloud-rain"></i>
-                                                            Feeling Anxious
-                                                        </button>
-                                                    <button class="quick-prompt"
-                                data-prompt="I'm having trouble sleeping">
-                                                            <i class="fas fa-moon"></i>
-                                                            Sleep Issues
-                                                        </button>
-                                                    <button class="quick-prompt" data-prompt="I need help with stress">
-                                                            <i class="fas fa-bolt"></i>
-                                                            Stressed
-                                                        </button>
-                                                    <button class="quick-prompt"
-                                data-prompt="I want to talk about relationships">
-                                                            <i class="fas fa-heart"></i>
-                                                            Relationships
-                                                        </button>
-                                                </div>
-                                        </div>
-                                </div>
+                <div class="messages-container" id="messagesContainer" style="display: none;">
+                    <div class="messages" id="messages"></div>
+                </div>
 
-                            <div class="messages-container" id="messagesContainer" style="display: none;">
-                                    <div class="messages" id="messages"></div>
-                                </div>
+                <!-- Typing Indicator -->
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span class="typing-text">AI Psychologist is typing...</span>
+                </div>
+            </main>
+        </div>
 
-                            <!-- Typing Indicator -->
-                            <div class="typing-indicator" id="typingIndicator" style="display: none;">
-                                    <div class="typing-dots">
-                                            <span></span>
-                                            <span></span>
-                                            <span></span>
-                                        </div>
-                                    <span class="typing-text">AI Psychologist is typing...</span>
-                                </div>
-                            </main>
-                    </div>
+        <!-- Input Area -->
+        <footer class="input-area">
+            <div class="input-container">
+                <textarea id="messageInput" placeholder="Type your message here..." rows="1" maxlength="1000"></textarea>
+                <button class="btn-send" id="sendButton" disabled>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="input-info">
+                <span class="char-count" id="charCount">0 / 1000</span>
+                <span class="disclaimer">
+                    <i class="fas fa-shield-alt"></i>
+                    This is not a substitute for professional medical advice
+                </span>
+            </div>
+        </footer>
 
-                <!-- Input Area -->
-                <footer class="input-area">
-                        <div class="input-container">
-                                <textarea                     id="messageInput"                    
-                    placeholder="Type your message here..."                     rows="1"                    
-                    maxlength="1000"                ></textarea>
-                                <button class="btn-send" id="sendButton" disabled>
-                                        <i class="fas fa-paper-plane"></i>
-                                    </button>
-                            </div>
-                        <div class="input-info">
-                                <span class="char-count" id="charCount">0 / 1000</span>
-                                <span class="disclaimer">
-                                        <i class="fas fa-shield-alt"></i>
-                                        This is not a substitute for professional medical advice
-                                    </span>
-                            </div>
-                    </footer>
+        <!-- Crisis Modal -->
+        <div class="modal" id="crisisModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Important Notice</h3>
+                </div>
+                <div class="modal-body">
+                    <p id="crisisMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="crisisOk">I Understand</button>
+                    <button class="btn btn-secondary" id="crisisResources">Get Resources</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                <!-- Crisis Modal -->
-                <div class="modal" id="crisisModal" style="display: none;">
-                        <div class="modal-content">
-                                <div class="modal-header">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        <h3>Important Notice</h3>
-                                    </div>
-                                <div class="modal-body">
-                                        <p id="crisisMessage"></p>
-                                    </div>
-                                <div class="modal-footer">
-                                        <button class="btn btn-primary" id="crisisOk">I Understand</button>
-                                        <button class="btn btn-secondary" id="crisisResources">Get Resources</button>
-                                    </div>
-                            </div>
-                    </div>
-            </div>
-
-       
     <script src="static/js/chat.js"></script>
 </body>
 

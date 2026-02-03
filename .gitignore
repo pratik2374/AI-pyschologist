@@ -1,8 +1,11 @@
 .env
 __pycache__/ai_psychologist.cpython-312.pyc
 __pycache__/config.cpython-312.pyc
+psychologist_app/__pycache__/
 agno_info.txt
-
+psychologist_app/__pycache__/
 requirments.txt
 fastapi_info.txt
 .venv/
+__pycache__/app_backend.cpython-312.pyc
+ai_psychologist_django/__pycache__/

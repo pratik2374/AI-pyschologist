@@ -2,13 +2,26 @@ class ChatApp {
     constructor() {
         this.messages = [];
         this.isTyping = false;
-        this.userId = null;
-        this.currentSessionId = null;
+
+        // Generate or retrieve session ID from memory (or localStorage if we wanted persistence across refresh, 
+        // but user asked for no cookies, so purely in-memory session is safest interpretation, 
+        // OR we use localStorage which is not a cookie but persists. 
+        // Let's use sessionStorage so it survives refresh in tab but clears on close, or just a new one every load.)
+        // Given "remove cookies", often implies "no tracking". 
+        // We will generate a new session ID every time the page loads.
+        this.sessionId = this.generateUUID();
 
         this.initializeElements();
         this.attachEventListeners();
         this.loadTheme();
-        this.bootstrapAuth();
+    }
+
+    generateUUID() {
+        // specific UUID generator
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
     }
 
     initializeElements() {
@@ -24,10 +37,6 @@ class ChatApp {
             crisisMessage: document.getElementById('crisisMessage'),
             clearChat: document.getElementById('clearChat'),
             themeToggle: document.getElementById('themeToggle'),
-            sessionList: document.getElementById('sessionList'),
-            newSessionBtn: document.getElementById('newSessionBtn'),
-            sidebarToggle: document.getElementById('sidebarToggle'),
-            appContainer: document.getElementById('appContainer')
         };
     }
 
@@ -59,7 +68,7 @@ class ChatApp {
         });
 
         document.getElementById('crisisResources').addEventListener('click', () => {
-            window.open('https://www.crisistextline.org/ ', '_blank');
+            window.open('https://www.crisistextline.org/', '_blank');
             this.elements.crisisModal.style.display = 'none';
         });
 
@@ -69,35 +78,6 @@ class ChatApp {
         // Theme toggle
         this.elements.themeToggle.addEventListener('click', () => this.toggleTheme());
 
-        // Sidebar toggle (Gemini-like)
-        if (this.elements.sidebarToggle && this.elements.appContainer) {
-            this.elements.sidebarToggle.addEventListener('click', () => {
-                this.elements.appContainer.classList.toggle('sidebar-collapsed');
-            });
-        }
-
-        // Logout (optional button on main page)
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', async () => {
-                await fetch('/api/logout', { method: 'POST' });
-                window.location.href = '/static/login.html';
-            });
-        }
-
-        // New session
-        if (this.elements.newSessionBtn) {
-            this.elements.newSessionBtn.addEventListener('click', async () => {
-                const res = await fetch('/api/sessions/start', { method: 'POST' });
-                if (res.ok) {
-                    const data = await res.json();
-                    this.currentSessionId = data.session_id;
-                    await this.refreshSidebar();
-                    await this.loadSessionToChat(this.currentSessionId);
-                }
-            });
-        }
-
         // Auto-resize textarea
         this.elements.messageInput.addEventListener('input', () => {
             this.autoResizeTextarea();
@@ -106,102 +86,6 @@ class ChatApp {
         // Make welcome screen scrollable
         this.elements.welcomeScreen.addEventListener('wheel', (e) => {
             e.stopPropagation();
-        });
-    }
-
-    async bootstrapAuth() {
-        try {
-            const res = await fetch('/api/me');
-            if (!res.ok) {
-                window.location.href = '/static/login.html';
-                return;
-            }
-            const data = await res.json();
-            this.userId = data.user_id;
-            await this.refreshSidebar();
-        } catch (e) {
-            window.location.href = '/static/login.html';
-        }
-    }
-
-    async refreshSidebar() {
-        if (!this.elements.sessionList) return;
-
-        const [sessionsRes, currentRes] = await Promise.all([
-            fetch('/api/sessions'),
-            fetch('/api/sessions/current')
-        ]);
-
-        if (!sessionsRes.ok) return;
-        const sessionsData = await sessionsRes.json();
-        const currentData = currentRes.ok ? await currentRes.json() : { session_id: null };
-
-        this.currentSessionId = currentData.session_id || this.currentSessionId;
-
-        const sessions = sessionsData.sessions || [];
-        this.elements.sessionList.innerHTML = '';
-
-        sessions.forEach((s) => {
-            const btn = document.createElement('button');
-            btn.className = 'session-item' + (s.session_id === this.currentSessionId ? ' active' : '');
-            btn.type = 'button';
-
-            const dot = document.createElement('span');
-            dot.className = 'session-dot';
-
-            const meta = document.createElement('div');
-            meta.className = 'session-meta';
-
-            const title = document.createElement('div');
-            title.className = 'session-title';
-            title.textContent = s.session_id;
-
-            const time = document.createElement('div');
-            time.className = 'session-time';
-            time.textContent = (s.created_at || '').toString().slice(0, 19).replace('T', ' ');
-
-            meta.appendChild(title);
-            meta.appendChild(time);
-            btn.appendChild(dot);
-            btn.appendChild(meta);
-
-            btn.addEventListener('click', async () => {
-                await fetch('/api/sessions/select', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ session_id: s.session_id })
-                });
-                this.currentSessionId = s.session_id;
-                await this.refreshSidebar();
-                await this.loadSessionToChat(s.session_id);
-            });
-
-            this.elements.sessionList.appendChild(btn);
-        });
-    }
-
-    async loadSessionToChat(sessionId) {
-        const res = await fetch(`/api/sessions/${encodeURIComponent(sessionId)}/messages`);
-        if (!res.ok) return;
-        const data = await res.json();
-
-        // Clear UI and render history
-        this.messages = [];
-        this.elements.messages.innerHTML = '';
-
-        const messages = data.messages || [];
-        if (messages.length) {
-            this.elements.welcomeScreen.style.display = 'none';
-            this.elements.messagesContainer.style.display = 'block';
-        } else {
-            this.elements.welcomeScreen.style.display = 'flex';
-            this.elements.messagesContainer.style.display = 'none';
-            return;
-        }
-
-        messages.forEach((m) => {
-            if (m.user_message) this.addMessage(m.user_message, 'user');
-            if (m.agent_response) this.addMessage(m.agent_response, 'ai', m.therapy_mode);
         });
     }
 
@@ -253,16 +137,13 @@ class ChatApp {
                 },
                 body: JSON.stringify({
                     query: message,
+                    user_id: this.sessionId // Send session ID with request
                 })
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                if (response.status === 401) {
-                    window.location.href = '/static/login.html';
-                    return;
-                }
                 throw new Error(data.detail || 'Something went wrong');
             }
 
@@ -276,7 +157,6 @@ class ChatApp {
 
             // Add AI response
             this.addMessage(data.response, 'ai', data.therapy_mode);
-            await this.refreshSidebar();
 
         } catch (error) {
             this.hideTypingIndicator();
@@ -349,6 +229,9 @@ class ChatApp {
             this.elements.messages.innerHTML = '';
             this.elements.welcomeScreen.style.display = 'flex';
             this.elements.messagesContainer.style.display = 'none';
+
+            // Optionally reset session ID if we want to "forget" the user
+            // this.sessionId = this.generateUUID(); 
         }
     }
 
@@ -357,7 +240,7 @@ class ChatApp {
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
         document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
+        localStorage.setItem('theme', newTheme); // localStorage is not a cookie
 
         const icon = this.elements.themeToggle.querySelector('i');
         icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
