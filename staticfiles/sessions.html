@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Therapy Sessions - AI Psychologist</title>
+  <link rel="stylesheet" href="static/css/style.css">
+  <style>
+    .wrap { max-width: 720px; margin: 6vh auto; padding: 20px; }
+    .card { padding: 16px; border: 1px solid rgba(0,0,0,.08); border-radius: 12px; background: #fff; }
+    .row { display:flex; gap: 10px; align-items:center; justify-content: space-between; flex-wrap: wrap; }
+    button { padding: 10px 12px; border-radius: 10px; border: none; background: #2563eb; color: #fff; cursor:pointer; }
+    .muted { opacity: .75; font-size: 13px; }
+    ul { margin: 10px 0 0; padding-left: 18px; }
+    li { margin: 6px 0; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 13px; }
+    a { font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="row">
+        <div>
+          <h2 style="margin:0;">My sessions</h2>
+          <div class="muted" id="who"></div>
+        </div>
+        <div class="row">
+          <button id="new">Start new session</button>
+          <button id="logout" style="background:#111827;">Logout</button>
+        </div>
+      </div>
+      <hr style="margin:14px 0; opacity:.2;">
+      <div class="muted">Sessions are stored per user in MongoDB.</div>
+      <ul id="list"></ul>
+      <div style="margin-top:12px;">
+        <a href="/">Go to chat</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const who = document.getElementById('who');
+    const list = document.getElementById('list');
+
+    async function mustMe() {
+      const res = await fetch('/api/me');
+      if (!res.ok) { window.location.href = '/static/login.html'; return null; }
+      const me = await res.json();
+      who.textContent = me.email;
+      return me;
+    }
+
+    async function loadSessions() {
+      const res = await fetch('/api/sessions');
+      if (!res.ok) { list.innerHTML = '<li>Not authenticated</li>'; return; }
+      const data = await res.json();
+      list.innerHTML = '';
+      (data.sessions || []).forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = `${s.session_id}  (${s.created_at || ''})`;
+        list.appendChild(li);
+      });
+      if (!list.children.length) {
+        const li = document.createElement('li');
+        li.textContent = 'No sessions yet.';
+        list.appendChild(li);
+      }
+    }
+
+    document.getElementById('new').addEventListener('click', async () => {
+      const res = await fetch('/api/sessions/start', { method: 'POST' });
+      if (res.ok) { await loadSessions(); }
+    });
+
+    document.getElementById('logout').addEventListener('click', async () => {
+      await fetch('/api/logout', { method: 'POST' });
+      window.location.href = '/static/login.html';
+    });
+
+    (async () => {
+      await mustMe();
+      await loadSessions();
+    })();
+  </script>
+</body>
+</html>
+

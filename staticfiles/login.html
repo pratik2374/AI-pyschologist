@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - AI Psychologist</title>
+  <link rel="stylesheet" href="static/css/style.css">
+  <style>
+    .auth-wrap { max-width: 420px; margin: 8vh auto; padding: 20px; background: var(--card-bg, #fff); border: 1px solid rgba(0,0,0,.08); border-radius: 12px; }
+    .auth-wrap h1 { margin: 0 0 10px; font-size: 22px; }
+    .auth-wrap label { display:block; margin: 12px 0 6px; font-size: 13px; opacity: .85; }
+    .auth-wrap input { width:100%; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,.15); }
+    .auth-wrap button { width:100%; margin-top: 14px; padding: 10px 12px; border-radius: 10px; border: none; background: #2563eb; color: #fff; cursor: pointer; }
+    .auth-wrap .row { display:flex; justify-content: space-between; margin-top: 10px; font-size: 13px; }
+    .auth-wrap .err { margin-top: 10px; color: #b91c1c; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="auth-wrap">
+    <h1>Login</h1>
+    <p style="margin:0;opacity:.75;font-size:13px;">Use your email + password.</p>
+    <div class="err" id="err" style="display:none;"></div>
+    <form id="form">
+      <label>Email</label>
+      <input type="email" id="email" required />
+      <label>Password</label>
+      <input type="password" id="password" required />
+      <button type="submit">Login</button>
+    </form>
+    <div class="row">
+      <a href="/static/register.html">Create account</a>
+      <a href="/">Back</a>
+    </div>
+  </div>
+
+  <script>
+    const err = document.getElementById('err');
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      err.style.display = 'none';
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        err.textContent = data.detail || 'Login failed';
+        err.style.display = 'block';
+        return;
+      }
+      window.location.href = '/';
+    });
+  </script>
+</body>
+</html>
+
