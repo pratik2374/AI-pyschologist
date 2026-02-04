@@ -30,11 +30,14 @@ INSTALLED_APPS = [
     'rest_framework',
 ]
 
+INSTALLED_APPS += ["corsheaders"]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'ai_psychologist_django.urls'
@@ -48,6 +51,7 @@ REST_FRAMEWORK = {
     ),
 }
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 TEMPLATES = [
     {
