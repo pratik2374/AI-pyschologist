@@ -1,79 +1,67 @@
 
-//auth middleware
-
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
+// Authentication Middleware
 
-exports.auth = (req,res,next)=>{
-   try{
-      //extract jwt token
-      // console.log("body",req.body.token);
-      // console.log("cookie",req.cookies.token);
-      // console.log("header",req.header("Authorization"));
-      const token = req.cookies.token;
-      if(!token){
-        return res.status(401).json({
-            success:false,
-            message:"token not available"
-        })
-      }
-      //verify token
-      try {
-        const payload = jwt.verify(token,process.env.JWT_SECRET);
-        console.log(payload);
-        req.user = payload;
-      } catch (error) {
-        return res.status(401).json({
-            success:false,
-            message:"token is invalid"
-        })
-      }
+exports.AuthN = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+      
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "No JWT token found",
+      });
+    }
 
-
-      next();
-   }
-   catch(err){
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    req.decoded = decoded;
+    next();
+  } catch (err) {
     return res.status(401).json({
-        success:false,
-        message:"internal server error in auth"
-    })
-   }
-}
-
-exports.isVisitor = (req,res,next)=>{
-  try{
-     if(req.user.role!=="visitor"){
-        return res.status(401).json({
-            success:false,
-            message:"this is protected route for student"
-        })
-     }
-
-     next();
+      success: false,
+      message: "Invalid or expired token",
+    });
   }
-  catch(err){
-    return res.status(500).json({
-        success:false,
-        message:"internal server error for student"
-    })
-  }
-}
+};
 
-exports.isAdmin = (req,res,next)=>{
+exports.isVisitor = async (req, res, next) => {
     try{
-       if(req.user.role!=="Admin"){
-          return res.status(401).json({
-              success:false,
-              message:"this is protected route for admin"
-          })
-       }
-  
-       next();
+        const role = req.decoded.role;
+
+        if(role !== "Visitor"){
+            return res.status(401).json({
+                success: false,
+                message:"You are not Permitted Attendee Section!!"
+            })
+        }
+
+        next();
+
+    } catch(err){
+        res.status(500).json({
+            success: false,
+            message:"Something went wrong while authorizing visitor"
+        })
     }
-    catch(err){
-      return res.status(500).json({
-          success:false,
-          message:"internal server error for admin"
-      })
+}
+
+exports.isAdmin = async (req, res, next) => {
+    try{
+        const role = req.decoded.role;
+
+        if(role!=="Admin" ){
+            return res.status(401).json({
+                success: false,
+                message:"You are not Permitted Admin Section !!"
+            })
+        }
+
+        next();
+
+    } catch(err){
+        res.status(500).json({
+            success: false,
+            message:"Something went wrong while authorizing Admin"
+        })
     }
-  }
+}

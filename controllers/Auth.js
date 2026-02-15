@@ -1,120 +1,186 @@
+const User = require("../models/user");
+const OTP = require("../models/otp");
 const bcrypt = require("bcrypt");
-const User = require("../models/User");
-const jwt = require("jsonwebtoken")
-require("dotenv").config()
-//signup 
+const jwt = require("jsonwebtoken");
+const otpGenerator =require("otp-generator");
 
-exports.signup = async(req,res) => {
+require("dotenv").config();
+
+//generate otp
+exports.generateOTP = async (req, res) => {
     try{
-       //fetch data
-       const {name,email,password} = req.body;
-       //check if user alredy exist
-       
-       //find existing user from database
-       const existingUser = await User.findOne({email});
+        console.log("otp started");
 
-       // if present
-       if(existingUser){  
-        return res.status(400).json({
-            success:false,
-            message:"user alredy exist"
+        const {email} = req.body;
+
+        //validation
+        if(!email){
+            return res.status(401).json({
+                success: false,
+                message: "Enter the email address"
+            })
+        }
+
+        const otp = otpGenerator.generate(6, {
+            upperCaseAlphabets: false,
+            lowerCaseAlphabets: false,
+            specialChars: false
         })
-       }
-        
-       //secure password
-       let hashedPassword;
-       try{
-         hashedPassword = await bcrypt.hash(password,10);
-       }
-       catch(err){
+
+        const result = await OTP.create({
+            otp: otp,
+            email: email
+        })
+
+        res.status(200).json({
+            success:true,
+            message:"OTP sent successfully"
+        })
+    } catch(err){
         res.status(500).json({
-            success:false,
-            message:"error in hashing password",
-        })
-       }
-
-       //crete user
-       const user = await User.create({name,email,password:hashedPassword,role})
-       return res.status(200).json({
-        success:true,
-        message:"user created successfully"
-       })
-    }
-    catch(error){
-        console.error(error);
-        return res.status(500).json({
-            success:false,
-            message:"error in creating user",
+            success: false,
+            message:"Error occured while generating otp"
         })
     }
 }
 
 
+//Signup
+exports.signup = async (req, res) =>{
+    try{
+        const {name, email,password, role, otp} = req.body;
+
+        //validation
+        if(!name || !email || !password ||!role || !otp){
+            return res.status(401).json({
+                success: false,
+                message:"Enter all the required fields"
+            })
+        }
+
+        //find otp
+        const actualOTP = await OTP.find({email}).sort({created:-1}).limit(1);
+
+        if(!actualOTP[0].otp){
+            return res.status(401).json({
+                success: false,
+                message:"No otp found for this email"
+            })
+        }
+        console.log(actualOTP[0].otp,parseInt(otp));
+        if(actualOTP[0].otp !== parseInt(otp)){
+            return res.status(401).json({
+                success: false,
+                message:"Wrong OTP"
+            })
+        }
+
+        //hash password
+        const hashedpassword = await bcrypt.hash(password, 10);
+
+        //create user
+        const response = await User.create({
+            name:name, 
+            email:email,
+            password: hashedpassword,
+            role:role});
+
+        response.password = undefined;
+
+        //Create token and log in the user 
+        const payload={
+            role: response.role,
+            userid: response._id,
+            email: email
+        }
+
+        console.log("in");
+
+        const token = jwt.sign(payload, process.env.SECRET_KEY, {
+            expiresIn:"10h"
+        })
+
+        res.status(200).cookie("token", token, 
+            {
+                expires: new Date(Date.now() + 24*60*60*1000),
+                httpOnly: true,
+                secure: true,
+                sameSite: 'None'
+            }
+        ).json({
+            success: true,
+            message:"User Created Successfully ",
+            response
+        })
+    } catch(err){
+        res.status(500).json({
+            success: false,
+            message:"Some internal error occured while registering"
+        })
+    }
+}
 
 
-//login 
-
-exports.login = async(req,res)=>{
-
+//Login
+exports.login = async (req, res) =>{
     try{
         const {email, password} = req.body;
+
+        //validation 
         if(!email || !password){
-            return res.status(400).json({
+            return res.status(401).json({
                 success: false,
-                message:"please enter email or password",
+                message:"Enter all the fields"
             })
         }
-        let response = await User.findOne({email:email});
-        if(!response){
-            return res.status(404).json({
-                success: false,
-                message:"user does not exist please sign up"
-            })
-        }
+
+        const user = await User.findOne({email:email});
         
-        //verify password & genrate a JW token
-        const payload = {
-            email: response.email,
-            id:response._id,
-            role:response.role
+        if(!user){
+            return res.status (401).json({
+                success: false,
+                message:"User doesn't exists"
+            })
         }
-        const isMatch =await bcrypt.compare(password,response.password);
-        if(!isMatch){
+
+        
+
+        const result = await bcrypt.compare(password, user.password);
+
+        if(!result){
             return res.status(401).json({
                 success:false,
-                message:"please enter correct password"
+                message:"Wrong Password"
             })
         }
-        else{
-            //password match
-            let token = jwt.sign(payload,
-                process.env.JWT_SECRET,
-                {
-                    expiresIn:"2h",
-                }
-            );
-            response = response.toObject();
-            response.token = token;
-            response.password = undefined;
-            const options = {
-                expired:new Date(Date.now()+3*24*60*60*1000*1000*1000*60),
-                httpOnly:true,
+
+        const payload={
+            role: user.role,
+            userid: user._id,
+            email: email
+        }
+
+        const token = jwt.sign(payload, process.env.SECRET_KEY, {
+            expiresIn:"2h"
+        })
+        const response = user;
+
+        res.status(200).cookie("token", token, 
+            {
+                expires: new Date(Date.now() + 60*60*1000),
+                httpOnly: true,
+                secure: true,
+                sameSite: 'None'
             }
-            res.cookie("token",token, options).status(200).json({
-                success:true,
-                token,
-                response,
-                message:"logged in successfully"
-            })
-        }
-    }
-    catch(err){
-        console.log(err);
-        return res.status(500).json({
-            success: false,
-            error:err,
-            message:"internal server error"
+        ).json({
+            success: true,
+            message:"User Logged In successfully",
+            response
+        })
+    } catch(err){
+        res.status(500).json({
+            success:false,
+            message:"Internal error occured while Logging in"
         })
     }
 }
-

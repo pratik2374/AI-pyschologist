@@ -1,9 +1,13 @@
 const express = require("express");
-const router = express.Router();
+const route = express.Router();
 
-const { signup, login } = require("../controllers/Auth");
+const {AuthN, isVisitor, isAdmin} = require("../middlewares/auth");
 
-router.post("/login", login);
-router.post("/signup", signup);
+//Auth
+const {generateOTP, signup, login} = require("../controllers/Auth");
+route.post("/generateotp", generateOTP);
+route.post("/signup", signup);
+route.post("/login", login);
 
-module.exports = router;
+
+module.exports = route;
