@@ -9,3 +9,4 @@ fastapi_info.txt
 .venv/
 __pycache__/app_backend.cpython-312.pyc
 ai_psychologist_django/__pycache__/
+ai_psychologist_django/__pycache__/settings.cpython-312.pyc

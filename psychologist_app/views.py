@@ -37,6 +37,7 @@ def psychologist_endpoint(request):
             
         message = (data.get("query") or "").strip()
         user_id = data.get("user_id") or "default"
+        print(user_id, message)
         
         # Validate message
         if not message:

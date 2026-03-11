@@ -3,12 +3,8 @@ class ChatApp {
         this.messages = [];
         this.isTyping = false;
 
-        // Generate or retrieve session ID from memory (or localStorage if we wanted persistence across refresh, 
-        // but user asked for no cookies, so purely in-memory session is safest interpretation, 
-        // OR we use localStorage which is not a cookie but persists. 
-        // Let's use sessionStorage so it survives refresh in tab but clears on close, or just a new one every load.)
-        // Given "remove cookies", often implies "no tracking". 
-        // We will generate a new session ID every time the page loads.
+        this.API_URL = 'https://ai-pyschologist-production.up.railway.app/psychologist';
+
         this.sessionId = this.generateUUID();
 
         this.initializeElements();
@@ -17,9 +13,9 @@ class ChatApp {
     }
 
     generateUUID() {
-        // specific UUID generator
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
     }
@@ -36,33 +32,32 @@ class ChatApp {
             crisisModal: document.getElementById('crisisModal'),
             crisisMessage: document.getElementById('crisisMessage'),
             clearChat: document.getElementById('clearChat'),
-            themeToggle: document.getElementById('themeToggle'),
+            themeToggle: document.getElementById('themeToggle')
         };
     }
 
     attachEventListeners() {
-        // Send message
         this.elements.sendButton.addEventListener('click', () => this.sendMessage());
-        this.elements.messageInput.addEventListener('keypress', (e) => {
+
+        this.elements.messageInput.addEventListener('keypress', e => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 this.sendMessage();
             }
         });
 
-        // Input handling
-        this.elements.messageInput.addEventListener('input', () => this.handleInput());
+        this.elements.messageInput.addEventListener('input', () => {
+            this.handleInput();
+            this.autoResizeTextarea();
+        });
 
-        // Quick prompts
-        document.querySelectorAll('.quick-prompt').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const prompt = e.currentTarget.dataset.prompt;
-                this.elements.messageInput.value = prompt;
+        document.querySelectorAll('.quick-prompt').forEach(btn => {
+            btn.addEventListener('click', e => {
+                this.elements.messageInput.value = e.currentTarget.dataset.prompt;
                 this.sendMessage();
             });
         });
 
-        // Crisis modal
         document.getElementById('crisisOk').addEventListener('click', () => {
             this.elements.crisisModal.style.display = 'none';
         });
@@ -72,105 +67,88 @@ class ChatApp {
             this.elements.crisisModal.style.display = 'none';
         });
 
-        // Clear chat
         this.elements.clearChat.addEventListener('click', () => this.clearChat());
-
-        // Theme toggle
         this.elements.themeToggle.addEventListener('click', () => this.toggleTheme());
-
-        // Auto-resize textarea
-        this.elements.messageInput.addEventListener('input', () => {
-            this.autoResizeTextarea();
-        });
-
-        // Make welcome screen scrollable
-        this.elements.welcomeScreen.addEventListener('wheel', (e) => {
-            e.stopPropagation();
-        });
     }
 
     handleInput() {
-        const value = this.elements.messageInput.value.trim();
-        const length = this.elements.messageInput.value.length;
+        const text = this.elements.messageInput.value;
+        const trimmed = text.trim();
 
-        this.elements.sendButton.disabled = !value;
-        this.elements.charCount.textContent = `${length} / 1000`;
-
-        if (length > 900) {
-            this.elements.charCount.style.color = 'var(--warning-color)';
-        } else {
-            this.elements.charCount.style.color = 'var(--text-light)';
-        }
+        this.elements.sendButton.disabled = !trimmed;
+        this.elements.charCount.textContent = `${text.length} / 1000`;
+        this.elements.charCount.style.color =
+            text.length > 900 ? 'var(--warning-color)' : 'var(--text-light)';
     }
 
     autoResizeTextarea() {
-        const textarea = this.elements.messageInput;
-        textarea.style.height = 'auto';
-        textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+        const t = this.elements.messageInput;
+        t.style.height = 'auto';
+        t.style.height = Math.min(t.scrollHeight, 120) + 'px';
     }
 
     async sendMessage() {
         const message = this.elements.messageInput.value.trim();
         if (!message || this.isTyping) return;
 
-        // Hide welcome screen
         if (this.elements.welcomeScreen.style.display !== 'none') {
             this.elements.welcomeScreen.style.display = 'none';
             this.elements.messagesContainer.style.display = 'block';
         }
 
-        // Add user message
         this.addMessage(message, 'user');
         this.elements.messageInput.value = '';
         this.elements.sendButton.disabled = true;
         this.elements.charCount.textContent = '0 / 1000';
         this.autoResizeTextarea();
 
-        // Show typing indicator
         this.showTypingIndicator();
 
         try {
-            const response = await fetch('/psychologist', {
+            const response = await fetch(this.API_URL, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     query: message,
-                    user_id: this.sessionId // Send session ID with request
+                    user_id: this.sessionId
                 })
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.detail || 'Something went wrong');
+                throw new Error(data.detail || 'Server error');
             }
 
-            // Hide typing indicator
             this.hideTypingIndicator();
 
-            // Handle crisis response
             if (data.possible_crisis) {
                 this.showCrisisModal(data.response);
             }
 
-            // Add AI response
             this.addMessage(data.response, 'ai', data.therapy_mode);
 
-        } catch (error) {
+        } catch (err) {
             this.hideTypingIndicator();
-            this.addMessage(`I'm sorry, I encountered an error: ${error.message}. Please try again.`, 'ai');
+            this.addMessage(
+                'I had trouble reaching the server. Please check your connection and try again.',
+                'ai'
+            );
+            console.error(err);
         }
     }
 
     addMessage(text, sender, therapyMode = null) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}`;
+        const msg = document.createElement('div');
+        msg.className = `message ${sender}`;
 
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar';
-        avatar.innerHTML = sender === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-brain"></i>';
+        avatar.innerHTML = sender === 'user'
+            ? '<i class="fas fa-user"></i>'
+            : '<i class="fas fa-brain"></i>';
 
         const content = document.createElement('div');
         content.className = 'message-content';
@@ -179,14 +157,16 @@ class ChatApp {
         textDiv.className = 'message-text';
         textDiv.textContent = text;
 
-        const timeDiv = document.createElement('div');
-        timeDiv.className = 'message-time';
-        timeDiv.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const time = document.createElement('div');
+        time.className = 'message-time';
+        time.textContent = new Date().toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
 
         content.appendChild(textDiv);
-        content.appendChild(timeDiv);
+        content.appendChild(time);
 
-        // Add therapy mode badge below AI message
         if (therapyMode && sender === 'ai') {
             const badge = document.createElement('div');
             badge.className = 'therapy-mode-badge';
@@ -194,13 +174,11 @@ class ChatApp {
             content.appendChild(badge);
         }
 
-        messageDiv.appendChild(avatar);
-        messageDiv.appendChild(content);
+        msg.appendChild(avatar);
+        msg.appendChild(content);
+        this.elements.messages.appendChild(msg);
 
-        this.elements.messages.appendChild(messageDiv);
         this.scrollToBottom();
-
-        this.messages.push({ text, sender, therapyMode, timestamp: new Date() });
     }
 
     showTypingIndicator() {
@@ -220,42 +198,39 @@ class ChatApp {
     }
 
     scrollToBottom() {
-        this.elements.messagesContainer.scrollTop = this.elements.messagesContainer.scrollHeight;
+        this.elements.messagesContainer.scrollTop =
+            this.elements.messagesContainer.scrollHeight;
     }
 
     clearChat() {
-        if (confirm('Are you sure you want to clear the chat? This action cannot be undone.')) {
-            this.messages = [];
-            this.elements.messages.innerHTML = '';
-            this.elements.welcomeScreen.style.display = 'flex';
-            this.elements.messagesContainer.style.display = 'none';
+        if (!confirm('Clear entire chat?')) return;
 
-            // Optionally reset session ID if we want to "forget" the user
-            // this.sessionId = this.generateUUID(); 
-        }
+        this.messages = [];
+        this.elements.messages.innerHTML = '';
+        this.elements.welcomeScreen.style.display = 'flex';
+        this.elements.messagesContainer.style.display = 'none';
     }
 
     toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
 
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme); // localStorage is not a cookie
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
 
-        const icon = this.elements.themeToggle.querySelector('i');
-        icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        this.elements.themeToggle.querySelector('i').className =
+            next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     }
 
     loadTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
 
-        const icon = this.elements.themeToggle.querySelector('i');
-        icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        this.elements.themeToggle.querySelector('i').className =
+            theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     }
 }
 
-// Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new ChatApp();
 });
