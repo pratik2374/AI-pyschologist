@@ -94,8 +94,6 @@ exports.signup = async (req, res) =>{
             email: email
         }
 
-        console.log("in");
-
         const token = jwt.sign(payload, process.env.SECRET_KEY, {
             expiresIn:"10h"
         })

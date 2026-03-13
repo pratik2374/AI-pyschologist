@@ -7,6 +7,17 @@ const userSchema = new mongoose.Schema({
         trim:true
     },
 
+    age:{
+        type : Number,
+        required:true,
+        trim:true
+    },
+
+    city:{
+        type : String,
+        trim:true
+    },
+
     email:{
         type: String,
         required:true,
@@ -22,7 +33,8 @@ const userSchema = new mongoose.Schema({
     role:{
         type:String, 
         required: true,
-        enum:["Admin","Visitor"]
+        enum:["Admin","Visitor"],
+        default:"Visitor"
     },
 
     resetPasswordToken:{

@@ -2,6 +2,7 @@
 const User = require('../models/User');
 const Chat = require('../models/Chat');
 require("dotenv").config();
+
 exports.pastHistory = async(req,res)=>{
     try{
         const user_id = req.decoded?.userid;
@@ -28,7 +29,8 @@ exports.pastHistory = async(req,res)=>{
 
 exports.currChat = async(req,res)=>{
     try{      
-        const {user_id,query} = req.body;
+        const user_id = req.decoded?.userid;
+        const {query,sessionId} = req.body;
         const api = process.env.currentChatdjangoApi;
 
         const response = await fetch(api, {
@@ -38,7 +40,8 @@ exports.currChat = async(req,res)=>{
           },
           body: JSON.stringify({
             user_id,   
-            query 
+            query,
+            sessionId
           })
         });
         const data = await response.json();
@@ -48,9 +51,7 @@ exports.currChat = async(req,res)=>{
             message:"curr chat api working good",
             data
         })
-
-
-
+        
     }
     catch(err){
         res.status(500).json({
