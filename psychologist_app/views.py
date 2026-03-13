@@ -6,6 +6,7 @@ import json
 from typing import Optional
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
 from ai_psychologist import AIPsychologist, CrisisResponseAgent, TherapyModeDeterminer
