@@ -37,7 +37,7 @@ def psychologist_endpoint(request):
             
         message = (data.get("query") or "").strip()
         user_id = data.get("user_id") or "default"
-        print(user_id, message)
+        session_id = data.get("session_id") or f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         
         # Validate message
         if not message:
@@ -61,7 +61,7 @@ def psychologist_endpoint(request):
 
         # Start/Switch session if needed
         if psychologist.current_session_id is None or psychologist.user_id != user_id:
-            psychologist.start_session(user_id)
+            psychologist.start_session(user_id, session_id)
         
         # Crisis pre-check using CrisisResponseAgent
         crisis_agent = CrisisResponseAgent()

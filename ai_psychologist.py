@@ -445,7 +445,7 @@ class AIPsychologist:
         
         # Initialize Agno Memory using MongoDB
         self.memory = Memory(
-            model=OpenAIChat(id="gpt-4o-mini"),
+            model=OpenAIChat(id="gpt-4o"),
             db=MongoMemoryDb(collection_name="user_memories", mongo_url=Config.MONGODB_URL, db_name=Config.MONGODB_DB_NAME),
         )
         
@@ -544,12 +544,12 @@ class AIPsychologist:
         
         return history
     
-    def start_session(self, user_id: str = None):
+    def start_session(self, session_id: str, user_id: str = None):
         """Start a new therapy session"""
         if user_id:
             self.user_id = user_id
         
-        self.current_session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        self.current_session_id = session_id
         self.session_count += 1
         
         console.print(Panel(
