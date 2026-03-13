@@ -41,7 +41,7 @@ class CrisisResponseAgent:
         self.crisis_agent = Agent(
             name="Crisis Response Specialist",
             role="Compassionate crisis intervention specialist providing immediate emotional support and safety guidance",
-            model=OpenAIChat(id="gpt-4o-mini"),
+            model=OpenAIChat(id="gpt-4o"),
             instructions="""
             You are a compassionate crisis response specialist. Your role is to:
             1. Provide immediate emotional support and validation
@@ -132,7 +132,7 @@ class TherapyModeDeterminer:
         self.mode_agent = Agent(
             name="Therapy Mode Analyzer",
             role="Psychological assessment specialist that determines optimal therapy approaches",
-            model=OpenAIChat(id="gpt-4o-mini"),
+            model=OpenAIChat(id="gpt-4o"),
             instructions="""
             You are a psychological assessment specialist. Your role is to analyze conversation patterns and determine the most appropriate therapy mode.
             
@@ -453,7 +453,7 @@ class AIPsychologist:
         self.agent = Agent(
             name="AI Psychologist",
             role="Licensed psychological AI therapist providing evidence-based therapeutic support",
-            model=OpenAIChat(id="gpt-4o-mini"),
+            model=OpenAIChat(id="gpt-4o"),
             tools=[self._get_session_summary, self._get_conversation_history],
             storage=self.storage,
             memory=self.memory,
