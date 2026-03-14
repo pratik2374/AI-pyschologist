@@ -1,7 +1,7 @@
+const crypto = require("crypto");
 const User = require("../models/User");
-
-const {sendmail} = require("../utils/mailsender");
-const bcrypt = require("bcrypt")
+const { sendmail } = require("../utils/mailsender");
+const bcrypt = require("bcrypt");
 
 
 //reset Password Link

@@ -1,15 +1,20 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const cookieParser = require("cookie-parser");
 
 require("./config/database").connect();
 
-require('dotenv').config();
+require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 
-require("dotenv").config();
-
-//middlewares
+// middlewares
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

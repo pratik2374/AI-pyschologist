@@ -1,0 +1,49 @@
+:root {
+  --bg-gradient-start: #e8f4f8;
+  --bg-gradient-mid: #f5ebe0;
+  --bg-gradient-end: #fef3e2;
+  --panel-bg: rgba(255, 255, 255, 0.75);
+  --panel-border: rgba(255, 255, 255, 0.9);
+  --text-primary: #2d3748;
+  --text-secondary: #5a6578;
+  --accent-peach: #e8a87c;
+  --accent-mint: #85cdca;
+  --accent-sky: #a8d5e5;
+  --accent-lavender: #c9b1bd;
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --radius: 16px;
+  --radius-sm: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Outfit", sans-serif;
+  color: var(--text-primary);
+  min-height: 100vh;
+  background: linear-gradient(165deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 45%, var(--bg-gradient-end) 100%);
+  background-attachment: fixed;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1, h2 {
+  font-family: "Playfair Display", serif;
+}
+
+button, input, textarea {
+  font-family: inherit;
+}
+
+a {
+  color: var(--accent-peach);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}

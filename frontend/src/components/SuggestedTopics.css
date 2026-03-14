@@ -1,0 +1,42 @@
+.suggested-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  max-width: 520px;
+}
+
+.topic-chip {
+  padding: 0.75rem 1.25rem;
+  border-radius: 2rem;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.topic-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
+}
+
+.topic-peach {
+  background: rgba(232, 168, 124, 0.4);
+  color: #5c4033;
+}
+
+.topic-mint {
+  background: rgba(133, 205, 202, 0.4);
+  color: #2d5a58;
+}
+
+.topic-sky {
+  background: rgba(168, 213, 229, 0.5);
+  color: #3d5a68;
+}
+
+.topic-lavender {
+  background: rgba(201, 177, 189, 0.4);
+  color: #4a3f45;
+}

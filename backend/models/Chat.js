@@ -35,7 +35,7 @@ const conversation_logs = new mongoose.Schema(
 
     therapy_mode: {
       type: String,
-      enum: ["cbt", "dbt", "act", "mindfulness", "none"],
+      enum: ["cbt", "humanistic", "psychoanalytic", "none"],
       default: "cbt",
     },
   },

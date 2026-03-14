@@ -9,8 +9,8 @@ const userSchema = new mongoose.Schema({
 
     age:{
         type : Number,
-        required:true,
-        trim:true
+        required: false,
+        trim: true
     },
 
     city:{

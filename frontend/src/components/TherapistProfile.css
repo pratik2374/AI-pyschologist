@@ -1,0 +1,43 @@
+.therapist-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--panel-border);
+}
+
+.therapist-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-mint), var(--accent-sky));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.therapist-avatar-inner {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+}
+
+.therapist-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.therapist-info strong {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.therapist-info span {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
