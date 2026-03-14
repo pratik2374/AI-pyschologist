@@ -55,6 +55,10 @@ exports.currChat = async (req, res) => {
     const { query, sessionId } = req.body;
     const api = process.env.currentChatdjangoApi;
 
+    if (!api) {
+      throw new Error("currentChatdjangoApi is not configured in environment");
+    }
+
     const response = await fetch(api, {
       method: "POST",
       headers: {
@@ -114,10 +118,13 @@ exports.currChat = async (req, res) => {
       data,
     });
   } catch (err) {
+    console.error("currChat error:", err);
     return res.status(500).json({
       success: false,
-      message: "Error occured while current chat",
-      err,
+      message:
+        "Error occured while current chat: " +
+        (err && err.message ? err.message : "Unknown error"),
+      err: err && err.stack ? err.stack : err,
     });
   }
 };
