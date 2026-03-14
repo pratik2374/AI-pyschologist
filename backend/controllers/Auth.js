@@ -10,7 +10,7 @@ require("dotenv").config();
 //generate otp
 exports.generateOTP = async (req, res) => {
     try{
-        console.log("otp started");
+        console.log("generateOTP: handler started");
 
         const {email} = req.body;
 
@@ -28,17 +28,23 @@ exports.generateOTP = async (req, res) => {
             specialChars: false
         })
 
+        console.log("generateOTP: otp generated", { email, otp });
+
         const created = await OTP.create({
           otp: otp,
           email: email,
         });
 
         try {
+          console.log("generateOTP: calling sendmail for", email);
           await sendmail(email, `OTP for Sign Up`, `${otp}`);
+          console.log("generateOTP: sendmail success", { id: created?._id });
         } catch (mailErr) {
+          console.error("generateOTP: sendmail failed", mailErr);
           // cleanup OTP if email failed
           try {
             await OTP.deleteOne({ _id: created?._id });
+            console.log("generateOTP: cleaned up OTP after mail failure");
           } catch {}
 
           return res.status(500).json({
@@ -48,11 +54,13 @@ exports.generateOTP = async (req, res) => {
           });
         }
 
+        console.log("generateOTP: completed successfully for", email);
         res.status(200).json({
             success:true,
             message:"OTP sent successfully"
         })
     } catch(err){
+        console.error("generateOTP: unhandled error", err);
         res.status(500).json({
             success: false,
             message:"Error occured while generating otp"
