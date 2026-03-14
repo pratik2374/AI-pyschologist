@@ -1,4 +1,8 @@
-const BASE = "/api/v1";
+// In dev we rely on the Vite proxy (`/api` → localhost:4000).
+// In production you can set VITE_API_URL to your hosted backend, e.g.
+// VITE_API_URL="https://ai-pyschologist-node-server.onrender.com/api/v1"
+const BASE =
+  import.meta.env.VITE_API_URL?.replace(/\/+$/, "") || "/api/v1";
 
 const request = async (path, options = {}) => {
   const url = path.startsWith("http") ? path : `${BASE}${path}`;
