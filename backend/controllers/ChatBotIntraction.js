@@ -71,7 +71,23 @@ exports.currChat = async (req, res) => {
       }),
     });
 
-    const data = await response.json();
+    // Handle both JSON and plain-text responses from Django API
+    let data;
+    const contentType = response.headers.get("content-type") || "";
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(
+        `Downstream chat API ${response.status} ${response.statusText}: ${text.slice(
+          0,
+          200
+        )}`
+      );
+    } else if (contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      data = { message: text };
+    }
 
     // Normalize assistant response text for logging
     let agentText = "";
