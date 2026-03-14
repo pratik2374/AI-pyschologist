@@ -3,6 +3,7 @@ const OTP = require("../models/otp");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const otpGenerator =require("otp-generator");
+const { sendmail } = require("../utils/mailsender");
 
 require("dotenv").config();
 
@@ -27,10 +28,25 @@ exports.generateOTP = async (req, res) => {
             specialChars: false
         })
 
-        const result = await OTP.create({
-            otp: otp,
-            email: email
-        })
+        const created = await OTP.create({
+          otp: otp,
+          email: email,
+        });
+
+        try {
+          await sendmail(email, `OTP for Sign Up`, `${otp}`);
+        } catch (mailErr) {
+          // cleanup OTP if email failed
+          try {
+            await OTP.deleteOne({ _id: created?._id });
+          } catch {}
+
+          return res.status(500).json({
+            success: false,
+            message:
+              "Unable to send OTP email right now. Please try again later.",
+          });
+        }
 
         res.status(200).json({
             success:true,
