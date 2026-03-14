@@ -1,8 +1,8 @@
 {
   "dependencies": {
     "bcrypt": "^6.0.0",
-    "cors": "^2.8.5",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
@@ -10,6 +10,7 @@
     "mongoose": "^8.22.0",
     "nodemailer": "^7.0.13",
     "nodemon": "^3.1.14",
-    "otp-generator": "^4.0.1"
+    "otp-generator": "^4.0.1",
+    "resend": "^6.9.3"
   }
 }
