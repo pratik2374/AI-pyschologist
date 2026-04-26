@@ -1,121 +1,124 @@
-const User = require("../models/User");
+const crypto = require("crypto");
+const User   = require("../models/User");
+const bcrypt = require("bcrypt");
+const { sendmail } = require("../utils/mailsender");
 
-const {sendmail} = require("../utils/mailsender");
-const bcrypt = require("bcrypt")
 
+// ─── Send reset password link ──────────────────────────────────────────────────
+exports.resetPasswordLink = async (req, res) => {
+    try {
+        const { email } = req.body;
 
-//reset Password Link
-exports.resetPasswordLink = async (req, res) =>{
-    try{
-        const {email} = req.body;
-
-        if(!email){
-            return res.status(401).json({
+        if (!email) {
+            return res.status(400).json({
                 success: false,
-                message:"No email entered"
-            })
+                message: "Email address is required"
+            });
         }
-        
-        const user = await User.findOne({email: email});
 
-        if(!user){
-            return res.status(401).json({
-                success: false,
-                message:"user doesn't exists"
-            })
+        const user = await User.findOne({ email });
+
+        // Generic response — don't reveal whether the account exists
+        if (!user) {
+            return res.status(200).json({
+                success: true,
+                message: "If an account with that email exists, a reset link has been sent"
+            });
         }
-        
+
         const token = crypto.randomUUID();
+        const expiryTime = Date.now() + 10 * 60 * 1000; // 10 minutes
 
-        const url = `localhost:3000/resetpassword/${token}`;
-
-        // 10 minutes
-        const expiryTime = Date.now() + 10 * 60 *1000;
-
-        // make changes in user
         await user.updateOne({
             resetPasswordToken: token,
             resetPasswordExpiry: expiryTime
-        }, {new: true});
+        });
 
+        const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
 
-        // send email
-        const respone = await sendmail(email, "Reset Password Link", `${url}`);
+        await sendmail(
+            email,
+            "Reset your Dr. Aria password",
+            `<p style="font-family:sans-serif">
+                You requested a password reset. Click the link below to set a new password:
+                <br/><br/>
+                <a href="${resetUrl}" style="color:#6366f1">${resetUrl}</a>
+                <br/><br/>
+                This link expires in <strong>10 minutes</strong>.
+                If you did not request this, you can safely ignore this email.
+            </p>`
+        );
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
-            message:"Link sent successfully"
-        })
-    } catch(err){
-        res.status(500).json({
+            message: "If an account with that email exists, a reset link has been sent"
+        });
+
+    } catch (err) {
+        return res.status(500).json({
             success: false,
-            message:"Internal error in link generation "+err
-        })
+            message: "Error occurred while sending reset link"
+        });
     }
-}
+};
 
 
-//reset password
-exports.resetPassword = async (req, res) =>{
-    try{
-        const token = req.params.token;
+// ─── Reset password ────────────────────────────────────────────────────────────
+exports.resetPassword = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { newPassword, confirmPassword } = req.body;
 
-        const {newPassword, confirmPassword} =req.body;
-
-        if(!newPassword || !confirmPassword){
-            return res.status(401).json({
+        if (!newPassword || !confirmPassword) {
+            return res.status(400).json({
                 success: false,
-                message:"Enter all the required fields"
-            })
+                message: "Both password fields are required"
+            });
         }
 
-        if(newPassword !== confirmPassword){
-            return res.status(401).json({
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({
                 success: false,
-                message:"Passwords doesn't match"
-            })
+                message: "Passwords do not match"
+            });
         }
 
-        const user = await User.findOne({resetPasswordToken: token});
+        const user = await User.findOne({ resetPasswordToken: token });
 
-        if(!user){
-            return res.status(401).json({
+        if (!user) {
+            return res.status(400).json({
                 success: false,
-                message:"Invalid token"
-            })
+                message: "Invalid or expired reset link"
+            });
         }
 
-        if(user.resetPasswordExpiry < Date.now()){
+        if (user.resetPasswordExpiry < Date.now()) {
+            await user.updateOne({
+                $unset: { resetPasswordToken: "", resetPasswordExpiry: "" }
+            });
 
-            await user.updateOne({$unset:{
-                resetPasswordToken:"",
-                resetPasswordExpiry:""
-            }});
-
-            return res.status(401).json({
+            return res.status(400).json({
                 success: false,
-                message:"Token expired "
-            })
+                message: "Reset link has expired. Please request a new one."
+            });
         }
 
-        let hashedpassword = await bcrypt.hash(newPassword, 10);
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-        const response= await user.updateOne({
-            $set:{password:hashedpassword},
-            $unset:{
-                resetPasswordExpiry:"",
-                resetPasswordToken:""
-            }},
-            {new:true});
+        await user.updateOne({
+            $set: { password: hashedPassword },
+            $unset: { resetPasswordToken: "", resetPasswordExpiry: "" }
+        });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
-            message:"Password Reset Successfull"
-        })
-    } catch(err){
-        res.status(500).json({
+            message: "Password reset successfully"
+        });
+
+    } catch (err) {
+        return res.status(500).json({
             success: false,
-            message:"Internal error in reseting password "+err
-        })
+            message: "Error occurred while resetting password"
+        });
     }
-}
+};

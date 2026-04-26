@@ -1,3 +1,12 @@
 node_modules
 .env
 planningAndUpdate.js
+.venv
+__pycache__
+
+.venv/Lib/site-packages/__pycache__/six.cpython-312.pyc
+
+# Test reports (generated — do not commit)
+tests/reports/*.txt
+tests/reports/*.json
+server.log

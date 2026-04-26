@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-background: #F7F5F0;
+  --color-foreground: #2C332E;
+
+  /* Custom animations */
+  --animate-ambient: ambient-drift 20s ease-in-out infinite alternate;
+  --animate-pulse-soft: pulse-soft 3s ease-in-out infinite;
+
+  @keyframes ambient-drift {
+    0% { transform: translate(0px, 0px) scale(1); opacity: 0.3; }
+    33% { transform: translate(20px, -30px) scale(1.05); opacity: 0.5; }
+    66% { transform: translate(-20px, 20px) scale(0.95); opacity: 0.3; }
+    100% { transform: translate(0px, 0px) scale(1); opacity: 0.3; }
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+}
+
+.font-handwritten {
+  font-family: 'Kalam', cursive;
+}
+
+/* Custom scrollbar matching app style */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 20px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(138, 147, 134, 0.2); /* theme #8A9386 but very subtle */
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(92, 112, 96, 0.4); /* #5C7060 on direct hover */
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
