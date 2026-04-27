@@ -1,0 +1,42 @@
+Dr. Aria — Test Report
+Started:  2026-04-13T16:31:07.560Z
+Base URL: http://localhost:4000
+──────────────────────────────────────────────────────────────────────
+
+
+
+[ AUTH ]
+  PASS [524ms] POST /auth/generate-otp → 200
+       Preview: OTP sent successfully
+  PASS [26ms] OTP stored in DB
+       Preview: OTP: 401572
+  PASS [11ms] POST /auth/signup → 400 wrong OTP
+  PASS [5ms] POST /auth/signup → 400 short password
+  PASS [212ms] POST /auth/signup → role always Visitor
+       Preview: User created, role=Visitor
+  PASS [42ms] POST /auth/signup → 400 duplicate email
+  PASS [9ms] GET /auth/me → 200 with user data
+       Preview: name=Arjun Sharma, mode=A
+  PASS [2ms] GET /auth/me → 401 without token
+  PASS [10ms] PUT /auth/profile → 200 updates preferredName
+       Preview: preferredName=AJ
+  PASS [5ms] POST /auth/refresh → 200
+       Preview: refreshed=false
+  PASS [3ms] POST /auth/logout → 200 clears cookie
+  PASS [2ms] GET /auth/me → 401 after logout
+  PASS [146ms] POST /auth/login → 200
+       Preview: Logged in as arjun.test.aria@mailinator.com
+  PASS [180ms] POST /auth/login → 401 wrong password
+  PASS [4ms] POST /auth/login → 401 unknown email
+
+
+[ CHAT ]
+  PASS [15ms] POST /chat → 400 empty message
+  PASS [12ms] POST /chat → 400 message too long
+  PASS [4ms] POST /chat → 401 without token
+  PASS [863ms] First message → SSE streams + opener in history
+       Preview: TTFT=793ms  total=863ms  tokens≈5  6tok/s | "Hey. What's going on?..."
+  FAIL [90424ms] Second message → streams coherent response
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90405ms] Conversation msg 3: "I know I should study but I just sit at ..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.

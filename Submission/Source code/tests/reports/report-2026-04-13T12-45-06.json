@@ -1,0 +1,221 @@
+{
+  "startedAt": "2026-04-13T13:14:34.028Z",
+  "baseUrl": "http://localhost:4000",
+  "total": 25,
+  "passed": 7,
+  "failed": 18,
+  "latency": {
+    "avg": 68220,
+    "p50": 90402,
+    "p95": 100436,
+    "p99": 155688
+  },
+  "results": [
+    {
+      "suite": "Chat",
+      "name": "POST /chat → 400 empty message",
+      "passed": true,
+      "ms": 24,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "POST /chat → 400 message too long",
+      "passed": true,
+      "ms": 15,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "POST /chat → 401 without token",
+      "passed": true,
+      "ms": 6,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "First message → SSE streams + opener in history",
+      "passed": true,
+      "ms": 1127,
+      "error": null,
+      "meta": {
+        "preview": "TTFT=1082ms  total=1127ms  tokens≈5  4tok/s | \"Hey. What's going on?...\""
+      }
+    },
+    {
+      "suite": "Chat",
+      "name": "Second message → streams coherent response",
+      "passed": false,
+      "ms": 90371,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 3: \"I know I should study but I just sit at ...\"",
+      "passed": false,
+      "ms": 90417,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 4: \"My dad said if I don't crack it this tim...\"",
+      "passed": false,
+      "ms": 90339,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 5: \"I don't think I'm stupid. I used to be g...\"",
+      "passed": false,
+      "ms": 90453,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 6: \"Yeah that's exactly it. When I'm in the ...\"",
+      "passed": false,
+      "ms": 90434,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 7: \"I never thought of it that way. My paren...\"",
+      "passed": false,
+      "ms": 90396,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 8: \"What do I do when I'm sitting at the des...\"",
+      "passed": false,
+      "ms": 90891,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 9: \"I tried that actually. Walking away for ...\"",
+      "passed": false,
+      "ms": 90409,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 10: \"Can I ask you something. Do you think I ...\"",
+      "passed": false,
+      "ms": 90329,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 11: \"You're right that I haven't actually dec...\"",
+      "passed": false,
+      "ms": 90743,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 12: \"I feel a bit lighter after saying that. ...\"",
+      "passed": false,
+      "ms": 90398,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 13: \"Same time tomorrow?...\"",
+      "passed": false,
+      "ms": 90418,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation metrics summary",
+      "passed": true,
+      "ms": 1,
+      "error": null,
+      "meta": {
+        "preview": "No metrics collected"
+      }
+    },
+    {
+      "suite": "Chat",
+      "name": "GET /chat/history → messages in order",
+      "passed": true,
+      "ms": 36,
+      "error": null,
+      "meta": {
+        "preview": "3 messages, first role=\"aria\", mode=A"
+      }
+    },
+    {
+      "suite": "Chat",
+      "name": "GET /chat/history → 401 without token",
+      "passed": true,
+      "ms": 3,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Warmup — TPM pause + 3 sequential requests",
+      "passed": false,
+      "ms": 155688,
+      "error": "Assertion failed: Warmup 1 error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Latency benchmark — 5 messages (P50/P95)",
+      "passed": false,
+      "ms": 100436,
+      "error": "Assertion failed: Benchmark msg 1 error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Concurrent burst — 5 users simultaneously",
+      "passed": false,
+      "ms": 91306,
+      "error": "Assertion failed: 5 concurrent requests failed: Dr. Aria is unavailable right now. Please try again in a moment., Dr. Aria is unavailable right now. Please try again in a moment., HTTP 401: {\"success\":false,\"message\":\"Authentication required\"}, HTTP 401: {\"success\":false,\"message\":\"Authentication required\"}, HTTP 401: {\"success\":false,\"message\":\"Authentication required\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Long input (300 words) → streams without timeout",
+      "passed": false,
+      "ms": 90425,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Crisis signal → Dr. Aria continues (never cuts off)",
+      "passed": false,
+      "ms": 90402,
+      "error": "Assertion failed: Stream errored during crisis message: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Gap simulation → Dr. Aria acknowledges return naturally",
+      "passed": false,
+      "ms": 90426,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    }
+  ]
+}

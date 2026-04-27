@@ -1,0 +1,223 @@
+{
+  "startedAt": "2026-04-13T12:00:37.914Z",
+  "baseUrl": "http://localhost:4000",
+  "total": 25,
+  "passed": 8,
+  "failed": 17,
+  "latency": {
+    "avg": 452588,
+    "p50": 1707,
+    "p95": 71398,
+    "p99": 10892775
+  },
+  "results": [
+    {
+      "suite": "Chat",
+      "name": "POST /chat → 400 empty message",
+      "passed": true,
+      "ms": 82,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "POST /chat → 400 message too long",
+      "passed": true,
+      "ms": 54,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "POST /chat → 401 without token",
+      "passed": true,
+      "ms": 25,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "First message → SSE streams + opener in history",
+      "passed": true,
+      "ms": 1347,
+      "error": null,
+      "meta": {
+        "preview": "TTFT=1277ms  total=1346ms  tokens≈5  4tok/s | \"Hello. What's going on?...\""
+      }
+    },
+    {
+      "suite": "Chat",
+      "name": "Second message → streams coherent response",
+      "passed": true,
+      "ms": 19324,
+      "error": null,
+      "meta": {
+        "preview": "TTFT=18968ms  total=19324ms  tokens≈75  4tok/s"
+      }
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 3: \"I know I should study but I just sit at ...\"",
+      "passed": false,
+      "ms": 37123,
+      "error": "Assertion failed: TTFT too slow: 36733ms (limit 8s)",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 4: \"My dad said if I don't crack it this tim...\"",
+      "passed": false,
+      "ms": 38310,
+      "error": "Assertion failed: TTFT too slow: 37854ms (limit 8s)",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 5: \"I don't think I'm stupid. I used to be g...\"",
+      "passed": false,
+      "ms": 38284,
+      "error": "Assertion failed: TTFT too slow: 37749ms (limit 8s)",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 6: \"Yeah that's exactly it. When I'm in the ...\"",
+      "passed": false,
+      "ms": 41273,
+      "error": "Assertion failed: TTFT too slow: 40878ms (limit 8s)",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 7: \"I never thought of it that way. My paren...\"",
+      "passed": false,
+      "ms": 10892775,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 8: \"What do I do when I'm sitting at the des...\"",
+      "passed": false,
+      "ms": 1707,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 9: \"I tried that actually. Walking away for ...\"",
+      "passed": true,
+      "ms": 5830,
+      "error": null,
+      "meta": {
+        "preview": "TTFT=5374ms  total=5830ms  ~134tok  23tok/s"
+      }
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 10: \"Can I ask you something. Do you think I ...\"",
+      "passed": false,
+      "ms": 30357,
+      "error": "Assertion failed: TTFT too slow: 30050ms (limit 8s)",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 11: \"You're right that I haven't actually dec...\"",
+      "passed": false,
+      "ms": 43976,
+      "error": "Assertion failed: TTFT too slow: 43503ms (limit 8s)",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 12: \"I feel a bit lighter after saying that. ...\"",
+      "passed": false,
+      "ms": 43613,
+      "error": "Assertion failed: TTFT too slow: 43268ms (limit 8s)",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 13: \"Same time tomorrow?...\"",
+      "passed": false,
+      "ms": 47031,
+      "error": "Assertion failed: TTFT too slow: 46919ms (limit 8s)",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation metrics summary",
+      "passed": false,
+      "ms": 1,
+      "error": "Assertion failed: Average TTFT 5374ms exceeds 5s threshold",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "GET /chat/history → messages in order",
+      "passed": true,
+      "ms": 28,
+      "error": null,
+      "meta": {
+        "preview": "24 messages, first role=\"aria\", mode=A"
+      }
+    },
+    {
+      "suite": "Chat",
+      "name": "GET /chat/history → 401 without token",
+      "passed": true,
+      "ms": 3,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Warmup — 3 sequential requests",
+      "passed": false,
+      "ms": 71398,
+      "error": "Assertion failed: Warmup 3 error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Latency benchmark — 10 messages (P50/P95)",
+      "passed": false,
+      "ms": 455,
+      "error": "Assertion failed: Benchmark msg 1 error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Concurrent burst — 5 users simultaneously",
+      "passed": false,
+      "ms": 1036,
+      "error": "Assertion failed: 5 concurrent requests failed: Dr. Aria is unavailable right now. Please try again in a moment., Dr. Aria is unavailable right now. Please try again in a moment., Dr. Aria is unavailable right now. Please try again in a moment., Dr. Aria is unavailable right now. Please try again in a moment., Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Long input (300 words) → streams without timeout",
+      "passed": false,
+      "ms": 145,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Crisis signal → Dr. Aria continues (never cuts off)",
+      "passed": false,
+      "ms": 112,
+      "error": "Assertion failed: Stream errored during crisis message: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Gap simulation → Dr. Aria acknowledges return naturally",
+      "passed": false,
+      "ms": 415,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    }
+  ]
+}

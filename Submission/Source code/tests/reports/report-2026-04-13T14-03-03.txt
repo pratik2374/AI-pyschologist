@@ -1,0 +1,115 @@
+Dr. Aria — Test Report
+Started:  2026-04-13T14:03:03.418Z
+Base URL: http://localhost:4000
+──────────────────────────────────────────────────────────────────────
+
+
+
+[ AUTH ]
+  PASS [494ms] POST /auth/generate-otp → 200
+       Preview: OTP sent successfully
+  PASS [17ms] OTP stored in DB
+       Preview: OTP: 776482
+  FAIL [4ms] POST /auth/signup → 400 wrong OTP
+       Error: wrong OTP should 400: expected 400, got 429
+  FAIL [5ms] POST /auth/signup → 400 short password
+       Error: short password should 400: expected 400, got 429
+  FAIL [24ms] POST /auth/signup → role always Visitor
+       Error: signup should succeed: expected 201, got 429
+  FAIL [5ms] POST /auth/signup → 400 duplicate email
+       Error: duplicate email should 400: expected 400, got 429
+  FAIL [3ms] GET /auth/me → 200 with user data
+       Error: /auth/me: expected 200, got 401
+  PASS [2ms] GET /auth/me → 401 without token
+  FAIL [4ms] PUT /auth/profile → 200 updates preferredName
+       Error: profile update: expected 200, got 401
+  FAIL [4ms] POST /auth/refresh → 200
+       Error: refresh: expected 200, got 401
+  PASS [4ms] POST /auth/logout → 200 clears cookie
+  PASS [2ms] GET /auth/me → 401 after logout
+  FAIL [3ms] POST /auth/login → 200
+       Error: login: expected 200, got 429
+  FAIL [2ms] POST /auth/login → 401 wrong password
+       Error: wrong password should 401: expected 401, got 429
+  FAIL [3ms] POST /auth/login → 401 unknown email
+       Error: unknown email should 401: expected 401, got 429
+
+
+[ CHAT ]
+  FAIL [2ms] POST /chat → 400 empty message
+       Error: empty message: expected 400, got 401
+  FAIL [2ms] POST /chat → 400 message too long
+       Error: oversized message: expected 400, got 401
+  PASS [3ms] POST /chat → 401 without token
+  FAIL [3ms] First message → SSE streams + opener in history
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [7ms] Second message → streams coherent response
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [4ms] Conversation msg 3: "I know I should study but I just sit at ..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [5ms] Conversation msg 4: "My dad said if I don't crack it this tim..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [7ms] Conversation msg 5: "I don't think I'm stupid. I used to be g..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [3ms] Conversation msg 6: "Yeah that's exactly it. When I'm in the ..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [8ms] Conversation msg 7: "I never thought of it that way. My paren..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [6ms] Conversation msg 8: "What do I do when I'm sitting at the des..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [6ms] Conversation msg 9: "I tried that actually. Walking away for ..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [6ms] Conversation msg 10: "Can I ask you something. Do you think I ..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [6ms] Conversation msg 11: "You're right that I haven't actually dec..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [4ms] Conversation msg 12: "I feel a bit lighter after saying that. ..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [2ms] Conversation msg 13: "Same time tomorrow?..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  PASS [0ms] Conversation metrics summary
+       Preview: No metrics collected
+  FAIL [2ms] GET /chat/history → messages in order
+       Error: history: expected 200, got 401
+  PASS [1ms] GET /chat/history → 401 without token
+
+
+[ PRIVACY ]
+  FAIL [1ms] GET /privacy/profile → 200 with stats
+       Error: profile: expected 200, got 401
+  PASS [2ms] GET /privacy/profile → 401 without token
+  FAIL [2ms] PUT /privacy/emergency-contact → 200 saves encrypted
+       Error: save contact: expected 200, got 401
+  FAIL [1ms] GET /privacy/emergency-contact → 200 decrypted
+       Error: get contact: expected 200, got 401
+  FAIL [1ms] PUT /privacy/emergency-contact → 400 empty body
+       Error: empty contact: expected 400, got 401
+  PASS [3ms] Messages are encrypted at rest (Mode A)
+       Preview: SKIPPED — ENCRYPTION_MASTER_KEY not set in dev env
+  FAIL [86ms] DELETE /privacy/account → 200 cascade deletes all data
+       Error: delete account: expected 200, got 401
+  FAIL [2ms] DELETE /privacy/account → 400 without confirmDelete
+       Error: must require confirmDelete:true: expected 400, got 401
+
+
+[ PERFORMANCE ]
+  FAIL [155428ms] Warmup — TPM pause + 3 sequential requests
+       Error: Assertion failed: Warmup 1 error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [100537ms] Latency benchmark — 5 messages (P50/P95)
+       Error: Assertion failed: Benchmark msg 1 error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [91394ms] Concurrent burst — 5 users simultaneously
+       Error: Assertion failed: 5 concurrent requests failed: Dr. Aria is unavailable right now. Please try again in a moment., Dr. Aria is unavailable right now. Please try again in a moment., Dr. Aria is unavailable right now. Please try again in a moment., Dr. Aria is unavailable right now. Please try again in a moment., Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90623ms] Long input (300 words) → streams without timeout
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  PASS [17155ms] Crisis signal → Dr. Aria continues (never cuts off)
+       Preview: Crisis response: "The thoughts you're describing, they sound like a deep exhaustion, a feeling of being drained from the inside out. It's ..."
+  FAIL [90419ms] Gap simulation → Dr. Aria acknowledges return naturally
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+
+──────────────────────────────────────────────────────────────────────
+  RESULTS   11/48 passed    37 FAILED
+  LATENCY   avg 11381ms   p50 4ms   p95 91394ms   p99 155428ms
+  REPORT    D:\Codes\Project\AI pyschologist\tests\reports\report-2026-04-13T14-03-03.txt
+──────────────────────────────────────────────────────────────────────
+
+Finished: 2026-04-13T14:13:26.020Z

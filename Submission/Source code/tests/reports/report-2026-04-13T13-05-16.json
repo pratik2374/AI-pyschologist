@@ -1,0 +1,425 @@
+{
+  "startedAt": "2026-04-13T13:34:42.705Z",
+  "baseUrl": "http://localhost:4000",
+  "total": 48,
+  "passed": 28,
+  "failed": 20,
+  "latency": {
+    "avg": 35508,
+    "p50": 73,
+    "p95": 90687,
+    "p99": 155579
+  },
+  "results": [
+    {
+      "suite": "Auth",
+      "name": "POST /auth/generate-otp → 200",
+      "passed": true,
+      "ms": 646,
+      "error": null,
+      "meta": {
+        "preview": "OTP sent successfully"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "OTP stored in DB",
+      "passed": true,
+      "ms": 8,
+      "error": null,
+      "meta": {
+        "preview": "OTP: 226942"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → 400 wrong OTP",
+      "passed": true,
+      "ms": 5,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → 400 short password",
+      "passed": true,
+      "ms": 4,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → role always Visitor",
+      "passed": true,
+      "ms": 98,
+      "error": null,
+      "meta": {
+        "preview": "User created, role=Visitor"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → 400 duplicate email",
+      "passed": true,
+      "ms": 9,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "GET /auth/me → 200 with user data",
+      "passed": true,
+      "ms": 4,
+      "error": null,
+      "meta": {
+        "preview": "name=Arjun Sharma, mode=A"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "GET /auth/me → 401 without token",
+      "passed": true,
+      "ms": 2,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "PUT /auth/profile → 200 updates preferredName",
+      "passed": true,
+      "ms": 6,
+      "error": null,
+      "meta": {
+        "preview": "preferredName=AJ"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/refresh → 200",
+      "passed": true,
+      "ms": 4,
+      "error": null,
+      "meta": {
+        "preview": "refreshed=false"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/logout → 200 clears cookie",
+      "passed": true,
+      "ms": 3,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "GET /auth/me → 401 after logout",
+      "passed": true,
+      "ms": 1,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/login → 200",
+      "passed": true,
+      "ms": 75,
+      "error": null,
+      "meta": {
+        "preview": "Logged in as arjun.test.aria@mailinator.com"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/login → 401 wrong password",
+      "passed": true,
+      "ms": 73,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/login → 401 unknown email",
+      "passed": true,
+      "ms": 3,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "POST /chat → 400 empty message",
+      "passed": true,
+      "ms": 7,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "POST /chat → 400 message too long",
+      "passed": true,
+      "ms": 7,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "POST /chat → 401 without token",
+      "passed": true,
+      "ms": 3,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "First message → SSE streams + opener in history",
+      "passed": false,
+      "ms": 90405,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Second message → streams coherent response",
+      "passed": false,
+      "ms": 90387,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 3: \"I know I should study but I just sit at ...\"",
+      "passed": false,
+      "ms": 90319,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 4: \"My dad said if I don't crack it this tim...\"",
+      "passed": false,
+      "ms": 90429,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 5: \"I don't think I'm stupid. I used to be g...\"",
+      "passed": false,
+      "ms": 90392,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 6: \"Yeah that's exactly it. When I'm in the ...\"",
+      "passed": false,
+      "ms": 90209,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 7: \"I never thought of it that way. My paren...\"",
+      "passed": false,
+      "ms": 90399,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 8: \"What do I do when I'm sitting at the des...\"",
+      "passed": false,
+      "ms": 90442,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 9: \"I tried that actually. Walking away for ...\"",
+      "passed": false,
+      "ms": 90360,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 10: \"Can I ask you something. Do you think I ...\"",
+      "passed": false,
+      "ms": 90513,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 11: \"You're right that I haven't actually dec...\"",
+      "passed": false,
+      "ms": 90535,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 12: \"I feel a bit lighter after saying that. ...\"",
+      "passed": false,
+      "ms": 90314,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 13: \"Same time tomorrow?...\"",
+      "passed": false,
+      "ms": 90687,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation metrics summary",
+      "passed": true,
+      "ms": 2,
+      "error": null,
+      "meta": {
+        "preview": "No metrics collected"
+      }
+    },
+    {
+      "suite": "Chat",
+      "name": "GET /chat/history → messages in order",
+      "passed": false,
+      "ms": 40,
+      "error": "Assertion failed: should have at least opener + messages",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "GET /chat/history → 401 without token",
+      "passed": true,
+      "ms": 3,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "GET /privacy/profile → 200 with stats",
+      "passed": true,
+      "ms": 18,
+      "error": null,
+      "meta": {
+        "preview": "messages=1  observations=0  profile=null"
+      }
+    },
+    {
+      "suite": "Privacy",
+      "name": "GET /privacy/profile → 401 without token",
+      "passed": true,
+      "ms": 2,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "PUT /privacy/emergency-contact → 200 saves encrypted",
+      "passed": true,
+      "ms": 10,
+      "error": null,
+      "meta": {
+        "preview": "Emergency contact saved"
+      }
+    },
+    {
+      "suite": "Privacy",
+      "name": "GET /privacy/emergency-contact → 200 decrypted",
+      "passed": true,
+      "ms": 9,
+      "error": null,
+      "meta": {
+        "preview": "name=Ramesh Sharma  phone=+91-9876543210"
+      }
+    },
+    {
+      "suite": "Privacy",
+      "name": "PUT /privacy/emergency-contact → 400 empty body",
+      "passed": true,
+      "ms": 4,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "Messages are encrypted at rest (Mode A)",
+      "passed": true,
+      "ms": 5,
+      "error": null,
+      "meta": {
+        "preview": "SKIPPED — no messages yet (run chat suite first to verify)"
+      }
+    },
+    {
+      "suite": "Privacy",
+      "name": "DELETE /privacy/account → 200 cascade deletes all data",
+      "passed": true,
+      "ms": 213,
+      "error": null,
+      "meta": {
+        "preview": "User + messages + observations all confirmed deleted"
+      }
+    },
+    {
+      "suite": "Privacy",
+      "name": "DELETE /privacy/account → 400 without confirmDelete",
+      "passed": true,
+      "ms": 3,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Warmup — TPM pause + 3 sequential requests",
+      "passed": false,
+      "ms": 155579,
+      "error": "Assertion failed: Warmup 1 error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Latency benchmark — 5 messages (P50/P95)",
+      "passed": false,
+      "ms": 100434,
+      "error": "Assertion failed: Benchmark msg 1 error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Concurrent burst — 5 users simultaneously",
+      "passed": false,
+      "ms": 434,
+      "error": "Assertion failed: 5 concurrent requests failed: HTTP 401: {\"success\":false,\"message\":\"Authentication required\"}, HTTP 401: {\"success\":false,\"message\":\"Authentication required\"}, HTTP 401: {\"success\":false,\"message\":\"Authentication required\"}, HTTP 401: {\"success\":false,\"message\":\"Authentication required\"}, HTTP 401: {\"success\":false,\"message\":\"Authentication required\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Long input (300 words) → streams without timeout",
+      "passed": false,
+      "ms": 90509,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Crisis signal → Dr. Aria continues (never cuts off)",
+      "passed": false,
+      "ms": 90356,
+      "error": "Assertion failed: Stream errored during crisis message: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Gap simulation → Dr. Aria acknowledges return naturally",
+      "passed": false,
+      "ms": 90431,
+      "error": "Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.",
+      "meta": {}
+    }
+  ]
+}

@@ -68,7 +68,21 @@
       "Bash(npm list *)",
       "Bash(node -e \"require\\('docx'\\); console.log\\('ok'\\)\")",
       "Bash(node scripts/gen_scorecard.js)",
-      "Bash(node -e \"const fs=require\\('fs'\\); const s=fs.statSync\\('DrAria_Evaluation_Scorecard.docx'\\); console.log\\('Size:', \\(s.size/1024\\).toFixed\\(1\\)+'KB'\\)\")"
+      "Bash(node -e \"const fs=require\\('fs'\\); const s=fs.statSync\\('DrAria_Evaluation_Scorecard.docx'\\); console.log\\('Size:', \\(s.size/1024\\).toFixed\\(1\\)+'KB'\\)\")",
+      "Bash(xargs ls *)",
+      "Bash(pandoc --track-changes=all \"C:\\\\Users\\\\prati\\\\Downloads\\\\12310305_123103006_123303002.docx\" -o output.md)",
+      "Bash(python scripts/office/unpack.py \"C:\\\\Users\\\\prati\\\\Downloads\\\\12310305_123103006_123303002.docx\" unpacked_team/)",
+      "Bash(npm --version)",
+      "Bash(node create_report.js)",
+      "Bash(node create_dataset_docs.js)",
+      "Bash(node create_pptx.js)",
+      "Bash(cp -r 'D:/Codes/Project/AI pyschologist/ai' 'D:/Codes/Project/AI pyschologist/Submission/Source code/ai')",
+      "Bash(cp -r 'D:/Codes/Project/AI pyschologist/models' 'D:/Codes/Project/AI pyschologist/Submission/Source code/models')",
+      "Bash(cp -r 'D:/Codes/Project/AI pyschologist/controllers' 'D:/Codes/Project/AI pyschologist/Submission/Source code/controllers')",
+      "Bash(cp -r 'D:/Codes/Project/AI pyschologist/routes' 'D:/Codes/Project/AI pyschologist/Submission/Source code/routes')",
+      "Bash(cp -r 'D:/Codes/Project/AI pyschologist/middlewares' 'D:/Codes/Project/AI pyschologist/Submission/Source code/middlewares')",
+      "Bash(cp \"C:/Users/prati/Downloads/DrAria_Evaluation_Scorecard.txt\" \"D:/Codes/Project/AI pyschologist/Submission/DATASET/DrAria_Evaluation_Scorecard_Full.txt\")",
+      "Bash(cp \"C:/Users/prati/Downloads/DrAria_Evaluation_Scorecard.txt\" \"D:/Codes/Project/AI pyschologist/Submission/Other Stuff/DrAria_Evaluation_Scorecard_Full.txt\")"
     ]
   }
 }

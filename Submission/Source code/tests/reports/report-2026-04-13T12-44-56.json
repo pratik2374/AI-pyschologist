@@ -1,0 +1,223 @@
+{
+  "startedAt": "2026-04-13T12:44:58.928Z",
+  "baseUrl": "http://localhost:4000",
+  "total": 23,
+  "passed": 23,
+  "failed": 0,
+  "latency": {
+    "avg": 77,
+    "p50": 6,
+    "p95": 189,
+    "p99": 1203
+  },
+  "results": [
+    {
+      "suite": "Auth",
+      "name": "POST /auth/generate-otp → 200",
+      "passed": true,
+      "ms": 1203,
+      "error": null,
+      "meta": {
+        "preview": "OTP sent successfully"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "OTP stored in DB",
+      "passed": true,
+      "ms": 12,
+      "error": null,
+      "meta": {
+        "preview": "OTP: 205753"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → 400 wrong OTP",
+      "passed": true,
+      "ms": 18,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → 400 short password",
+      "passed": true,
+      "ms": 6,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → role always Visitor",
+      "passed": true,
+      "ms": 110,
+      "error": null,
+      "meta": {
+        "preview": "User created, role=Visitor"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → 400 duplicate email",
+      "passed": true,
+      "ms": 10,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "GET /auth/me → 200 with user data",
+      "passed": true,
+      "ms": 6,
+      "error": null,
+      "meta": {
+        "preview": "name=Arjun Sharma, mode=A"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "GET /auth/me → 401 without token",
+      "passed": true,
+      "ms": 3,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "PUT /auth/profile → 200 updates preferredName",
+      "passed": true,
+      "ms": 11,
+      "error": null,
+      "meta": {
+        "preview": "preferredName=AJ"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/refresh → 200",
+      "passed": true,
+      "ms": 4,
+      "error": null,
+      "meta": {
+        "preview": "refreshed=false"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/logout → 200 clears cookie",
+      "passed": true,
+      "ms": 2,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "GET /auth/me → 401 after logout",
+      "passed": true,
+      "ms": 1,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/login → 200",
+      "passed": true,
+      "ms": 79,
+      "error": null,
+      "meta": {
+        "preview": "Logged in as arjun.test.aria@mailinator.com"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/login → 401 wrong password",
+      "passed": true,
+      "ms": 75,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/login → 401 unknown email",
+      "passed": true,
+      "ms": 3,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "GET /privacy/profile → 200 with stats",
+      "passed": true,
+      "ms": 9,
+      "error": null,
+      "meta": {
+        "preview": "messages=0  observations=0  profile=null"
+      }
+    },
+    {
+      "suite": "Privacy",
+      "name": "GET /privacy/profile → 401 without token",
+      "passed": true,
+      "ms": 1,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "PUT /privacy/emergency-contact → 200 saves encrypted",
+      "passed": true,
+      "ms": 6,
+      "error": null,
+      "meta": {
+        "preview": "Emergency contact saved"
+      }
+    },
+    {
+      "suite": "Privacy",
+      "name": "GET /privacy/emergency-contact → 200 decrypted",
+      "passed": true,
+      "ms": 5,
+      "error": null,
+      "meta": {
+        "preview": "name=Ramesh Sharma  phone=+91-9876543210"
+      }
+    },
+    {
+      "suite": "Privacy",
+      "name": "PUT /privacy/emergency-contact → 400 empty body",
+      "passed": true,
+      "ms": 2,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "Messages are encrypted at rest (Mode A)",
+      "passed": true,
+      "ms": 3,
+      "error": null,
+      "meta": {
+        "preview": "SKIPPED — no messages yet (run chat suite first to verify)"
+      }
+    },
+    {
+      "suite": "Privacy",
+      "name": "DELETE /privacy/account → 200 cascade deletes all data",
+      "passed": true,
+      "ms": 189,
+      "error": null,
+      "meta": {
+        "preview": "User + messages + observations all confirmed deleted"
+      }
+    },
+    {
+      "suite": "Privacy",
+      "name": "DELETE /privacy/account → 400 without confirmDelete",
+      "passed": true,
+      "ms": 3,
+      "error": null,
+      "meta": {}
+    }
+  ]
+}

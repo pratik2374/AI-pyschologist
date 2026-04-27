@@ -1,0 +1,61 @@
+Dr. Aria — Test Report
+Started:  2026-04-13T13:30:32.705Z
+Base URL: http://localhost:4000
+──────────────────────────────────────────────────────────────────────
+
+
+
+[ AUTH ]
+  PASS [1037ms] POST /auth/generate-otp → 200
+       Preview: OTP sent successfully
+  PASS [8ms] OTP stored in DB
+       Preview: OTP: 875713
+  FAIL [3ms] POST /auth/signup → 400 wrong OTP
+       Error: wrong OTP should 400: expected 400, got 429
+  FAIL [4ms] POST /auth/signup → 400 short password
+       Error: short password should 400: expected 400, got 429
+  FAIL [15ms] POST /auth/signup → role always Visitor
+       Error: signup should succeed: expected 201, got 429
+  FAIL [4ms] POST /auth/signup → 400 duplicate email
+       Error: duplicate email should 400: expected 400, got 429
+  FAIL [2ms] GET /auth/me → 200 with user data
+       Error: /auth/me: expected 200, got 401
+  PASS [3ms] GET /auth/me → 401 without token
+  FAIL [3ms] PUT /auth/profile → 200 updates preferredName
+       Error: profile update: expected 200, got 401
+  FAIL [2ms] POST /auth/refresh → 200
+       Error: refresh: expected 200, got 401
+  PASS [3ms] POST /auth/logout → 200 clears cookie
+  PASS [1ms] GET /auth/me → 401 after logout
+  FAIL [3ms] POST /auth/login → 200
+       Error: login: expected 200, got 429
+  FAIL [2ms] POST /auth/login → 401 wrong password
+       Error: wrong password should 401: expected 401, got 429
+  FAIL [1ms] POST /auth/login → 401 unknown email
+       Error: unknown email should 401: expected 401, got 429
+
+
+[ PRIVACY ]
+  FAIL [2ms] GET /privacy/profile → 200 with stats
+       Error: profile: expected 200, got 401
+  PASS [1ms] GET /privacy/profile → 401 without token
+  FAIL [2ms] PUT /privacy/emergency-contact → 200 saves encrypted
+       Error: save contact: expected 200, got 401
+  FAIL [2ms] GET /privacy/emergency-contact → 200 decrypted
+       Error: get contact: expected 200, got 401
+  FAIL [2ms] PUT /privacy/emergency-contact → 400 empty body
+       Error: empty contact: expected 400, got 401
+  PASS [2ms] Messages are encrypted at rest (Mode A)
+       Preview: SKIPPED — ENCRYPTION_MASTER_KEY not set in dev env
+  FAIL [92ms] DELETE /privacy/account → 200 cascade deletes all data
+       Error: delete account: expected 200, got 401
+  FAIL [2ms] DELETE /privacy/account → 400 without confirmDelete
+       Error: must require confirmDelete:true: expected 400, got 401
+
+──────────────────────────────────────────────────────────────────────
+  RESULTS   7/23 passed    16 FAILED
+  LATENCY   avg 52ms   p50 2ms   p95 92ms   p99 1037ms
+  REPORT    D:\Codes\Project\AI pyschologist\tests\reports\report-2026-04-13T13-30-32.txt
+──────────────────────────────────────────────────────────────────────
+
+Finished: 2026-04-13T13:30:33.951Z

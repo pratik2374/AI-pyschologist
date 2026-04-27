@@ -10,3 +10,4 @@ __pycache__
 tests/reports/*.txt
 tests/reports/*.json
 server.log
+.claude

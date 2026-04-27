@@ -1,0 +1,106 @@
+Dr. Aria — Test Report
+Started:  2026-04-13T13:05:16.903Z
+Base URL: http://localhost:4000
+──────────────────────────────────────────────────────────────────────
+
+
+
+[ AUTH ]
+  PASS [646ms] POST /auth/generate-otp → 200
+       Preview: OTP sent successfully
+  PASS [8ms] OTP stored in DB
+       Preview: OTP: 226942
+  PASS [5ms] POST /auth/signup → 400 wrong OTP
+  PASS [4ms] POST /auth/signup → 400 short password
+  PASS [98ms] POST /auth/signup → role always Visitor
+       Preview: User created, role=Visitor
+  PASS [9ms] POST /auth/signup → 400 duplicate email
+  PASS [4ms] GET /auth/me → 200 with user data
+       Preview: name=Arjun Sharma, mode=A
+  PASS [2ms] GET /auth/me → 401 without token
+  PASS [6ms] PUT /auth/profile → 200 updates preferredName
+       Preview: preferredName=AJ
+  PASS [4ms] POST /auth/refresh → 200
+       Preview: refreshed=false
+  PASS [3ms] POST /auth/logout → 200 clears cookie
+  PASS [1ms] GET /auth/me → 401 after logout
+  PASS [75ms] POST /auth/login → 200
+       Preview: Logged in as arjun.test.aria@mailinator.com
+  PASS [73ms] POST /auth/login → 401 wrong password
+  PASS [3ms] POST /auth/login → 401 unknown email
+
+
+[ CHAT ]
+  PASS [7ms] POST /chat → 400 empty message
+  PASS [7ms] POST /chat → 400 message too long
+  PASS [3ms] POST /chat → 401 without token
+  FAIL [90405ms] First message → SSE streams + opener in history
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90387ms] Second message → streams coherent response
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90319ms] Conversation msg 3: "I know I should study but I just sit at ..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90429ms] Conversation msg 4: "My dad said if I don't crack it this tim..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90392ms] Conversation msg 5: "I don't think I'm stupid. I used to be g..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90209ms] Conversation msg 6: "Yeah that's exactly it. When I'm in the ..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90399ms] Conversation msg 7: "I never thought of it that way. My paren..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90442ms] Conversation msg 8: "What do I do when I'm sitting at the des..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90360ms] Conversation msg 9: "I tried that actually. Walking away for ..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90513ms] Conversation msg 10: "Can I ask you something. Do you think I ..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90535ms] Conversation msg 11: "You're right that I haven't actually dec..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90314ms] Conversation msg 12: "I feel a bit lighter after saying that. ..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90687ms] Conversation msg 13: "Same time tomorrow?..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  PASS [2ms] Conversation metrics summary
+       Preview: No metrics collected
+  FAIL [40ms] GET /chat/history → messages in order
+       Error: Assertion failed: should have at least opener + messages
+  PASS [3ms] GET /chat/history → 401 without token
+
+
+[ PRIVACY ]
+  PASS [18ms] GET /privacy/profile → 200 with stats
+       Preview: messages=1  observations=0  profile=null
+  PASS [2ms] GET /privacy/profile → 401 without token
+  PASS [10ms] PUT /privacy/emergency-contact → 200 saves encrypted
+       Preview: Emergency contact saved
+  PASS [9ms] GET /privacy/emergency-contact → 200 decrypted
+       Preview: name=Ramesh Sharma  phone=+91-9876543210
+  PASS [4ms] PUT /privacy/emergency-contact → 400 empty body
+  PASS [5ms] Messages are encrypted at rest (Mode A)
+       Preview: SKIPPED — no messages yet (run chat suite first to verify)
+  PASS [213ms] DELETE /privacy/account → 200 cascade deletes all data
+       Preview: User + messages + observations all confirmed deleted
+  PASS [3ms] DELETE /privacy/account → 400 without confirmDelete
+
+
+[ PERFORMANCE ]
+  FAIL [155579ms] Warmup — TPM pause + 3 sequential requests
+       Error: Assertion failed: Warmup 1 error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [100434ms] Latency benchmark — 5 messages (P50/P95)
+       Error: Assertion failed: Benchmark msg 1 error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [434ms] Concurrent burst — 5 users simultaneously
+       Error: Assertion failed: 5 concurrent requests failed: HTTP 401: {"success":false,"message":"Authentication required"}, HTTP 401: {"success":false,"message":"Authentication required"}, HTTP 401: {"success":false,"message":"Authentication required"}, HTTP 401: {"success":false,"message":"Authentication required"}, HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [90509ms] Long input (300 words) → streams without timeout
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90356ms] Crisis signal → Dr. Aria continues (never cuts off)
+       Error: Assertion failed: Stream errored during crisis message: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [90431ms] Gap simulation → Dr. Aria acknowledges return naturally
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+
+──────────────────────────────────────────────────────────────────────
+  RESULTS   28/48 passed    20 FAILED
+  LATENCY   avg 35508ms   p50 73ms   p95 90687ms   p99 155579ms
+  REPORT    D:\Codes\Project\AI pyschologist\tests\reports\report-2026-04-13T13-05-16.txt
+──────────────────────────────────────────────────────────────────────
+
+Finished: 2026-04-13T13:34:42.705Z

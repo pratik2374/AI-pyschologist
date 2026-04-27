@@ -1,0 +1,57 @@
+Dr. Aria — Test Report
+Started:  2026-04-13T16:37:23.813Z
+Base URL: http://localhost:4000
+──────────────────────────────────────────────────────────────────────
+
+
+
+[ AUTH ]
+  FAIL [31ms] POST /auth/generate-otp → 200
+       Error: generate-otp: expected 200, got 429
+  FAIL [25ms] OTP stored in DB
+       Error: Assertion failed: OTP document should exist
+  FAIL [10ms] POST /auth/signup → 400 wrong OTP
+       Error: wrong OTP should 400: expected 400, got 429
+  FAIL [15ms] POST /auth/signup → 400 short password
+       Error: short password should 400: expected 400, got 429
+  FAIL [61ms] POST /auth/signup → role always Visitor
+       Error: signup should succeed: expected 201, got 429
+  FAIL [13ms] POST /auth/signup → 400 duplicate email
+       Error: duplicate email should 400: expected 400, got 429
+  FAIL [8ms] GET /auth/me → 200 with user data
+       Error: /auth/me: expected 200, got 401
+  PASS [6ms] GET /auth/me → 401 without token
+  FAIL [12ms] PUT /auth/profile → 200 updates preferredName
+       Error: profile update: expected 200, got 401
+  FAIL [12ms] POST /auth/refresh → 200
+       Error: refresh: expected 200, got 401
+  PASS [9ms] POST /auth/logout → 200 clears cookie
+  PASS [5ms] GET /auth/me → 401 after logout
+  FAIL [8ms] POST /auth/login → 200
+       Error: login: expected 200, got 429
+  FAIL [7ms] POST /auth/login → 401 wrong password
+       Error: wrong password should 401: expected 401, got 429
+  FAIL [6ms] POST /auth/login → 401 unknown email
+       Error: unknown email should 401: expected 401, got 429
+
+
+[ CHAT ]
+  FAIL [3ms] POST /chat → 400 empty message
+       Error: empty message: expected 400, got 401
+  FAIL [4ms] POST /chat → 400 message too long
+       Error: oversized message: expected 400, got 401
+  PASS [4ms] POST /chat → 401 without token
+  FAIL [3ms] First message → SSE streams + opener in history
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [18ms] Second message → streams coherent response
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [15ms] Conversation msg 3: "I know I should study but I just sit at ..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [8ms] Conversation msg 4: "My dad said if I don't crack it this tim..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [4ms] Conversation msg 5: "I don't think I'm stupid. I used to be g..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [7ms] Conversation msg 6: "Yeah that's exactly it. When I'm in the ..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [10ms] Conversation msg 7: "I never thought of it that way. My paren..."
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}

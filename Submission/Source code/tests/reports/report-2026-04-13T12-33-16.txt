@@ -1,0 +1,54 @@
+Dr. Aria — Test Report
+Started:  2026-04-13T12:33:16.740Z
+Base URL: http://localhost:4000
+──────────────────────────────────────────────────────────────────────
+
+
+
+[ AUTH ]
+  PASS [703ms] POST /auth/generate-otp → 200
+       Preview: OTP sent successfully
+  PASS [15ms] OTP stored in DB
+       Preview: OTP: 529241
+  PASS [21ms] POST /auth/signup → 400 wrong OTP
+  PASS [7ms] POST /auth/signup → 400 short password
+  PASS [122ms] POST /auth/signup → role always Visitor
+       Preview: User created, role=Visitor
+  PASS [13ms] POST /auth/signup → 400 duplicate email
+  PASS [8ms] GET /auth/me → 200 with user data
+       Preview: name=Arjun Sharma, mode=A
+  PASS [2ms] GET /auth/me → 401 without token
+  PASS [11ms] PUT /auth/profile → 200 updates preferredName
+       Preview: preferredName=AJ
+  PASS [5ms] POST /auth/refresh → 200
+       Preview: refreshed=false
+  PASS [3ms] POST /auth/logout → 200 clears cookie
+  PASS [2ms] GET /auth/me → 401 after logout
+  PASS [80ms] POST /auth/login → 200
+       Preview: Logged in as arjun.test.aria@mailinator.com
+  PASS [77ms] POST /auth/login → 401 wrong password
+  PASS [5ms] POST /auth/login → 401 unknown email
+
+
+[ PRIVACY ]
+  PASS [17ms] GET /privacy/profile → 200 with stats
+       Preview: messages=0  observations=0  profile=null
+  PASS [2ms] GET /privacy/profile → 401 without token
+  PASS [6ms] PUT /privacy/emergency-contact → 200 saves encrypted
+       Preview: Emergency contact saved
+  PASS [11ms] GET /privacy/emergency-contact → 200 decrypted
+       Preview: name=Ramesh Sharma  phone=+91-9876543210
+  PASS [2ms] PUT /privacy/emergency-contact → 400 empty body
+  FAIL [4ms] Messages are encrypted at rest (Mode A)
+       Error: Assertion failed: should have at least one user message
+  PASS [206ms] DELETE /privacy/account → 200 cascade deletes all data
+       Preview: User + messages + observations all confirmed deleted
+  PASS [4ms] DELETE /privacy/account → 400 without confirmDelete
+
+──────────────────────────────────────────────────────────────────────
+  RESULTS   22/23 passed    1 FAILED
+  LATENCY   avg 58ms   p50 8ms   p95 206ms   p99 703ms
+  REPORT    D:\Codes\Project\AI pyschologist\tests\reports\report-2026-04-13T12-33-16.txt
+──────────────────────────────────────────────────────────────────────
+
+Finished: 2026-04-13T12:33:18.127Z

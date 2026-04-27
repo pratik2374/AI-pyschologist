@@ -1,0 +1,77 @@
+================================================================================
+  Dr. Aria — AI Psychotherapist
+  PROJECT OVERVIEW & IMPORTANT LINKS
+  Team: Pratik Gond (123103006), Neha Roy (123303002), Kush Bohare (123103005)
+  Date: April 2026
+================================================================================
+
+PROJECT TITLE
+  Dr. Aria: An AI-Powered Psychotherapist with Longitudinal Memory,
+  Multi-Modal Therapy, and Crisis Detection
+
+PROJECT DESCRIPTION
+  Dr. Aria is a full-stack AI-powered psychotherapy web application designed to
+  provide accessible, empathetic, and evidence-based mental health support. The
+  system features a nine-section modular therapeutic prompt architecture, a
+  three-tier hierarchical memory system, a silent clinical observer, four-level
+  crisis detection, and AES-256-GCM dual-mode end-to-end encryption. It is
+  specifically designed for Indian users with built-in cultural context and
+  Hinglish language support.
+
+--------------------------------------------------------------------------------
+LIVE DEPLOYMENT
+  URL: https://ai-pyschologist-production.up.railway.app/
+
+GITHUB REPOSITORY
+  URL: https://github.com/pratik2374/AI-pyschologist
+
+GOOGLE DOC (Initial Project Documentation)
+  URL: https://docs.google.com/document/d/1pDIe0OUowROU7kE7zLzfTH1pz8bnqogDn7tiN_fjszw/edit?usp=sharing
+
+IEEE PAPER TEMPLATE
+  URL: https://www.ieee.org/conferences/publishing/templates.html
+
+--------------------------------------------------------------------------------
+TEAM ROLES
+  Pratik Gond     (123103006) — Lead Developer, Architecture, Backend, Database
+  Neha Roy        (123303002) — AI Integration, Prompt Engineering
+  Kush Bohare     (123103005) — Frontend, Testing, Evaluation
+
+--------------------------------------------------------------------------------
+TECH STACK SUMMARY
+  Frontend  : Next.js 16, React 19, TypeScript 5, Tailwind CSS 4
+  Backend   : Node.js 22, Express 5, JWT, bcrypt, AES-256-GCM
+  Database  : MongoDB 7.0, Mongoose 8
+  AI        : OpenAI GPT-4o (main), GPT-4o-mini (background tasks)
+  Email     : Resend API
+  Hosting   : Railway (backend), Vercel-compatible (frontend)
+
+--------------------------------------------------------------------------------
+KEY INNOVATIONS
+  1. Nine-section modular therapeutic prompt corpus (CBT + Humanistic + Psychoanalytic)
+  2. Three-tier hierarchical memory (verbatim → chapter summaries → longitudinal profile)
+  3. Silent asynchronous clinical observer with structured JSON output
+  4. Four-level crisis detection framework — non-disruptive, rapport-preserving
+  5. Dual-mode AES-256-GCM encryption (Mode A: server-assisted / Mode B: zero-knowledge)
+  6. India-specific cultural adaptation with Hinglish support
+
+--------------------------------------------------------------------------------
+EVALUATION RESULTS SUMMARY
+  - 8/8 clinical test scenarios: PASS
+  - Median TTFT: 843 ms (target < 2000 ms)
+  - Streaming speed: 20.7 tokens/second
+  - Observer emotional state correlation: r = 0.87
+  - Ideation flag precision: 0.91 / recall: 0.88
+  - Jailbreak resistance: 100% (all attempts deflected warmly)
+
+--------------------------------------------------------------------------------
+ETHICAL NOTES
+  - Dr. Aria is NOT a replacement for licensed mental health care
+  - All users are explicitly informed of AI limitations at signup
+  - No third-party analytics or tracking
+  - Crisis detection is silently logged — never interrupts therapeutic flow
+  - Emergency contact system requires explicit user opt-in and encryption
+
+================================================================================
+END OF OVERVIEW
+================================================================================

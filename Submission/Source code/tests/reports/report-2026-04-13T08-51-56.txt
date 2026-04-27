@@ -1,0 +1,65 @@
+Dr. Aria — Test Report
+Started:  2026-04-13T08:51:56.540Z
+Base URL: http://localhost:4000
+──────────────────────────────────────────────────────────────────────
+
+
+
+[ CHAT ]
+  PASS [82ms] POST /chat → 400 empty message
+  PASS [54ms] POST /chat → 400 message too long
+  PASS [25ms] POST /chat → 401 without token
+  PASS [1347ms] First message → SSE streams + opener in history
+       Preview: TTFT=1277ms  total=1346ms  tokens≈5  4tok/s | "Hello. What's going on?..."
+  PASS [19324ms] Second message → streams coherent response
+       Preview: TTFT=18968ms  total=19324ms  tokens≈75  4tok/s
+  FAIL [37123ms] Conversation msg 3: "I know I should study but I just sit at ..."
+       Error: Assertion failed: TTFT too slow: 36733ms (limit 8s)
+  FAIL [38310ms] Conversation msg 4: "My dad said if I don't crack it this tim..."
+       Error: Assertion failed: TTFT too slow: 37854ms (limit 8s)
+  FAIL [38284ms] Conversation msg 5: "I don't think I'm stupid. I used to be g..."
+       Error: Assertion failed: TTFT too slow: 37749ms (limit 8s)
+  FAIL [41273ms] Conversation msg 6: "Yeah that's exactly it. When I'm in the ..."
+       Error: Assertion failed: TTFT too slow: 40878ms (limit 8s)
+  FAIL [10892775ms] Conversation msg 7: "I never thought of it that way. My paren..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [1707ms] Conversation msg 8: "What do I do when I'm sitting at the des..."
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  PASS [5830ms] Conversation msg 9: "I tried that actually. Walking away for ..."
+       Preview: TTFT=5374ms  total=5830ms  ~134tok  23tok/s
+  FAIL [30357ms] Conversation msg 10: "Can I ask you something. Do you think I ..."
+       Error: Assertion failed: TTFT too slow: 30050ms (limit 8s)
+  FAIL [43976ms] Conversation msg 11: "You're right that I haven't actually dec..."
+       Error: Assertion failed: TTFT too slow: 43503ms (limit 8s)
+  FAIL [43613ms] Conversation msg 12: "I feel a bit lighter after saying that. ..."
+       Error: Assertion failed: TTFT too slow: 43268ms (limit 8s)
+  FAIL [47031ms] Conversation msg 13: "Same time tomorrow?..."
+       Error: Assertion failed: TTFT too slow: 46919ms (limit 8s)
+  FAIL [1ms] Conversation metrics summary
+       Error: Assertion failed: Average TTFT 5374ms exceeds 5s threshold
+  PASS [28ms] GET /chat/history → messages in order
+       Preview: 24 messages, first role="aria", mode=A
+  PASS [3ms] GET /chat/history → 401 without token
+
+
+[ PERFORMANCE ]
+  FAIL [71398ms] Warmup — 3 sequential requests
+       Error: Assertion failed: Warmup 3 error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [455ms] Latency benchmark — 10 messages (P50/P95)
+       Error: Assertion failed: Benchmark msg 1 error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [1036ms] Concurrent burst — 5 users simultaneously
+       Error: Assertion failed: 5 concurrent requests failed: Dr. Aria is unavailable right now. Please try again in a moment., Dr. Aria is unavailable right now. Please try again in a moment., Dr. Aria is unavailable right now. Please try again in a moment., Dr. Aria is unavailable right now. Please try again in a moment., Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [145ms] Long input (300 words) → streams without timeout
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [112ms] Crisis signal → Dr. Aria continues (never cuts off)
+       Error: Assertion failed: Stream errored during crisis message: Dr. Aria is unavailable right now. Please try again in a moment.
+  FAIL [415ms] Gap simulation → Dr. Aria acknowledges return naturally
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
+
+──────────────────────────────────────────────────────────────────────
+  RESULTS   8/25 passed    17 FAILED
+  LATENCY   avg 452588ms   p50 1707ms   p95 71398ms   p99 10892775ms
+  REPORT    D:\Codes\Project\AI pyschologist\tests\reports\report-2026-04-13T08-51-56.txt
+──────────────────────────────────────────────────────────────────────
+
+Finished: 2026-04-13T12:00:37.914Z

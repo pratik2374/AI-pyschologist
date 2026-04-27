@@ -1,0 +1,201 @@
+{
+  "startedAt": "2026-04-13T13:31:15.788Z",
+  "baseUrl": "http://localhost:4000",
+  "total": 23,
+  "passed": 5,
+  "failed": 18,
+  "latency": {
+    "avg": 9,
+    "p50": 3,
+    "p95": 24,
+    "p99": 100
+  },
+  "results": [
+    {
+      "suite": "Auth",
+      "name": "POST /auth/generate-otp → 200",
+      "passed": false,
+      "ms": 18,
+      "error": "generate-otp: expected 200, got 429",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "OTP stored in DB",
+      "passed": false,
+      "ms": 12,
+      "error": "Assertion failed: OTP document should exist",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → 400 wrong OTP",
+      "passed": false,
+      "ms": 6,
+      "error": "wrong OTP should 400: expected 400, got 429",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → 400 short password",
+      "passed": false,
+      "ms": 8,
+      "error": "short password should 400: expected 400, got 429",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → role always Visitor",
+      "passed": false,
+      "ms": 24,
+      "error": "signup should succeed: expected 201, got 429",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → 400 duplicate email",
+      "passed": false,
+      "ms": 5,
+      "error": "duplicate email should 400: expected 400, got 429",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "GET /auth/me → 200 with user data",
+      "passed": false,
+      "ms": 2,
+      "error": "/auth/me: expected 200, got 401",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "GET /auth/me → 401 without token",
+      "passed": true,
+      "ms": 1,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "PUT /auth/profile → 200 updates preferredName",
+      "passed": false,
+      "ms": 5,
+      "error": "profile update: expected 200, got 401",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/refresh → 200",
+      "passed": false,
+      "ms": 7,
+      "error": "refresh: expected 200, got 401",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/logout → 200 clears cookie",
+      "passed": true,
+      "ms": 5,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "GET /auth/me → 401 after logout",
+      "passed": true,
+      "ms": 2,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/login → 200",
+      "passed": false,
+      "ms": 3,
+      "error": "login: expected 200, got 429",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/login → 401 wrong password",
+      "passed": false,
+      "ms": 3,
+      "error": "wrong password should 401: expected 401, got 429",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/login → 401 unknown email",
+      "passed": false,
+      "ms": 2,
+      "error": "unknown email should 401: expected 401, got 429",
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "GET /privacy/profile → 200 with stats",
+      "passed": false,
+      "ms": 1,
+      "error": "profile: expected 200, got 401",
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "GET /privacy/profile → 401 without token",
+      "passed": true,
+      "ms": 2,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "PUT /privacy/emergency-contact → 200 saves encrypted",
+      "passed": false,
+      "ms": 3,
+      "error": "save contact: expected 200, got 401",
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "GET /privacy/emergency-contact → 200 decrypted",
+      "passed": false,
+      "ms": 2,
+      "error": "get contact: expected 200, got 401",
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "PUT /privacy/emergency-contact → 400 empty body",
+      "passed": false,
+      "ms": 2,
+      "error": "empty contact: expected 400, got 401",
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "Messages are encrypted at rest (Mode A)",
+      "passed": true,
+      "ms": 2,
+      "error": null,
+      "meta": {
+        "preview": "SKIPPED — ENCRYPTION_MASTER_KEY not set in dev env"
+      }
+    },
+    {
+      "suite": "Privacy",
+      "name": "DELETE /privacy/account → 200 cascade deletes all data",
+      "passed": false,
+      "ms": 100,
+      "error": "delete account: expected 200, got 401",
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "DELETE /privacy/account → 400 without confirmDelete",
+      "passed": false,
+      "ms": 2,
+      "error": "must require confirmDelete:true: expected 400, got 401",
+      "meta": {}
+    }
+  ]
+}

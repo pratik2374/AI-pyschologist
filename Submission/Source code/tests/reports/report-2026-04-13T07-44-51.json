@@ -1,0 +1,403 @@
+{
+  "startedAt": "2026-04-13T07:44:53.282Z",
+  "baseUrl": "http://localhost:4000",
+  "total": 48,
+  "passed": 4,
+  "failed": 44,
+  "latency": {
+    "avg": 14,
+    "p50": 8,
+    "p95": 25,
+    "p99": 295
+  },
+  "results": [
+    {
+      "suite": "Auth",
+      "name": "POST /auth/generate-otp → 200",
+      "passed": false,
+      "ms": 25,
+      "error": "generate-otp: expected 200, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "OTP stored in DB",
+      "passed": false,
+      "ms": 11,
+      "error": "Assertion failed: OTP document should exist",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → 400 wrong OTP",
+      "passed": false,
+      "ms": 11,
+      "error": "wrong OTP should 400: expected 400, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → 400 short password",
+      "passed": false,
+      "ms": 15,
+      "error": "short password should 400: expected 400, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → role always Visitor",
+      "passed": false,
+      "ms": 26,
+      "error": "signup should succeed: expected 201, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/signup → 400 duplicate email",
+      "passed": false,
+      "ms": 6,
+      "error": "duplicate email should 400: expected 400, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "GET /auth/me → 200 with user data",
+      "passed": false,
+      "ms": 5,
+      "error": "/auth/me: expected 200, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "GET /auth/me → 401 without token",
+      "passed": false,
+      "ms": 4,
+      "error": "no token should 401: expected 401, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "PUT /auth/profile → 200 updates preferredName",
+      "passed": false,
+      "ms": 4,
+      "error": "profile update: expected 200, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/refresh → 200",
+      "passed": false,
+      "ms": 4,
+      "error": "refresh: expected 200, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/logout → 200 clears cookie",
+      "passed": false,
+      "ms": 5,
+      "error": "logout: expected 200, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "GET /auth/me → 401 after logout",
+      "passed": false,
+      "ms": 3,
+      "error": "should be 401 after logout: expected 401, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/login → 200",
+      "passed": false,
+      "ms": 3,
+      "error": "login: expected 200, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/login → 401 wrong password",
+      "passed": false,
+      "ms": 4,
+      "error": "wrong password should 401: expected 401, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "POST /auth/login → 401 unknown email",
+      "passed": false,
+      "ms": 3,
+      "error": "unknown email should 401: expected 401, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "POST /chat → 400 empty message",
+      "passed": false,
+      "ms": 3,
+      "error": "empty message: expected 400, got 401",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "POST /chat → 400 message too long",
+      "passed": false,
+      "ms": 6,
+      "error": "oversized message: expected 400, got 401",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "POST /chat → 401 without token",
+      "passed": true,
+      "ms": 8,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "First message → SSE streams + opener in history",
+      "passed": false,
+      "ms": 9,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Second message → streams coherent response",
+      "passed": false,
+      "ms": 11,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 3: \"I know I should study but I just sit at ...\"",
+      "passed": false,
+      "ms": 9,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 4: \"My dad said if I don't crack it this tim...\"",
+      "passed": false,
+      "ms": 9,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 5: \"I don't think I'm stupid. I used to be g...\"",
+      "passed": false,
+      "ms": 8,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 6: \"Yeah that's exactly it. When I'm in the ...\"",
+      "passed": false,
+      "ms": 7,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 7: \"I never thought of it that way. My paren...\"",
+      "passed": false,
+      "ms": 10,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 8: \"What do I do when I'm sitting at the des...\"",
+      "passed": false,
+      "ms": 6,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 9: \"I tried that actually. Walking away for ...\"",
+      "passed": false,
+      "ms": 8,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 10: \"Can I ask you something. Do you think I ...\"",
+      "passed": false,
+      "ms": 9,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 11: \"You're right that I haven't actually dec...\"",
+      "passed": false,
+      "ms": 8,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 12: \"I feel a bit lighter after saying that. ...\"",
+      "passed": false,
+      "ms": 10,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation msg 13: \"Same time tomorrow?...\"",
+      "passed": false,
+      "ms": 8,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "Conversation metrics summary",
+      "passed": true,
+      "ms": 1,
+      "error": null,
+      "meta": {
+        "preview": "No metrics collected"
+      }
+    },
+    {
+      "suite": "Chat",
+      "name": "GET /chat/history → messages in order",
+      "passed": false,
+      "ms": 9,
+      "error": "history: expected 200, got 401",
+      "meta": {}
+    },
+    {
+      "suite": "Chat",
+      "name": "GET /chat/history → 401 without token",
+      "passed": true,
+      "ms": 6,
+      "error": null,
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "GET /privacy/profile → 200 with stats",
+      "passed": false,
+      "ms": 7,
+      "error": "profile: expected 200, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "GET /privacy/profile → 401 without token",
+      "passed": false,
+      "ms": 4,
+      "error": "no token: expected 401, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "PUT /privacy/emergency-contact → 200 saves encrypted",
+      "passed": false,
+      "ms": 12,
+      "error": "save contact: expected 200, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "GET /privacy/emergency-contact → 200 decrypted",
+      "passed": false,
+      "ms": 6,
+      "error": "get contact: expected 200, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "PUT /privacy/emergency-contact → 400 empty body",
+      "passed": false,
+      "ms": 9,
+      "error": "empty contact: expected 400, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "Messages are encrypted at rest (Mode A)",
+      "passed": true,
+      "ms": 8,
+      "error": null,
+      "meta": {
+        "preview": "SKIPPED — ENCRYPTION_MASTER_KEY not set in dev env"
+      }
+    },
+    {
+      "suite": "Privacy",
+      "name": "DELETE /privacy/account → 200 cascade deletes all data",
+      "passed": false,
+      "ms": 295,
+      "error": "delete account: expected 200, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Privacy",
+      "name": "DELETE /privacy/account → 400 without confirmDelete",
+      "passed": false,
+      "ms": 7,
+      "error": "must require confirmDelete:true: expected 400, got 404",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Warmup — 3 sequential requests",
+      "passed": false,
+      "ms": 7,
+      "error": "Assertion failed: Warmup 1 error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Latency benchmark — 10 messages (P50/P95)",
+      "passed": false,
+      "ms": 5,
+      "error": "Assertion failed: Benchmark msg 1 error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Concurrent burst — 5 simultaneous requests",
+      "passed": false,
+      "ms": 25,
+      "error": "Assertion failed: 5 concurrent requests failed (max 1 allowed): HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}, HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}, HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}, HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}, HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Long input (300 words) → streams without timeout",
+      "passed": false,
+      "ms": 7,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Crisis signal → Dr. Aria continues (never cuts off)",
+      "passed": false,
+      "ms": 6,
+      "error": "Assertion failed: Stream errored during crisis message: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    },
+    {
+      "suite": "Performance",
+      "name": "Gap simulation → Dr. Aria acknowledges return naturally",
+      "passed": false,
+      "ms": 20,
+      "error": "Assertion failed: stream error: HTTP 401: {\"success\":false,\"message\":\"No JWT token found\"}",
+      "meta": {}
+    }
+  ]
+}

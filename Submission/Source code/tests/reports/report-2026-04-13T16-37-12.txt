@@ -1,0 +1,47 @@
+Dr. Aria — Test Report
+Started:  2026-04-13T16:37:12.631Z
+Base URL: http://localhost:4000
+──────────────────────────────────────────────────────────────────────
+
+
+
+[ AUTH ]
+  PASS [1147ms] POST /auth/generate-otp → 200
+       Preview: OTP sent successfully
+  PASS [45ms] OTP stored in DB
+       Preview: OTP: 827713
+  FAIL [15ms] POST /auth/signup → 400 wrong OTP
+       Error: wrong OTP should 400: expected 400, got 429
+  FAIL [21ms] POST /auth/signup → 400 short password
+       Error: short password should 400: expected 400, got 429
+  FAIL [60ms] POST /auth/signup → role always Visitor
+       Error: signup should succeed: expected 201, got 429
+  FAIL [10ms] POST /auth/signup → 400 duplicate email
+       Error: duplicate email should 400: expected 400, got 429
+  FAIL [7ms] GET /auth/me → 200 with user data
+       Error: /auth/me: expected 200, got 401
+  PASS [5ms] GET /auth/me → 401 without token
+  FAIL [6ms] PUT /auth/profile → 200 updates preferredName
+       Error: profile update: expected 200, got 401
+  FAIL [6ms] POST /auth/refresh → 200
+       Error: refresh: expected 200, got 401
+  PASS [6ms] POST /auth/logout → 200 clears cookie
+  PASS [3ms] GET /auth/me → 401 after logout
+  FAIL [5ms] POST /auth/login → 200
+       Error: login: expected 200, got 429
+  FAIL [4ms] POST /auth/login → 401 wrong password
+       Error: wrong password should 401: expected 401, got 429
+  FAIL [3ms] POST /auth/login → 401 unknown email
+       Error: unknown email should 401: expected 401, got 429
+
+
+[ CHAT ]
+  FAIL [4ms] POST /chat → 400 empty message
+       Error: empty message: expected 400, got 401
+  FAIL [3ms] POST /chat → 400 message too long
+       Error: oversized message: expected 400, got 401
+  PASS [5ms] POST /chat → 401 without token
+  FAIL [5ms] First message → SSE streams + opener in history
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}
+  FAIL [31ms] Second message → streams coherent response
+       Error: Assertion failed: stream error: HTTP 401: {"success":false,"message":"Authentication required"}

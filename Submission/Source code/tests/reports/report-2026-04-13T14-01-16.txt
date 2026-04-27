@@ -1,0 +1,38 @@
+Dr. Aria — Test Report
+Started:  2026-04-13T14:01:16.452Z
+Base URL: http://localhost:4000
+──────────────────────────────────────────────────────────────────────
+
+
+
+[ AUTH ]
+  PASS [889ms] POST /auth/generate-otp → 200
+       Preview: OTP sent successfully
+  PASS [35ms] OTP stored in DB
+       Preview: OTP: 644986
+  PASS [10ms] POST /auth/signup → 400 wrong OTP
+  PASS [6ms] POST /auth/signup → 400 short password
+  PASS [98ms] POST /auth/signup → role always Visitor
+       Preview: User created, role=Visitor
+  PASS [8ms] POST /auth/signup → 400 duplicate email
+  PASS [5ms] GET /auth/me → 200 with user data
+       Preview: name=Arjun Sharma, mode=A
+  PASS [2ms] GET /auth/me → 401 without token
+  PASS [5ms] PUT /auth/profile → 200 updates preferredName
+       Preview: preferredName=AJ
+  PASS [5ms] POST /auth/refresh → 200
+       Preview: refreshed=false
+  PASS [2ms] POST /auth/logout → 200 clears cookie
+  PASS [2ms] GET /auth/me → 401 after logout
+  PASS [82ms] POST /auth/login → 200
+       Preview: Logged in as arjun.test.aria@mailinator.com
+  PASS [91ms] POST /auth/login → 401 wrong password
+  PASS [4ms] POST /auth/login → 401 unknown email
+
+
+[ CHAT ]
+  PASS [11ms] POST /chat → 400 empty message
+  PASS [10ms] POST /chat → 400 message too long
+  PASS [3ms] POST /chat → 401 without token
+  FAIL [91010ms] First message → SSE streams + opener in history
+       Error: Assertion failed: stream error: Dr. Aria is unavailable right now. Please try again in a moment.
