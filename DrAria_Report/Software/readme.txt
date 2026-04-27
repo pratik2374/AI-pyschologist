@@ -168,7 +168,7 @@ DEPLOYMENT (Production)
 - Enable HTTPS at load balancer level
 - Rotate SECRET_KEY and ENCRYPTION_MASTER_KEY before production launch
 
-Existing deployment: https://ai-pyschologist-production.up.railway.app/
+Existing deployment: https://ai-pyschologist.vercel.app/
 
 ================================================================================
 END OF README

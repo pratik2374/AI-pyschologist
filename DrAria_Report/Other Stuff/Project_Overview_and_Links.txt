@@ -20,7 +20,7 @@ PROJECT DESCRIPTION
 
 --------------------------------------------------------------------------------
 LIVE DEPLOYMENT
-  URL: https://ai-pyschologist-production.up.railway.app/
+  URL: https://ai-pyschologist.vercel.app/
 
 GITHUB REPOSITORY
   URL: https://github.com/pratik2374/AI-pyschologist

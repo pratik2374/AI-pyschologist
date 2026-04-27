@@ -18,7 +18,7 @@ Please save the screenshots with these exact filenames in this folder:
       "ARIA IS PRESENT" indicator and cursive conversation text
 
 These were captured from the live deployment at:
-  https://ai-pyschologist-production.up.railway.app/
+  https://ai-pyschologist.vercel.app/
 
 How to capture them:
   1. Open the URL above in Chrome
