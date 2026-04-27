@@ -42,8 +42,25 @@ app.use(helmet({
         : false
 }));
 
+const allowedOrigins = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(u => u.trim()) : [];
+
 app.use(cors({
-    origin:      process.env.FRONTEND_URL,
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like server-to-server or curl)
+        if (!origin) return callback(null, true);
+        
+        // Allow if it matches the exact FRONTEND_URL
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        
+        // Allow any Vercel preview URL or local dev URL automatically
+        if (origin.endsWith('.vercel.app') || origin.startsWith('http://localhost:')) {
+            return callback(null, true);
+        }
+        
+        return callback(null, false); // Fail silently instead of throwing error to prevent crash logs
+    },
     credentials: true    // Required for HttpOnly cookies to work cross-origin
 }));
 
