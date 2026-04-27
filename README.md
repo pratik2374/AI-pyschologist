@@ -1,0 +1,133 @@
+# Dr. Aria - AI Psychologist
+
+Dr. Aria is a highly sophisticated, AI-driven psychological chat application. It provides real-time, clinically informed therapeutic conversations using a dual-model LLM architecture. Designed with strict privacy in mind, the platform supports both server-side and end-to-end encryption.
+
+## 🧠 Core Features
+
+- **Real-Time Therapy Chat**: Low-latency, token-by-token streaming responses using Server-Sent Events (SSE).
+- **Dual-Model AI Architecture**: 
+  - Uses a heavy model (e.g., `gpt-4o`) for high-quality, empathetic primary responses.
+  - Uses a lighter model (e.g., `gpt-4o-mini`) for asynchronous background tasks.
+- **Asynchronous Clinical Subsystems**:
+  - **Observer**: Silently analyzes conversations to extract clinical insights, emotional states, and behavioral patterns.
+  - **Compressor**: Summarizes past conversational chapters to prevent context window overflow.
+  - **Synthesizer**: Builds and maintains a longitudinal profile of the user's mental health journey.
+- **Dual-Mode Privacy**:
+  - **Mode A (Server-Side Encryption)**: The server securely encrypts and decrypts messages in RAM.
+  - **Mode B (End-to-End Encryption)**: The client encrypts messages locally. The server only sees ciphertext for storage and transient plaintext in RAM strictly during the request lifecycle.
+- **Built-in CLI Tool**: Includes a powerful `chat.js` CLI script for interacting directly with the backend without needing the frontend.
+
+## 🛠 Tech Stack
+
+- **Frontend**: Next.js 16, React 19, Tailwind CSS (Found in the `Frontend/` folder).
+- **Backend**: Node.js, Express.js.
+- **Database**: MongoDB (Mongoose).
+- **AI Integration**: OpenAI SDK.
+- **Security**: JWT for stateless auth, bcrypt for password hashing, AES for message encryption.
+
+## 📂 Project Structure
+
+```text
+├── Frontend/           # Next.js 16 Client Application
+├── ai/                 # AI prompt builders, wrappers, and asynchronous processors
+│   ├── groq.js               # OpenAI API bindings & streaming logic
+│   ├── observer.js           # Silent clinical insights generator
+│   ├── chapterCompressor.js  # Context summarization
+│   └── profileSynthesizer.js # Longitudinal user profiling
+├── config/             # DB & environmental config
+├── controllers/        # Express route handlers (Auth, Chat, Privacy)
+├── middlewares/        # JWT Authentication and Route Protection
+├── models/             # Mongoose schemas (User, Message, Profile, etc.)
+├── routes/             # Express API routing and rate limiting
+├── utils/              # Encryption utilities, mailing, and cron jobs
+├── chat.js             # Interactive CLI client for local testing
+└── index.js            # Main backend Express server entry point
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v18+)
+- MongoDB instance (local or Atlas)
+- OpenAI API Key
+
+### 1. Backend Setup
+
+1. Clone the repository and navigate to the project root.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file in the root directory:
+   ```env
+   PORT=4000
+   FRONTEND_URL=http://localhost:3000
+   MONGODB_URL=mongodb+srv://<user>:<password>@cluster.mongodb.net/dr-aria
+   SECRET_KEY=your_super_secret_jwt_key
+   OPENAI_API_KEY=sk-proj-...
+   
+   # Optional: Model overrides
+   OPENAI_MAIN_MODEL=gpt-4o
+   OPENAI_FAST_MODEL=gpt-4o-mini
+   ```
+4. Start the backend server:
+   ```bash
+   npm run dev
+   # or
+   node index.js
+   ```
+
+### 2. Frontend Setup
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd Frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Copy the example `.env` variables (ensure it points to the backend API):
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:4000/api/v1
+   ```
+4. Start the Next.js development server:
+   ```bash
+   npm run dev
+   ```
+5. Access the app at `http://localhost:3000`.
+
+## 💻 Using the CLI (`chat.js`)
+
+You can test the AI logic, SSE streams, and authentication locally without starting the frontend using the built-in CLI tool.
+
+Ensure the backend server is running, then run:
+
+```bash
+node chat.js
+```
+
+**CLI Options:**
+- `node chat.js --email=me@example.com` (Login with specific email)
+- `node chat.js --signup` (Force a fresh user creation)
+- `node chat.js --verbose` (Show full error stack traces and JWT debug info)
+
+**In-Chat Commands:**
+- `/history` - Show your last 6 messages
+- `/me` - View current user statistics and encryption mode
+- `/clear` - Refresh session JWT
+- `/quit` - Exit the CLI
+
+## 🛡 Security & Rate Limiting
+
+The application uses multiple strict limiters to prevent abuse:
+- **OTP Limiter**: Protects SMS/Email gateways.
+- **Auth Limiter**: Prevents brute forcing on `/login` and `/signup`.
+- **Chat Limiter**: Limits users to a strict conversational pace (e.g., 20 requests per minute) to protect OpenAI API quotas. 
+
+## 🔄 Automated Tasks
+
+- **Weekly Reporter (`utils/weeklyReportCron.js`)**: A cron job runs every Sunday to compile insights and longitudinal profiles generated by the observer into structured weekly summaries. 
+
+---
+*Disclaimer: Dr. Aria is an AI tool designed for psychological support simulation and is not a replacement for professional human psychiatric or medical help.*
