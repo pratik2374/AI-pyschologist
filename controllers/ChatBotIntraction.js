@@ -92,6 +92,7 @@ exports.pastHistory = async (req, res) => {
  *   data: {"type":"error","message":"..."}
  */
 exports.currChat = async (req, res) => {
+    console.log(`[currChat] Request received from user: ${req.decoded?.userid}`);
     const userId = req.decoded?.userid;
 
     try {

@@ -13,7 +13,9 @@
     "test:perf": "node tests/cli.js --suite=perf",
     "test:verbose": "node tests/cli.js --verbose",
     "test:clean": "node tests/cli.js --suite=all --clean",
-    "chat": "node chat.js"
+    "chat": "node chat.js",
+    "agent": "node agent/agent.js start",
+    "agent:dev": "node agent/agent.js dev"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -27,6 +29,7 @@
     "groq-sdk": "^1.1.2",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.3",
+    "livekit-server-sdk": "^2.19.1",
     "mongodb": "^6.21.0",
     "mongoose": "^8.22.0",
     "node-cron": "^4.2.1",

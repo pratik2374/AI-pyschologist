@@ -12,6 +12,7 @@ const {
     getEmergencyContact,
     deleteAccount
 } = require("../controllers/privacy");
+const { getVoiceToken } = require("../controllers/voice");
 
 // ─── Rate limiters ─────────────────────────────────────────────────────────────
 // In development / test mode we relax limits significantly so the test suite
@@ -68,6 +69,10 @@ route.post("/auth/reset-password/:token",          resetPassword);
 // ─── Chat (protected) ──────────────────────────────────────────────────────────
 route.get("/chat/history",            AuthN, isVisitor,             pastHistory);
 route.post("/chat",                   AuthN, isVisitor, chatLimiter, currChat);
+
+// ─── LiveKit Voice Session (protected) ─────────────────────────────────────────
+route.post("/voice/token",            AuthN, isVisitor,             getVoiceToken);
+route.get("/voice/token",             AuthN, isVisitor,             getVoiceToken);
 
 // ─── Privacy (protected) ──────────────────────────────────────────────────────
 route.get("/privacy/profile",                  AuthN, isVisitor, viewProfile);

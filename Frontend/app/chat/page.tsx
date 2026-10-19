@@ -1,15 +1,32 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
-import { Leaf } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Leaf, Mic, MicOff, Headphones } from 'lucide-react';
 import { useChat } from '@/hooks/useChat';
+import { useSpeechToText } from '@/hooks/useSpeechToText';
 import MessageBubble from '@/components/ui/MessageBubble';
 import TypingIndicator from '@/components/ui/TypingIndicator';
-
+import VoiceModeModal from '@/components/ui/VoiceModeModal';
 
 export default function TherapyRoom() {
   const { messages, input, setInput, isTyping, sendMessage, fetchHistory } = useChat();
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Feature 1: Speech-to-Text Dictation
+  const {
+    isListening,
+    isSupported: isSpeechSupported,
+    toggleListening,
+    stopListening
+  } = useSpeechToText({
+    onTranscript: (spokenText) => {
+      setInput((prev) => {
+        const trimmed = prev.trim();
+        return trimmed ? `${trimmed} ${spokenText}` : spokenText;
+      });
+    },
+  });
 
   // Fetch history on mount
   useEffect(() => {
@@ -24,7 +41,8 @@ export default function TherapyRoom() {
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    sendMessage(); // Defaults to Mode A for standard usage. Can pull mode from context if needed.
+    if (isListening) stopListening();
+    sendMessage();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -36,7 +54,7 @@ export default function TherapyRoom() {
 
   return (
     <div className="flex flex-col h-screen relative z-10">
-      {/* Subtle Header */}
+      {/* Subtle Header with Voice Mode trigger */}
       <div className="px-6 py-8 flex justify-between items-center sticky top-0 bg-gradient-to-b from-[#F7F5F0] via-[#F7F5F0]/80 to-transparent z-20">
         <button 
           onClick={() => window.history.back()}
@@ -45,9 +63,24 @@ export default function TherapyRoom() {
         >
           ← Back
         </button>
-        <span className="text-xs uppercase tracking-[0.3em] text-[#8A9386] flex items-center gap-3">
-          <Leaf className="w-3 h-3 opacity-50" /> Aria is present
-        </span>
+
+        <div className="flex items-center gap-4">
+          <span className="text-xs uppercase tracking-[0.3em] text-[#8A9386] flex items-center gap-3">
+            <Leaf className="w-3 h-3 opacity-50" /> Aria is present
+          </span>
+
+          {/* ChatGPT-style Voice-to-Voice Call Button */}
+          <button
+            onClick={() => setIsVoiceModalOpen(true)}
+            aria-label="Start Voice Session with Dr. Aria"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#8A9386]/30 bg-white/40 hover:bg-white/80 text-[#475A4A] text-xs uppercase tracking-wider font-mono shadow-sm transition-all hover:scale-105"
+            title="Start conversational voice session"
+          >
+            <Headphones className="w-3.5 h-3.5 text-[#5C7060]" />
+            <span className="hidden sm:inline">Voice Call</span>
+          </button>
+        </div>
+
         <div className="w-12"></div> {/* Spacer to keep header centered */}
       </div>
 
@@ -70,20 +103,40 @@ export default function TherapyRoom() {
         </div>
       </div>
 
-      {/* Input Area - Journal entry style */}
+      {/* Input Area - Journal entry style with Speech-to-Text */}
       <div className="fixed bottom-8 md:bottom-12 left-0 w-full px-4 md:px-6 flex justify-center z-20 pointer-events-none">
         <div className="w-full max-w-3xl bg-white/40 backdrop-blur-2xl rounded-[2rem] p-3 shadow-[0_10px_40px_rgb(0,0,0,0.03)] border border-white/60 pointer-events-auto transition-all focus-within:bg-white/80 focus-within:shadow-[0_10px_40px_rgb(0,0,0,0.06)]">
           <form onSubmit={handleSubmit} className="flex items-center gap-2">
             <textarea 
               rows={1}
               aria-label="Message Aria"
-              placeholder="Take your time..."
+              placeholder={isListening ? "Listening to your voice..." : "Take your time..."}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={isTyping}
               className="w-full bg-transparent resize-none py-1 px-2 focus:outline-none text-[#2C332E] placeholder-[#8A9386] text-xl font-handwritten max-h-32 leading-relaxed"
             />
+
+            {/* Feature 1: Dictation Mic Button */}
+            {isSpeechSupported && (
+              <button
+                type="button"
+                onClick={toggleListening}
+                disabled={isTyping}
+                aria-label={isListening ? "Stop listening" : "Speak message"}
+                title={isListening ? "Stop voice dictation" : "Voice dictation (Speech to text)"}
+                className={`p-2 rounded-full transition-all shrink-0 ${
+                  isListening
+                    ? 'bg-[#475A4A] text-white animate-pulse shadow-md'
+                    : 'text-[#8A9386] hover:text-[#475A4A] hover:bg-white/50'
+                }`}
+              >
+                {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              </button>
+            )}
+
+            {/* Share / Send Button */}
             <button 
               type="submit"
               disabled={isTyping || !input.trim()}
@@ -96,6 +149,12 @@ export default function TherapyRoom() {
         </div>
       </div>
 
+      {/* Feature 2: Interactive Voice Mode Modal */}
+      <VoiceModeModal
+        isOpen={isVoiceModalOpen}
+        onClose={() => setIsVoiceModalOpen(false)}
+        onSessionEnded={() => fetchHistory()}
+      />
     </div>
   );
 }

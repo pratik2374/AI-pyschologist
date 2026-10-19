@@ -1,15 +1,15 @@
 const jwt = require("jsonwebtoken");
 
 
-// ─── AuthN — verify JWT from HttpOnly cookie ───────────────────────────────────
+// ─── AuthN — verify JWT from HttpOnly cookie or Authorization header ──────────
 exports.AuthN = (req, res, next) => {
     try {
-        const token = req.cookies?.token;
+        const token = req.cookies?.token || (req.headers?.authorization?.startsWith("Bearer ") ? req.headers.authorization.split(" ")[1] : null);
 
         if (!token) {
             return res.status(401).json({
                 success: false,
-                message: "Authentication required"
+                message: "Authentication required. Please log in."
             });
         }
 

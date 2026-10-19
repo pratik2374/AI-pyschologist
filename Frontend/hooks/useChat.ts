@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { createParser } from 'eventsource-parser';
+import { useRouter } from 'next/navigation';
 
 export type Message = {
   id: string;
@@ -15,6 +16,7 @@ export function useChat() {
   const [isTyping, setIsTyping] = useState(false);
   const [mode, setMode] = useState<'A'|'B'>('A');
   const abortControllerRef = useRef<AbortController | null>(null);
+  const router = useRouter();
   
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
@@ -35,6 +37,12 @@ export function useChat() {
       const res = await fetch(`${apiUrl}/chat/history`, {
         credentials: 'include',
       });
+      
+      if (res.status === 401) {
+        router.push('/login');
+        return;
+      }
+
       if (res.ok) {
         const data = await res.json();
         if (data.messages) {
@@ -79,7 +87,9 @@ export function useChat() {
       });
 
       if (!res.ok) {
-        throw new Error('Failed to send message');
+        const errorText = await res.text().catch(() => 'unknown error');
+        console.error('Failed to send message:', res.status, res.statusText, errorText);
+        throw new Error('Failed to send message: ' + errorText);
       }
 
       if (!res.body) return;
